@@ -10,7 +10,7 @@ abstract class DioModule {
     final dio = Dio(
       BaseOptions(
         receiveDataWhenStatusError: true,
-        baseUrl: AppEndPoints.baseUrl,
+        baseUrl: AppEndpoints.baseUrl,
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 10),
       ),

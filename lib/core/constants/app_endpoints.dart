@@ -1,6 +1,11 @@
-class AppEndPoints {
-  AppEndPoints._();
-  static const String baseUrl = 'https://ecommerce.routemisr.com/api/v1';
-  static const String getProductsEndpoint = '$baseUrl/products';
-  static const String getCategoriesEndpoint = '$baseUrl/categories';
+class AppEndpoints {
+  AppEndpoints._();
+  static const String baseUrl = "https://exam.elevateegy.com/api/v1";
+
+  /// Auth
+  static const String signUp = "/auth/signup";
+  static const String signIn = "/auth/signin";
+  static const String forgotPassword = "/auth/forgotPassword";
+  static const String verifyResetCode = "/auth/verifyResetCode";
+  static const String resetPassword = "/auth/resetPassword";
 }

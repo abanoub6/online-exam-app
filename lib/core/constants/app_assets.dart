@@ -1,4 +1,4 @@
 class AppAssets {
   AppAssets._();
-  // static const String testPhoto = "test";
+  // static const String testPhoto = "";
 }
