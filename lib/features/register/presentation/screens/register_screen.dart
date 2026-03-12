@@ -72,6 +72,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
+  bool _isFormValid = false;
+  void _validateForm() {
+    final isValid = _formKey.currentState?.validate() ?? false;
+
+    if (isValid != _isFormValid) {
+      setState(() {
+        _isFormValid = isValid;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<RegisterViewModel>(
@@ -125,6 +136,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       children: [
                         // Username
                         TextFormField(
+                          onChanged: (_) => _validateForm(),
                           textInputAction: TextInputAction.next,
                           controller: _userNameController,
                           decoration: const InputDecoration(
@@ -143,6 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           children: [
                             Expanded(
                               child: TextFormField(
+                                onChanged: (_) => _validateForm(),
                                 textInputAction: TextInputAction.next,
 
                                 controller: _firstNameController,
@@ -158,6 +171,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             SizedBox(width: AppSizes.w(16)),
                             Expanded(
                               child: TextFormField(
+                                onChanged: (_) => _validateForm(),
                                 controller: _lastNameController,
                                 decoration: const InputDecoration(
                                   labelText: 'Last name',
@@ -174,6 +188,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                         // Email
                         TextFormField(
+                          onChanged: (_) => _validateForm(),
                           textInputAction: TextInputAction.next,
 
                           controller: _emailController,
@@ -191,6 +206,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           children: [
                             Expanded(
                               child: TextFormField(
+                                onChanged: (_) => _validateForm(),
                                 textInputAction: TextInputAction.next,
 
                                 controller: _passwordController,
@@ -207,6 +223,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             SizedBox(width: AppSizes.w(16)),
                             Expanded(
                               child: TextFormField(
+                                onChanged: (_) => _validateForm(),
                                 textInputAction: TextInputAction.next,
 
                                 controller: _confirmPasswordController,
@@ -229,6 +246,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                         // Phone
                         TextFormField(
+                          onChanged: (_) => _validateForm(),
                           controller: _phoneController,
                           keyboardType: TextInputType.phone,
                           decoration: const InputDecoration(
@@ -243,7 +261,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                         // Sign up button
                         PrimaryButton(
-                          onPressed: isLoading ? null : _signUp,
+                          onPressed: _isFormValid ? _signUp : null,
                           text: 'Sign up',
                           isLoading: isLoading,
                         ),
