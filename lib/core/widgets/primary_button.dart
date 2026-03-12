@@ -17,10 +17,11 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDisabled = onPressed == null;
     return ElevatedButton(
       onPressed: isLoading ? null : onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.blue,
+        backgroundColor: isDisabled ? AppColors.gray : AppColors.blue,
         foregroundColor: Colors.white,
         padding: EdgeInsets.symmetric(vertical: AppSizes.h(16)),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
