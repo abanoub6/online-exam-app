@@ -8,6 +8,7 @@ import 'package:online_exam_app_v/core/widgets/primary_button.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/screens/verify_reset_code_screen.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/cubits/forgot_password_view_model.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/states/forgot_password_state.dart';
+import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   static const String routeName = "forgetPassword";
@@ -42,7 +43,8 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody> {
         backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () =>
+              Navigator.pushReplacementNamed(context, LoginScreen.routeName),
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
             color: AppColors.black,
@@ -54,10 +56,13 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody> {
       body: BlocListener<ForgotPasswordCubit, ForgotPasswordState>(
         listener: (context, state) {
           if (state is ForgotPasswordSuccess) {
-            Navigator.pushNamed(
+            Navigator.push(
               context,
-              VerifyResetCodeScreen.routeName,
-              arguments: cubit.emailController.text.trim(),
+              MaterialPageRoute(
+                builder: (_) => VerifyResetCodeScreen(
+                  email: cubit.emailController.text.trim(),
+                ),
+              ),
             );
           } else if (state is ForgotPasswordFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -126,9 +131,8 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody> {
                           child: PrimaryButton(
                             isLoading: state is ForgotPasswordLoading,
                             text: 'Continue',
-                            onPressed: state is ForgotPasswordLoading
-                                ? null
-                                : () {
+                            onPressed: _isEmailValid
+                                ? () {
                                     if (cubit.formKey.currentState!
                                         .validate()) {
                                       cubit.forgotPassword();
@@ -137,41 +141,9 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody> {
                                         _isEmailValid = false;
                                       });
                                     }
-                                  },
+                                  }
+                                : null,
                           ),
-
-                          // ElevatedButton(
-                          //   style: ElevatedButton.styleFrom(
-                          //     backgroundColor: !_isEmailValid
-                          //         ? AppColors.gray
-                          //         : AppColors.blue,
-                          //     shape: RoundedRectangleBorder(
-                          //       borderRadius: BorderRadius.circular(30),
-                          //     ),
-                          //   ),
-                          //   onPressed: state is ForgotPasswordLoading
-                          //       ? null
-                          //       : () {
-                          //           if (cubit.formKey.currentState!
-                          //               .validate()) {
-                          //             cubit.forgotPassword();
-                          //           } else {
-                          //             setState(() {
-                          //               _isEmailValid = false;
-                          //             });
-                          //           }
-                          //         },
-                          //   child: state is ForgotPasswordLoading
-                          //       ? const CircularProgressIndicator(
-                          //           color: AppColors.white,
-                          //         )
-                          //       : Text(
-                          //           "Continue",
-                          //           style: AppTextStyles.s16w500(
-                          //             AppColors.white,
-                          //           ),
-                          //         ),
-                          // ),
                         );
                       },
                     ),

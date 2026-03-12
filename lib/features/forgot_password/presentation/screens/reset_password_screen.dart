@@ -4,8 +4,10 @@ import 'package:online_exam_app_v/config/di/di.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
 import 'package:online_exam_app_v/core/utilies/validators.dart';
+import 'package:online_exam_app_v/core/widgets/primary_button.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/cubits/reset_password_view_model.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/states/reset_password_state.dart';
+import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   static const String routeName = 'resetPassword';
@@ -37,7 +39,7 @@ class _ResetPasswordView extends StatelessWidget {
         backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pushReplacementNamed(context, LoginScreen.routeName),
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
             color: AppColors.black,
@@ -55,7 +57,7 @@ class _ResetPasswordView extends StatelessWidget {
                 backgroundColor: Colors.green,
               ),
             );
-            Navigator.of(context).popUntil((route) => route.isFirst);
+            Navigator.pushReplacementNamed(context, LoginScreen.routeName);
           } else if (state is ResetPasswordFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -135,13 +137,9 @@ class _ResetPasswordView extends StatelessWidget {
                     return SizedBox(
                       width: double.infinity,
                       height: 55,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF123F9A),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                        ),
+                      child: PrimaryButton(
+                        isLoading: state is ResetPasswordLoading,
+                        text: 'Continue',
                         onPressed: state is ResetPasswordLoading
                             ? null
                             : () {
@@ -149,14 +147,6 @@ class _ResetPasswordView extends StatelessWidget {
                                   cubit.resetPassword(email: email);
                                 }
                               },
-                        child: state is ResetPasswordLoading
-                            ? const CircularProgressIndicator(
-                                color: AppColors.white,
-                              )
-                            : Text(
-                                "Continue",
-                                style: AppTextStyles.s16w500(AppColors.white),
-                              ),
                       ),
                     );
                   },

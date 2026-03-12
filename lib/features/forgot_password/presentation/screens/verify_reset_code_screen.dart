@@ -7,6 +7,7 @@ import 'package:online_exam_app_v/core/widgets/rich_text_with_link.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/screens/reset_password_screen.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/cubits/verify_reset_code_view_model.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/states/verify_reset_code_state.dart';
+import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class VerifyResetCodeScreen extends StatelessWidget {
@@ -46,7 +47,8 @@ class _VerifyResetCodeViewState extends State<_VerifyResetCodeView> {
         backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () =>
+              Navigator.pushReplacementNamed(context, LoginScreen.routeName),
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
             color: AppColors.black,
@@ -59,10 +61,11 @@ class _VerifyResetCodeViewState extends State<_VerifyResetCodeView> {
         listener: (context, state) {
           if (state is VerifyResetCodeSuccess) {
             setState(() => _hasError = false);
-            Navigator.pushNamed(
+            Navigator.push(
               context,
-              ResetPasswordScreen.routeName,
-              arguments: widget.email,
+              MaterialPageRoute(
+                builder: (_) => ResetPasswordScreen(email: widget.email),
+              ),
             );
           } else if (state is VerifyResetCodeFailure) {
             setState(() => _hasError = true);
