@@ -28,9 +28,12 @@ class Validators {
   // ──────────────── Numbers ────────────────
 
   static String? number(String? value, {String? message}) {
-    if (value == null || value.trim().isEmpty) return null;
-    if (double.tryParse(value.trim()) == null) {
-      return message ?? 'Please enter a valid number';
+    if (value == null || value.isEmpty) return null;
+
+    final regex = RegExp(r'^01[0125][0-9]{8}$');
+
+    if (!regex.hasMatch(value)) {
+      return message ?? 'Please enter a valid Egyptian phone number';
     }
     return null;
   }
@@ -64,10 +67,17 @@ class Validators {
   // ──────────────── Password ────────────────
 
   static String? password(String? value, {String? message}) {
-    if (value == null || value.trim().isEmpty) return null;
-    if (value.length < 6) {
-      return message ?? 'Password must be at least 6 characters';
+    if (value == null || value.isEmpty) return null;
+
+    final regex = RegExp(
+      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
+    );
+
+    if (!regex.hasMatch(value)) {
+      return message ??
+          'Password must be at least 8 characters, include upper & lower case letters, a number, and a special character';
     }
+
     return null;
   }
 

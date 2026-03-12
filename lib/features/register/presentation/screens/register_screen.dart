@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
+import 'package:online_exam_app_v/config/di/di.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/core/theme/app_sizes.dart';
+import 'package:online_exam_app_v/core/utilies/validators.dart';
 import 'package:online_exam_app_v/core/widgets/primary_button.dart';
 import 'package:online_exam_app_v/core/widgets/rich_text_with_link.dart';
+import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
+import 'package:online_exam_app_v/features/register/data/models/register_request.dart';
+import 'package:online_exam_app_v/features/register/presentation/view_model/cubit/register_cubit.dart';
+import 'package:online_exam_app_v/features/register/presentation/view_model/states/register_states.dart';
 
+@injectable
 class RegisterScreen extends StatefulWidget {
   static const String routeName = "register";
+
   const RegisterScreen({super.key});
 
   @override
@@ -23,10 +33,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _confirmPasswordController = TextEditingController();
   final _phoneController = TextEditingController();
 
-  bool _isLoading = false;
+  late final RegisterCubit _registerCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    // Injectable DI
+    _registerCubit = getIt.get<RegisterCubit>();
+  }
 
   @override
   void dispose() {
+    _registerCubit.close();
     _userNameController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
@@ -39,192 +57,204 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _signUp() {
     if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
-      // هنا منطق التسجيل الحقيقي (API call مثلاً)
-      Future.delayed(const Duration(seconds: 2), () {
-        setState(() => _isLoading = false);
-        Navigator.pushReplacementNamed(context, '/home');
-      });
+      final request = RegisterRequest(
+        username: _userNameController.text,
+        firstName: _firstNameController.text,
+        lastName: _lastNameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+        phone: _phoneController.text,
+        rePassword: _confirmPasswordController.text,
+      );
+
+      _registerCubit.register(registerRequest: request);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text('Sign up'),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppSizes.w(24),
-            vertical: AppSizes.h(16),
+    return BlocProvider<RegisterCubit>(
+      create: (context) => _registerCubit,
+      child: BlocListener<RegisterCubit, RegisterStates>(
+        listenWhen: (previous, current) =>
+            previous.registerState.errorMessage !=
+                current.registerState.errorMessage ||
+            previous.registerState.data != current.registerState.data,
+        listener: (context, state) {
+          final registerState = state.registerState;
+
+          if (registerState.data != null && mounted) {
+            Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+            return;
+          }
+
+          if (registerState.errorMessage != null) {
+            ScaffoldMessenger.of(context)
+              ..clearSnackBars()
+              ..showSnackBar(
+                SnackBar(content: Text(registerState.errorMessage!)),
+              );
+
+            _registerCubit.clearError();
+          }
+        },
+
+        child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pop(context),
+            ),
+            title: const Text('Sign up'),
           ),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // User name
-                TextFormField(
-                  controller: _userNameController,
-                  decoration: const InputDecoration(
-                    labelText: 'User name',
-                    hintText: 'Enter your user name',
-                  ),
-                  textInputAction: TextInputAction.next,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter user name';
-                    }
-                    return null;
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSizes.w(24),
+                vertical: AppSizes.h(16),
+              ),
+              child: Form(
+                key: _formKey,
+                child: BlocBuilder<RegisterCubit, RegisterStates>(
+                  builder: (context, state) {
+                    final isLoading = state.registerState.isLoading;
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Username
+                        TextFormField(
+                          textInputAction: TextInputAction.next,
+                          controller: _userNameController,
+                          decoration: const InputDecoration(
+                            labelText: 'User name',
+                            hintText: 'Enter your user name',
+                          ),
+                          validator: (v) => Validators.compose([
+                            (v) => Validators.required(v),
+                            (v) => Validators.minLength(v, 3),
+                          ], v),
+                        ),
+                        SizedBox(height: AppSizes.h(20)),
+
+                        // First & Last name
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                textInputAction: TextInputAction.next,
+
+                                controller: _firstNameController,
+                                decoration: const InputDecoration(
+                                  labelText: 'First name',
+                                ),
+                                validator: (v) => Validators.required(v),
+                              ),
+                            ),
+                            SizedBox(width: AppSizes.w(16)),
+                            Expanded(
+                              child: TextFormField(
+                                controller: _lastNameController,
+                                decoration: const InputDecoration(
+                                  labelText: 'Last name',
+                                ),
+                                validator: (v) => Validators.required(v),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: AppSizes.h(20)),
+
+                        // Email
+                        TextFormField(
+                          textInputAction: TextInputAction.next,
+
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(labelText: 'Email'),
+                          validator: (v) => Validators.compose([
+                            (v) => Validators.required(v),
+                            (v) => Validators.email(v),
+                          ], v),
+                        ),
+                        SizedBox(height: AppSizes.h(20)),
+
+                        // Password + Confirm Password
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                textInputAction: TextInputAction.next,
+
+                                controller: _passwordController,
+                                obscureText: true,
+                                decoration: const InputDecoration(
+                                  labelText: 'Password',
+                                ),
+                                validator: (v) => Validators.compose([
+                                  (v) => Validators.required(v),
+                                  (v) => Validators.password(v),
+                                ], v),
+                              ),
+                            ),
+                            SizedBox(width: AppSizes.w(16)),
+                            Expanded(
+                              child: TextFormField(
+                                textInputAction: TextInputAction.next,
+
+                                controller: _confirmPasswordController,
+                                obscureText: true,
+                                decoration: const InputDecoration(
+                                  labelText: 'Confirm password',
+                                ),
+                                validator: (v) => Validators.confirmPassword(
+                                  v,
+                                  _passwordController.text,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: AppSizes.h(20)),
+
+                        // Phone
+                        TextFormField(
+                          controller: _phoneController,
+                          keyboardType: TextInputType.phone,
+                          decoration: const InputDecoration(
+                            labelText: 'Phone number',
+                          ),
+                          validator: (v) => Validators.compose([
+                            (v) => Validators.required(v),
+                            (v) => Validators.number(v),
+                          ], v),
+                        ),
+                        SizedBox(height: AppSizes.h(40)),
+
+                        // Sign up button
+                        PrimaryButton(
+                          onPressed: isLoading ? null : _signUp,
+                          text: 'Sign up',
+                          isLoading: isLoading,
+                        ),
+                        SizedBox(height: AppSizes.h(24)),
+
+                        // Already have an account? Login
+                        RichTextWithLink(
+                          normalText: "Already have an account? ",
+                          linkText: "Login",
+                          linkTextColor: AppColors.blue,
+                          onLinkTap: () => Navigator.pushNamed(
+                            context,
+                            LoginScreen.routeName,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    );
                   },
                 ),
-
-                SizedBox(height: AppSizes.h(20)),
-
-                // First name + Last name (row)
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _firstNameController,
-                        decoration: const InputDecoration(
-                          labelText: 'First name',
-                          hintText: 'Enter first name',
-                        ),
-                        textInputAction: TextInputAction.next,
-                      ),
-                    ),
-                    SizedBox(width: AppSizes.w(16)),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _lastNameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Last name',
-                          hintText: 'Enter last name',
-                        ),
-                        textInputAction: TextInputAction.next,
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: AppSizes.h(20)),
-
-                // Email
-                TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'Enter your email',
-                  ),
-                  textInputAction: TextInputAction.next,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter email';
-                    }
-                    if (!RegExp(
-                      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                    ).hasMatch(value)) {
-                      return 'Please enter a valid email';
-                    }
-                    return null;
-                  },
-                ),
-
-                SizedBox(height: AppSizes.h(20)),
-
-                // Password + Confirm Password
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
-                          hintText: 'Enter password',
-                        ),
-                        textInputAction: TextInputAction.next,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter password';
-                          }
-                          if (value.length < 6) {
-                            return 'Password must be at least 6 characters';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    SizedBox(width: AppSizes.w(16)),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _confirmPasswordController,
-                        obscureText: true,
-                        decoration: const InputDecoration(
-                          labelText: 'Confirm password',
-                          hintText: 'Confirm password',
-                        ),
-                        textInputAction: TextInputAction.next,
-                        validator: (value) {
-                          if (value != _passwordController.text) {
-                            return 'Passwords do not match';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: AppSizes.h(20)),
-
-                // Phone number
-                TextFormField(
-                  controller: _phoneController,
-                  keyboardType: TextInputType.phone,
-                  decoration: const InputDecoration(
-                    labelText: 'Phone number',
-                    hintText: 'Enter phone number',
-                  ),
-                  textInputAction: TextInputAction.done,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter phone number';
-                    }
-                    return null;
-                  },
-                ),
-
-                SizedBox(height: AppSizes.h(40)),
-
-                // زر Sign up
-                PrimaryButton(
-                  onPressed: _isLoading ? null : _signUp,
-                  text: 'Sign up',
-                  isLoading: _isLoading,
-                ),
-
-                SizedBox(height: AppSizes.h(24)),
-
-                // Already have an account? Login
-                RichTextWithLink(
-                  normalText: "Already have an account? ",
-                  linkText: "Login",
-                  linkTextColor: AppColors.blue,
-                  onLinkTap: () {
-                    Navigator.pop(context); // أو Navigator.pushNamed('/login')
-                  },
-                  textAlign: TextAlign.center,
-                ),
-              ],
+              ),
             ),
           ),
         ),
