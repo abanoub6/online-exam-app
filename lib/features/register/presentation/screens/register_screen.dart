@@ -10,6 +10,7 @@ import 'package:online_exam_app_v/core/widgets/rich_text_with_link.dart';
 import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
 import 'package:online_exam_app_v/features/register/data/models/register_request.dart';
 import 'package:online_exam_app_v/features/register/presentation/view_model/cubit/register_cubit.dart';
+import 'package:online_exam_app_v/features/register/presentation/view_model/states/register_events.dart';
 import 'package:online_exam_app_v/features/register/presentation/view_model/states/register_states.dart';
 
 @injectable
@@ -67,7 +68,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         rePassword: _confirmPasswordController.text,
       );
 
-      _registerCubit.register(registerRequest: request);
+      _registerCubit.doEvent(RegisterUserEvent(request));
     }
   }
 
@@ -95,7 +96,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 SnackBar(content: Text(registerState.errorMessage!)),
               );
 
-            _registerCubit.clearError();
+            _registerCubit.doEvent(ClearRegisterErrorEvent());
           }
         },
 
@@ -148,7 +149,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 decoration: const InputDecoration(
                                   labelText: 'First name',
                                 ),
-                                validator: (v) => Validators.required(v),
+                                validator: (v) => Validators.compose([
+                                  (v) => Validators.required(v),
+                                  (v) => Validators.minLength(v, 3),
+                                ], v),
                               ),
                             ),
                             SizedBox(width: AppSizes.w(16)),
@@ -158,7 +162,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 decoration: const InputDecoration(
                                   labelText: 'Last name',
                                 ),
-                                validator: (v) => Validators.required(v),
+                                validator: (v) => Validators.compose([
+                                  (v) => Validators.required(v),
+                                  (v) => Validators.minLength(v, 3),
+                                ], v),
                               ),
                             ),
                           ],
@@ -207,10 +214,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 decoration: const InputDecoration(
                                   labelText: 'Confirm password',
                                 ),
-                                validator: (v) => Validators.confirmPassword(
-                                  v,
-                                  _passwordController.text,
-                                ),
+                                validator: (v) => Validators.compose([
+                                  (v) => Validators.required(v),
+                                  (v) => Validators.confirmPassword(
+                                    v,
+                                    _passwordController.text,
+                                  ),
+                                ], v),
                               ),
                             ),
                           ],

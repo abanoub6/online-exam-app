@@ -4,12 +4,28 @@ import 'package:online_exam_app_v/config/base_responce/base_responce.dart';
 import 'package:online_exam_app_v/features/register/data/models/register_request.dart';
 import 'package:online_exam_app_v/features/register/domain/entities/user_entity.dart';
 import 'package:online_exam_app_v/features/register/domain/use_cases/register_usecase.dart';
+import 'package:online_exam_app_v/features/register/presentation/view_model/states/register_events.dart';
 import 'package:online_exam_app_v/features/register/presentation/view_model/states/register_states.dart';
 
 @singleton
 class RegisterCubit extends Cubit<RegisterStates> {
   final RegisterUseCase useCase;
-  void clearError() {
+
+  RegisterCubit(this.useCase) : super(RegisterStates());
+
+  void doEvent(RegisterEvents event) {
+    switch (event) {
+      case RegisterUserEvent():
+        _register(event.request);
+        break;
+
+      case ClearRegisterErrorEvent():
+        _clearError();
+        break;
+    }
+  }
+
+  void _clearError() {
     emit(
       state.copyWith(
         registerStateParam: state.registerState.copyWith(
@@ -19,9 +35,7 @@ class RegisterCubit extends Cubit<RegisterStates> {
     );
   }
 
-  RegisterCubit(this.useCase) : super(RegisterStates());
-
-  Future<void> register({required RegisterRequest registerRequest}) async {
+  Future<void> _register(RegisterRequest registerRequest) async {
     /// start loading
     emit(
       state.copyWith(
@@ -35,20 +49,17 @@ class RegisterCubit extends Cubit<RegisterStates> {
     final response = await useCase(registerRequest: registerRequest);
 
     switch (response) {
-      /// SUCCESS
       case SuccessBaseResponse<UserEntity>():
         emit(
           state.copyWith(
             registerStateParam: state.registerState.copyWith(
               isLoadingParam: false,
               dataParam: response.data,
-              errorMessageParam: null,
             ),
           ),
         );
         break;
 
-      /// ERROR
       case ErrorBaseResponse<UserEntity>():
         emit(
           state.copyWith(
