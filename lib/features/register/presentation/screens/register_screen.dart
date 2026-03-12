@@ -9,7 +9,7 @@ import 'package:online_exam_app_v/core/widgets/primary_button.dart';
 import 'package:online_exam_app_v/core/widgets/rich_text_with_link.dart';
 import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
 import 'package:online_exam_app_v/features/register/data/models/register_request.dart';
-import 'package:online_exam_app_v/features/register/presentation/view_model/cubit/register_cubit.dart';
+import 'package:online_exam_app_v/features/register/presentation/view_model/cubit/register_view_model.dart';
 import 'package:online_exam_app_v/features/register/presentation/view_model/states/register_events.dart';
 import 'package:online_exam_app_v/features/register/presentation/view_model/states/register_states.dart';
 
@@ -34,18 +34,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _confirmPasswordController = TextEditingController();
   final _phoneController = TextEditingController();
 
-  late final RegisterCubit _registerCubit;
+  late final RegisterViewModel _registerViewModel;
 
   @override
   void initState() {
     super.initState();
     // Injectable DI
-    _registerCubit = getIt.get<RegisterCubit>();
+    _registerViewModel = getIt.get<RegisterViewModel>();
   }
 
   @override
   void dispose() {
-    _registerCubit.close();
+    _registerViewModel.close();
     _userNameController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
@@ -68,15 +68,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
         rePassword: _confirmPasswordController.text,
       );
 
-      _registerCubit.doEvent(RegisterUserEvent(request));
+      _registerViewModel.doEvent(RegisterUserEvent(request));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<RegisterCubit>(
-      create: (context) => _registerCubit,
-      child: BlocListener<RegisterCubit, RegisterStates>(
+    return BlocProvider<RegisterViewModel>(
+      create: (context) => _registerViewModel,
+      child: BlocListener<RegisterViewModel, RegisterStates>(
         listenWhen: (previous, current) =>
             previous.registerState.errorMessage !=
                 current.registerState.errorMessage ||
@@ -96,7 +96,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 SnackBar(content: Text(registerState.errorMessage!)),
               );
 
-            _registerCubit.doEvent(ClearRegisterErrorEvent());
+            _registerViewModel.doEvent(ClearRegisterErrorEvent());
           }
         },
 
@@ -116,7 +116,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               child: Form(
                 key: _formKey,
-                child: BlocBuilder<RegisterCubit, RegisterStates>(
+                child: BlocBuilder<RegisterViewModel, RegisterStates>(
                   builder: (context, state) {
                     final isLoading = state.registerState.isLoading;
 

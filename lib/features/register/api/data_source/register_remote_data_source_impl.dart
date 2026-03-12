@@ -22,8 +22,8 @@ class RegisterRemoteDataSourceImpl implements RegisterRemoteDataSourceContract {
       // API call
       final response = await registerApiClient.register(registerRequest);
 
-      // Debug print full response
-      print("[DEBUG] Register Response: $response");
+      // // Debug print full response
+      // print("[DEBUG] Register Response: $response");
 
       // Success if user data exists
       if (response.user != null) {
@@ -35,8 +35,8 @@ class RegisterRemoteDataSourceImpl implements RegisterRemoteDataSourceContract {
       }
     } on DioException catch (dioError) {
       // Debug print for DioError
-      print("[DEBUG] DioException: ${dioError.message}");
-      print("[DEBUG] DioException Response: ${dioError.response?.data}");
+      // print("[DEBUG] DioException: ${dioError.message}");
+      // print("[DEBUG] DioException Response: ${dioError.response?.data}");
 
       String errorMessage;
 
@@ -57,13 +57,13 @@ class RegisterRemoteDataSourceImpl implements RegisterRemoteDataSourceContract {
       }
 
       return ErrorBaseResponse<UserDto>(errorMessage: errorMessage);
-    } on TimeoutException catch (e) {
-      print("[DEBUG] TimeoutException: $e");
+    } on TimeoutException catch (_) {
+      // print("[DEBUG] TimeoutException: $_");
       return ErrorBaseResponse<UserDto>(
         errorMessage: 'Request timed out. Please try again',
       );
-    } catch (e) {
-      print("[DEBUG] Unexpected Exception: $e");
+    } catch (_) {
+      // print("[DEBUG] Unexpected Exception: $e");
       return ErrorBaseResponse<UserDto>(
         errorMessage: 'An unexpected error occurred. Please try again',
       );

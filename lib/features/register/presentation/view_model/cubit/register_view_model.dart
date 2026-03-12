@@ -8,10 +8,10 @@ import 'package:online_exam_app_v/features/register/presentation/view_model/stat
 import 'package:online_exam_app_v/features/register/presentation/view_model/states/register_states.dart';
 
 @singleton
-class RegisterCubit extends Cubit<RegisterStates> {
+class RegisterViewModel extends Cubit<RegisterStates> {
   final RegisterUseCase useCase;
 
-  RegisterCubit(this.useCase) : super(RegisterStates());
+  RegisterViewModel(this.useCase) : super(RegisterStates());
 
   void doEvent(RegisterEvents event) {
     switch (event) {

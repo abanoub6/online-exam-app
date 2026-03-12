@@ -29,8 +29,8 @@ import '../../features/register/domain/use_cases/register_usecase.dart'
     as _i679;
 import '../../features/register/presentation/screens/register_screen.dart'
     as _i502;
-import '../../features/register/presentation/view_model/cubit/register_cubit.dart'
-    as _i278;
+import '../../features/register/presentation/view_model/cubit/register_view_model.dart'
+    as _i166;
 import '../dio/dio_interceptor.dart' as _i297;
 import '../dio/dio_module.dart' as _i977;
 import '../storage/secure_storage_module.dart' as _i391;
@@ -74,8 +74,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i679.RegisterUseCase>(
       () => _i679.RegisterUseCase(gh<_i210.RegisterRepositoryContract>()),
     );
-    gh.singleton<_i278.RegisterCubit>(
-      () => _i278.RegisterCubit(gh<_i679.RegisterUseCase>()),
+    gh.singleton<_i166.RegisterViewModel>(
+      () => _i166.RegisterViewModel(gh<_i679.RegisterUseCase>()),
     );
     return this;
   }
