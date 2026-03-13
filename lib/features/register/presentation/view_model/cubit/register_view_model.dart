@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:online_exam_app_v/config/base_responce/base_responce.dart';
+import 'package:online_exam_app_v/config/base_responce/base_response.dart';
 import 'package:online_exam_app_v/features/register/data/models/register_request.dart';
 import 'package:online_exam_app_v/features/register/domain/entities/user_entity.dart';
 import 'package:online_exam_app_v/features/register/domain/use_cases/register_usecase.dart';
@@ -9,14 +10,37 @@ import 'package:online_exam_app_v/features/register/presentation/view_model/stat
 
 @singleton
 class RegisterViewModel extends Cubit<RegisterStates> {
-  final RegisterUseCase useCase;
+  final RegisterUseCase registerUseCase;
 
-  RegisterViewModel(this.useCase) : super(RegisterStates());
+  RegisterViewModel(this.registerUseCase) : super(RegisterStates());
+
+  /// form key
+  final formKey = GlobalKey<FormState>();
+
+  /// controllers
+  final usernameController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  final phoneController = TextEditingController();
+
+  bool isFormValid = false;
+
+  void validateForm() {
+    final valid = formKey.currentState?.validate() ?? false;
+
+    if (valid != isFormValid) {
+      isFormValid = valid;
+      emit(state.copyWith());
+    }
+  }
 
   void doEvent(RegisterEvents event) {
     switch (event) {
       case RegisterUserEvent():
-        _register(event.request);
+        _register();
         break;
 
       case ClearRegisterErrorEvent():
@@ -35,7 +59,19 @@ class RegisterViewModel extends Cubit<RegisterStates> {
     );
   }
 
-  Future<void> _register(RegisterRequest registerRequest) async {
+  Future<void> _register() async {
+    if (!(formKey.currentState?.validate() ?? false)) return;
+
+    final request = RegisterRequest(
+      username: usernameController.text,
+      firstName: firstNameController.text,
+      lastName: lastNameController.text,
+      email: emailController.text,
+      password: passwordController.text,
+      rePassword: confirmPasswordController.text,
+      phone: phoneController.text,
+    );
+
     /// start loading
     emit(
       state.copyWith(
@@ -46,7 +82,7 @@ class RegisterViewModel extends Cubit<RegisterStates> {
       ),
     );
 
-    final response = await useCase(registerRequest: registerRequest);
+    final response = await registerUseCase(registerRequest: request);
 
     switch (response) {
       case SuccessBaseResponse<UserEntity>():
@@ -71,5 +107,17 @@ class RegisterViewModel extends Cubit<RegisterStates> {
         );
         break;
     }
+  }
+
+  @override
+  Future<void> close() {
+    usernameController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    phoneController.dispose();
+    return super.close();
   }
 }

@@ -34,7 +34,6 @@ import '../../features/register/presentation/view_model/cubit/register_view_mode
 import '../dio/dio_interceptor.dart' as _i297;
 import '../dio/dio_module.dart' as _i977;
 import '../storage/secure_storage_module.dart' as _i391;
-import '../storage/token_service.dart' as _i761;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -48,14 +47,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i558.FlutterSecureStorage>(
       () => storageModule.secureStorage(),
     );
-    gh.lazySingleton<_i761.TokenService>(
-      () => _i761.TokenService(gh<_i558.FlutterSecureStorage>()),
-    );
     gh.factory<_i502.RegisterScreen>(
       () => _i502.RegisterScreen(key: gh<_i409.Key>()),
     );
     gh.lazySingleton<_i297.AuthInterceptor>(
-      () => _i297.AuthInterceptor(gh<_i761.TokenService>()),
+      () => _i297.AuthInterceptor(gh<_i558.FlutterSecureStorage>()),
     );
     gh.lazySingleton<_i361.Dio>(
       () => dioModule.dio(gh<_i297.AuthInterceptor>()),

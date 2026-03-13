@@ -1,3 +1,5 @@
+import 'package:online_exam_app_v/core/constants/app_api_param.dart';
+
 class RegisterRequest {
   final String username;
   final String firstName;
@@ -18,12 +20,12 @@ class RegisterRequest {
   });
 
   Map<String, dynamic> toJson() => {
-    "username": username,
-    "firstName": firstName,
-    "lastName": lastName,
-    "email": email,
-    "password": password,
-    "rePassword": rePassword,
-    "phone": phone,
+    AppApiParam.username: username,
+    AppApiParam.firstName: firstName,
+    AppApiParam.lastName: lastName,
+    AppApiParam.email: email,
+    AppApiParam.password: password,
+    AppApiParam.rePassword: rePassword,
+    AppApiParam.phone: phone,
   };
 }

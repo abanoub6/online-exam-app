@@ -1,5 +1,5 @@
 import 'package:injectable/injectable.dart';
-import 'package:online_exam_app_v/config/base_responce/base_responce.dart';
+import 'package:online_exam_app_v/config/base_responce/base_response.dart';
 import 'package:online_exam_app_v/features/register/data/data_sources/register_remote_data_source_contract.dart';
 import 'package:online_exam_app_v/features/register/data/models/register_request.dart';
 import 'package:online_exam_app_v/features/register/data/models/user_dto.dart';
