@@ -1,5 +1,6 @@
 // validators.dart
-class Validators {
+class AppValidators {
+  AppValidators._();
   // ──────────────── General ────────────────
 
   static String? required(String? value, {String? message}) {
