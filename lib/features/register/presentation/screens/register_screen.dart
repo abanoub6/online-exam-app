@@ -41,208 +41,204 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => _registerViewModel,
-      child: BlocConsumer<RegisterViewModel, RegisterStates>(
-        listenWhen: (previous, current) =>
-            previous.registerState.errorMessage !=
-                current.registerState.errorMessage ||
-            previous.registerState.data != current.registerState.data,
-        listener: (context, state) {
-          final registerState = state.registerState;
-
-          if (registerState.data != null && mounted) {
-            Navigator.pushReplacementNamed(context, LoginScreen.routeName);
-          }
-
-          if (registerState.errorMessage != null) {
-            ScaffoldMessenger.of(context)
-              ..clearSnackBars()
-              ..showSnackBar(
-                SnackBar(content: Text(registerState.errorMessage!)),
-              );
-
-            _registerViewModel.doEvent(ClearRegisterErrorEvent());
-          }
-        },
-        builder: (context, state) {
-          return Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.pop(context),
-              ),
-              title: const Text('Sign up'),
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: const Text('Sign up'),
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSizes.w(24),
+              vertical: AppSizes.h(16),
             ),
-            body: SafeArea(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppSizes.w(24),
-                  vertical: AppSizes.h(16),
-                ),
-                child: Form(
-                  key: _registerViewModel.formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+            child: Form(
+              key: _registerViewModel.formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // User name
+                  TextFormField(
+                    controller: _registerViewModel.usernameController,
+                    onChanged: (_) => _registerViewModel.validateForm(),
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(
+                      labelText: 'User name',
+                      hintText: 'Enter your user name',
+                    ),
+                    validator: (v) => AppValidators.compose([
+                      (v) => AppValidators.required(v),
+                      (v) => AppValidators.minLength(v, 3),
+                    ], v),
+                  ),
+                  SizedBox(height: AppSizes.h(20)),
+
+                  // First & Last Name
+                  Row(
                     children: [
-                      TextFormField(
-                        controller: _registerViewModel.usernameController,
-                        onChanged: (_) => _registerViewModel.validateForm(),
-                        textInputAction: TextInputAction.next,
-                        decoration: const InputDecoration(
-                          labelText: 'User name',
-                          hintText: 'Enter your user name',
+                      Expanded(
+                        child: TextFormField(
+                          controller: _registerViewModel.firstNameController,
+                          onChanged: (_) => _registerViewModel.validateForm(),
+                          decoration: const InputDecoration(
+                            labelText: 'First name',
+                          ),
+                          validator: (v) => AppValidators.compose([
+                            (v) => AppValidators.required(v),
+                            (v) => AppValidators.minLength(v, 3),
+                          ], v),
                         ),
-                        validator: (v) => AppValidators.compose([
-                          (v) => AppValidators.required(v),
-                          (v) => AppValidators.minLength(v, 3),
-                        ], v),
                       ),
-                      SizedBox(height: AppSizes.h(20)),
-
-                      // First & Last Name
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller:
-                                  _registerViewModel.firstNameController,
-                              onChanged: (_) =>
-                                  _registerViewModel.validateForm(),
-                              decoration: const InputDecoration(
-                                labelText: 'First name',
-                              ),
-                              validator: (v) => AppValidators.compose([
-                                (v) => AppValidators.required(v),
-                                (v) => AppValidators.minLength(v, 3),
-                              ], v),
-                            ),
+                      SizedBox(width: AppSizes.w(16)),
+                      Expanded(
+                        child: TextFormField(
+                          controller: _registerViewModel.lastNameController,
+                          onChanged: (_) => _registerViewModel.validateForm(),
+                          decoration: const InputDecoration(
+                            labelText: 'Last name',
                           ),
-                          SizedBox(width: AppSizes.w(16)),
-                          Expanded(
-                            child: TextFormField(
-                              controller: _registerViewModel.lastNameController,
-                              onChanged: (_) =>
-                                  _registerViewModel.validateForm(),
-                              decoration: const InputDecoration(
-                                labelText: 'Last name',
-                              ),
-                              validator: (v) => AppValidators.compose([
-                                (v) => AppValidators.required(v),
-                                (v) => AppValidators.minLength(v, 3),
-                              ], v),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: AppSizes.h(20)),
-
-                      // Email
-                      TextFormField(
-                        controller: _registerViewModel.emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        onChanged: (_) => _registerViewModel.validateForm(),
-                        decoration: const InputDecoration(labelText: 'Email'),
-                        validator: (v) => AppValidators.compose([
-                          (v) => AppValidators.required(v),
-                          (v) => AppValidators.email(v),
-                        ], v),
-                      ),
-
-                      SizedBox(height: AppSizes.h(20)),
-
-                      // Password & Confirm
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: _registerViewModel.passwordController,
-                              obscureText: true,
-                              onChanged: (_) =>
-                                  _registerViewModel.validateForm(),
-                              decoration: const InputDecoration(
-                                labelText: 'Password',
-                              ),
-                              validator: (v) => AppValidators.compose([
-                                (v) => AppValidators.required(v),
-                                (v) => AppValidators.password(v),
-                              ], v),
-                            ),
-                          ),
-                          SizedBox(width: AppSizes.w(16)),
-                          Expanded(
-                            child: TextFormField(
-                              controller:
-                                  _registerViewModel.confirmPasswordController,
-                              obscureText: true,
-                              onChanged: (_) =>
-                                  _registerViewModel.validateForm(),
-                              decoration: const InputDecoration(
-                                labelText: 'Confirm password',
-                              ),
-                              validator: (v) => AppValidators.compose([
-                                (v) => AppValidators.required(v),
-                                (v) => AppValidators.confirmPassword(
-                                  v,
-                                  _registerViewModel.passwordController.text,
-                                ),
-                              ], v),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: AppSizes.h(20)),
-
-                      // Phone
-                      TextFormField(
-                        controller: _registerViewModel.phoneController,
-                        keyboardType: TextInputType.phone,
-                        onChanged: (_) => _registerViewModel.validateForm(),
-                        decoration: const InputDecoration(
-                          labelText: 'Phone number',
+                          validator: (v) => AppValidators.compose([
+                            (v) => AppValidators.required(v),
+                            (v) => AppValidators.minLength(v, 3),
+                          ], v),
                         ),
-                        validator: (v) => AppValidators.compose([
-                          (v) => AppValidators.required(v),
-                          (v) => AppValidators.number(v),
-                        ], v),
-                      ),
-
-                      SizedBox(height: AppSizes.h(40)),
-
-                      BlocBuilder<RegisterViewModel, RegisterStates>(
-                        buildWhen: (previous, current) =>
-                            previous.registerState.isLoading !=
-                            current.registerState.isLoading,
-                        builder: (context, state) {
-                          return PrimaryButton(
-                            onPressed: _registerViewModel.isFormValid
-                                ? () => _registerViewModel.doEvent(
-                                    RegisterUserEvent(),
-                                  )
-                                : null,
-                            text: 'Sign up',
-                            isLoading: state.registerState.isLoading,
-                          );
-                        },
-                      ),
-
-                      SizedBox(height: AppSizes.h(24)),
-
-                      RichTextWithLink(
-                        normalText: "Already have an account? ",
-                        linkText: "Login",
-                        linkTextColor: AppColors.blue,
-                        onLinkTap: () =>
-                            Navigator.pushNamed(context, LoginScreen.routeName),
-                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),
-                ),
+
+                  SizedBox(height: AppSizes.h(20)),
+
+                  // Email
+                  TextFormField(
+                    controller: _registerViewModel.emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    onChanged: (_) => _registerViewModel.validateForm(),
+                    decoration: const InputDecoration(labelText: 'Email'),
+                    validator: (v) => AppValidators.compose([
+                      (v) => AppValidators.required(v),
+                      (v) => AppValidators.email(v),
+                    ], v),
+                  ),
+
+                  SizedBox(height: AppSizes.h(20)),
+
+                  // Password & Confirm
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _registerViewModel.passwordController,
+                          obscureText: true,
+                          onChanged: (_) => _registerViewModel.validateForm(),
+                          decoration: const InputDecoration(
+                            labelText: 'Password',
+                          ),
+                          validator: (v) => AppValidators.compose([
+                            (v) => AppValidators.required(v),
+                            (v) => AppValidators.password(v),
+                          ], v),
+                        ),
+                      ),
+                      SizedBox(width: AppSizes.w(16)),
+                      Expanded(
+                        child: TextFormField(
+                          controller:
+                              _registerViewModel.confirmPasswordController,
+                          obscureText: true,
+                          onChanged: (_) => _registerViewModel.validateForm(),
+                          decoration: const InputDecoration(
+                            labelText: 'Confirm password',
+                          ),
+                          validator: (v) => AppValidators.compose([
+                            (v) => AppValidators.required(v),
+                            (v) => AppValidators.confirmPassword(
+                              v,
+                              _registerViewModel.passwordController.text,
+                            ),
+                          ], v),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: AppSizes.h(20)),
+
+                  // Phone
+                  TextFormField(
+                    controller: _registerViewModel.phoneController,
+                    keyboardType: TextInputType.phone,
+                    onChanged: (_) => _registerViewModel.validateForm(),
+                    decoration: const InputDecoration(
+                      labelText: 'Phone number',
+                    ),
+                    validator: (v) => AppValidators.compose([
+                      (v) => AppValidators.required(v),
+                      (v) => AppValidators.number(v),
+                    ], v),
+                  ),
+
+                  SizedBox(height: AppSizes.h(40)),
+
+                  // Primary Button داخل BlocConsumer
+                  BlocConsumer<RegisterViewModel, RegisterStates>(
+                    listenWhen: (previous, current) =>
+                        previous.registerState.errorMessage !=
+                            current.registerState.errorMessage ||
+                        previous.registerState.data !=
+                            current.registerState.data,
+                    listener: (context, state) {
+                      final registerState = state.registerState;
+                      if (!mounted) return;
+                      if (registerState.data != null) {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          LoginScreen.routeName,
+                        );
+                      }
+
+                      if (registerState.errorMessage != null) {
+                        ScaffoldMessenger.of(context)
+                          ..clearSnackBars()
+                          ..showSnackBar(
+                            SnackBar(
+                              content: Text(registerState.errorMessage!),
+                            ),
+                          );
+
+                        _registerViewModel.doEvent(ClearRegisterErrorEvent());
+                      }
+                    },
+                    builder: (context, state) {
+                      return PrimaryButton(
+                        onPressed: _registerViewModel.isFormValid
+                            ? () => _registerViewModel.doEvent(
+                                RegisterUserEvent(),
+                              )
+                            : null,
+                        text: 'Sign up',
+                        isLoading: state.registerState.isLoading,
+                      );
+                    },
+                  ),
+
+                  SizedBox(height: AppSizes.h(24)),
+
+                  RichTextWithLink(
+                    normalText: "Already have an account? ",
+                    linkText: "Login",
+                    linkTextColor: AppColors.blue,
+                    onLinkTap: () =>
+                        Navigator.pushNamed(context, LoginScreen.routeName),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }

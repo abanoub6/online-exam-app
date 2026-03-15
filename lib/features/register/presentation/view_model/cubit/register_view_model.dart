@@ -26,6 +26,18 @@ class RegisterViewModel extends Cubit<RegisterStates> {
   final confirmPasswordController = TextEditingController();
   final phoneController = TextEditingController();
 
+  @override
+  Future<void> close() {
+    usernameController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    phoneController.dispose();
+    return super.close();
+  }
+
   bool isFormValid = false;
 
   void validateForm() {
@@ -107,17 +119,5 @@ class RegisterViewModel extends Cubit<RegisterStates> {
         );
         break;
     }
-  }
-
-  @override
-  Future<void> close() {
-    usernameController.dispose();
-    firstNameController.dispose();
-    lastNameController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    phoneController.dispose();
-    return super.close();
   }
 }
