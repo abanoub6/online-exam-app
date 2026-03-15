@@ -33,7 +33,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
-    _registerViewModel.close();
     super.dispose();
   }
 
