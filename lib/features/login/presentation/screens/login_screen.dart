@@ -5,7 +5,7 @@ import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
 import 'package:online_exam_app_v/core/widgets/primary_button.dart';
 import 'package:online_exam_app_v/core/widgets/rich_text_with_link.dart';
-import 'package:online_exam_app_v/features/forget_password/presentation/screens/forget_password_screen.dart';
+import 'package:online_exam_app_v/features/forgot_password/presentation/screens/forget_password_screen.dart';
 import 'package:online_exam_app_v/features/home/presentation/screens/home_screen.dart';
 import 'package:online_exam_app_v/features/register/presentation/screens/register_screen.dart';
 
@@ -103,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       Navigator.pushNamed(
                         context,
-                        ForgetPasswordScreen.routeName,
+                        ForgotPasswordScreen.routeName,
                       );
                     },
                     child: Text(

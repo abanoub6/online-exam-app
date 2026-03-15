@@ -4,7 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:online_exam_app_v/config/di/di.dart';
 import 'package:online_exam_app_v/config/observer/bloc_observer.dart';
 import 'package:online_exam_app_v/core/theme/app_theme.dart';
-import 'package:online_exam_app_v/features/forget_password/presentation/screens/forget_password_screen.dart';
+import 'package:online_exam_app_v/features/forgot_password/presentation/screens/forget_password_screen.dart';
+import 'package:online_exam_app_v/features/forgot_password/presentation/screens/reset_password_screen.dart';
+import 'package:online_exam_app_v/features/forgot_password/presentation/screens/verify_reset_code_screen.dart';
 import 'package:online_exam_app_v/features/home/presentation/screens/home_screen.dart';
 import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
 import 'package:online_exam_app_v/features/register/presentation/screens/register_screen.dart';
@@ -32,7 +34,11 @@ class MyApp extends StatelessWidget {
           routes: {
             LoginScreen.routeName: (context) => LoginScreen(),
             RegisterScreen.routeName: (context) => RegisterScreen(),
-            ForgetPasswordScreen.routeName: (context) => ForgetPasswordScreen(),
+            ForgotPasswordScreen.routeName: (context) => ForgotPasswordScreen(),
+            VerifyResetCodeScreen.routeName: (context) =>
+                VerifyResetCodeScreen(email: ''),
+            ResetPasswordScreen.routeName: (context) =>
+                ResetPasswordScreen(email: ''),
             HomeScreen.routeName: (context) => HomeScreen(),
           },
         );
