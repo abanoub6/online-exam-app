@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:online_exam_app_v/config/di/di.dart';
 import 'package:online_exam_app_v/config/observer/bloc_observer.dart';
 import 'package:online_exam_app_v/core/theme/app_theme.dart';
+import 'package:online_exam_app_v/features/exam-details/presentation/screens/exam_details_screen.dart';
+import 'package:online_exam_app_v/features/exams/presentation/screens/exams_screen.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/screens/forget_password_screen.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/screens/reset_password_screen.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/screens/verify_reset_code_screen.dart';
@@ -30,7 +32,7 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           theme: AppTheme.lightTheme(),
           debugShowCheckedModeBanner: false,
-          initialRoute: RegisterScreen.routeName,
+          initialRoute: HomeScreen.routeName,
           routes: {
             LoginScreen.routeName: (context) => LoginScreen(),
             RegisterScreen.routeName: (context) => RegisterScreen(),
@@ -40,6 +42,8 @@ class MyApp extends StatelessWidget {
             ResetPasswordScreen.routeName: (context) =>
                 ResetPasswordScreen(email: ''),
             HomeScreen.routeName: (context) => HomeScreen(),
+            ExamsScreen.routeName: (context) => ExamsScreen(),
+            ExamDetailsScreen.routeName: (context) => ExamDetailsScreen(),
           },
         );
       },
