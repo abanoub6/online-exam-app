@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:online_exam_app_v/core/constants/app_strings.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
@@ -12,7 +13,7 @@ import 'package:online_exam_app_v/features/login/presentation/screens/login_scre
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class VerifyResetCodeScreen extends StatelessWidget {
-  static const String routeName = 'verifyResetCode';
+  static const String routeName = AppStrings.verifyResetCode;
   const VerifyResetCodeScreen({super.key});
 
   @override
@@ -48,7 +49,10 @@ class _VerifyResetCodeViewState extends State<_VerifyResetCodeView> {
             color: AppColors.black,
           ),
         ),
-        title: Text("Password", style: AppTextStyles.s20w500(AppColors.black)),
+        title: Text(
+          AppStrings.password,
+          style: AppTextStyles.s20w500(AppColors.black),
+        ),
       ),
       body: BlocListener<ForgotPasswordViewModel, ForgotPasswordState>(
         listener: (context, state) {
@@ -58,7 +62,7 @@ class _VerifyResetCodeViewState extends State<_VerifyResetCodeView> {
               context,
               MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
-                  value: cubit, // ← نفس الـ cubit instance
+                  value: cubit,
                   child: const ResetPasswordScreen(),
                 ),
               ),
@@ -74,7 +78,7 @@ class _VerifyResetCodeViewState extends State<_VerifyResetCodeView> {
           } else if (state is ForgotPasswordCodeResent) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Code resent to your email'),
+                content: Text(AppStrings.codeResentToYourEmail),
                 backgroundColor: AppColors.green,
               ),
             );
@@ -86,7 +90,7 @@ class _VerifyResetCodeViewState extends State<_VerifyResetCodeView> {
             children: [
               SizedBox(height: AppSizes.h(24)),
               Text(
-                'Email verification',
+                AppStrings.emailVerification,
                 style: AppTextStyles.s18w500(AppColors.black),
                 textAlign: TextAlign.center,
               ),
@@ -94,7 +98,7 @@ class _VerifyResetCodeViewState extends State<_VerifyResetCodeView> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: AppSizes.h(20)),
                 child: Text(
-                  'Please enter your code that send to your email address',
+                  AppStrings.enterYourCode,
                   style: AppTextStyles.s14w400(AppColors.black),
                   textAlign: TextAlign.center,
                 ),
@@ -147,7 +151,7 @@ class _VerifyResetCodeViewState extends State<_VerifyResetCodeView> {
                       ),
                       SizedBox(width: AppSizes.w(4)),
                       Text(
-                        'Invalid code',
+                        AppStrings.invalidCode,
                         style: AppTextStyles.s14w400(AppColors.red),
                       ),
                     ],
@@ -155,8 +159,8 @@ class _VerifyResetCodeViewState extends State<_VerifyResetCodeView> {
                 ),
               SizedBox(height: AppSizes.h(24)),
               RichTextWithLink(
-                normalText: "Didn't receive code? ",
-                linkText: 'Resend',
+                normalText: AppStrings.didntReceiveCode,
+                linkText: AppStrings.resend,
                 onLinkTap: () => cubit.doEvent(ResendCodeEvent()),
                 linkTextColor: AppColors.blue,
               ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:online_exam_app_v/core/constants/app_strings.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
@@ -11,7 +12,7 @@ import 'package:online_exam_app_v/features/forgot_password/presentation/view_mod
 import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
-  static const String routeName = 'resetPassword';
+  static const String routeName = AppStrings.resetPassword;
   const ResetPasswordScreen({super.key});
 
   @override
@@ -40,14 +41,17 @@ class _ResetPasswordView extends StatelessWidget {
             color: AppColors.black,
           ),
         ),
-        title: Text("Password", style: AppTextStyles.s20w500(AppColors.black)),
+        title: Text(
+          AppStrings.password,
+          style: AppTextStyles.s20w500(AppColors.black),
+        ),
       ),
       body: BlocListener<ForgotPasswordViewModel, ForgotPasswordState>(
         listener: (context, state) {
           if (state is ForgotPasswordResetSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Password reset successfully!'),
+                content: Text(AppStrings.passwordResetSuccessfully),
                 backgroundColor: AppColors.green,
               ),
             );
@@ -69,7 +73,7 @@ class _ResetPasswordView extends StatelessWidget {
               children: [
                 SizedBox(height: AppSizes.h(24)),
                 Text(
-                  'Reset password',
+                  AppStrings.resetPasswordTitle,
                   style: AppTextStyles.s18w500(AppColors.black),
                   textAlign: TextAlign.center,
                 ),
@@ -77,7 +81,7 @@ class _ResetPasswordView extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: AppSizes.h(10)),
                   child: Text(
-                    'Password must not be empty and must contain 6 characters with upper case letter and one number at least',
+                    AppStrings.passwordRequirements,
                     style: AppTextStyles.s14w400(AppColors.black),
                     textAlign: TextAlign.center,
                   ),
@@ -87,9 +91,9 @@ class _ResetPasswordView extends StatelessWidget {
                   controller: cubit.passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                    hintText: 'Enter your password',
+                    hintText: AppStrings.enterYourPassword,
                     label: Text(
-                      'New password',
+                      AppStrings.newPassword,
                       style: AppTextStyles.s14w400(AppColors.black),
                     ),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -104,9 +108,9 @@ class _ResetPasswordView extends StatelessWidget {
                   controller: cubit.confirmPasswordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                    hintText: 'Confirm password',
+                    hintText: AppStrings.confirmPassword,
                     label: Text(
-                      'Confirm password',
+                      AppStrings.confirmPassword,
                       style: AppTextStyles.s14w400(AppColors.black),
                     ),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -128,7 +132,7 @@ class _ResetPasswordView extends StatelessWidget {
                       height: AppSizes.h(55),
                       child: PrimaryButton(
                         isLoading: isLoading,
-                        text: 'Continue',
+                        text: AppStrings.continueText,
                         onPressed: isLoading
                             ? null
                             : () {

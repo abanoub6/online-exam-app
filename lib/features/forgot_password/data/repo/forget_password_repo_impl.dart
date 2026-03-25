@@ -1,13 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:online_exam_app_v/config/base_responce/base_response.dart';
+import 'package:online_exam_app_v/core/network/api_error_handler.dart';
 import 'package:online_exam_app_v/features/forgot_password/data/api/api_service.dart';
 import 'package:online_exam_app_v/features/forgot_password/data/models/request/forgot_password_request.dart';
 import 'package:online_exam_app_v/features/forgot_password/data/models/request/reset_password_request.dart';
 import 'package:online_exam_app_v/features/forgot_password/data/models/request/verify_reset_code_request.dart';
 import 'package:online_exam_app_v/features/forgot_password/domain/entities/forget_password_entity.dart';
 import 'package:online_exam_app_v/features/forgot_password/domain/repo/forget_password_repo_contract.dart';
-import '../../../../core/errors/failures.dart';
 
 @LazySingleton(as: ForgetPasswordRepoContract)
 class ForgetPasswordRepoImpl implements ForgetPasswordRepoContract {
@@ -26,10 +26,8 @@ class ForgetPasswordRepoImpl implements ForgetPasswordRepoContract {
       return SuccessBaseResponse(data: response.toEntity());
     } on DioException catch (e) {
       return ErrorBaseResponse(
-        errorMessage: ServerFailure.fromDioException(e).message,
+        errorMessage: ApiErrorHandler.getErrorMessage(e),
       );
-    } catch (e) {
-      return ErrorBaseResponse.fromException(e);
     }
   }
 
@@ -44,10 +42,8 @@ class ForgetPasswordRepoImpl implements ForgetPasswordRepoContract {
       return SuccessBaseResponse(data: response.toEntity());
     } on DioException catch (e) {
       return ErrorBaseResponse(
-        errorMessage: ServerFailure.fromDioException(e).message,
+        errorMessage: ApiErrorHandler.getErrorMessage(e),
       );
-    } catch (e) {
-      return ErrorBaseResponse.fromException(e);
     }
   }
 
@@ -63,10 +59,8 @@ class ForgetPasswordRepoImpl implements ForgetPasswordRepoContract {
       return SuccessBaseResponse(data: response.toEntity());
     } on DioException catch (e) {
       return ErrorBaseResponse(
-        errorMessage: ServerFailure.fromDioException(e).message,
+        errorMessage: ApiErrorHandler.getErrorMessage(e),
       );
-    } catch (e) {
-      return ErrorBaseResponse.fromException(e);
     }
   }
 }

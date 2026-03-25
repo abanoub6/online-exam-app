@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:online_exam_app_v/config/di/di.dart';
+import 'package:online_exam_app_v/core/constants/app_strings.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
-import 'package:online_exam_app_v/core/utilies/validators.dart';
+import 'package:online_exam_app_v/core/utilies/app_validators.dart';
 import 'package:online_exam_app_v/core/widgets/primary_button.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/screens/verify_reset_code_screen.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/cubits/forgot_password_view_model.dart';
@@ -13,7 +14,7 @@ import 'package:online_exam_app_v/features/forgot_password/presentation/view_mod
 import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
-  static const String routeName = "forgetPassword";
+  static const String routeName = AppStrings.forgetPassword;
   const ForgotPasswordScreen({super.key});
 
   @override
@@ -52,7 +53,10 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody> {
             color: AppColors.black,
           ),
         ),
-        title: Text("Password", style: AppTextStyles.s20w500(AppColors.black)),
+        title: Text(
+          AppStrings.password,
+          style: AppTextStyles.s20w500(AppColors.black),
+        ),
       ),
       body: BlocListener<ForgotPasswordViewModel, ForgotPasswordState>(
         listener: (context, state) {
@@ -81,7 +85,7 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody> {
             children: [
               SizedBox(height: AppSizes.h(24)),
               Text(
-                'Forget password',
+                AppStrings.forgetPasswordTitle,
                 style: AppTextStyles.s18w500(AppColors.black),
                 textAlign: TextAlign.center,
               ),
@@ -89,7 +93,7 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: AppSizes.h(45)),
                 child: Text(
-                  'Please enter your email associated to your account',
+                  AppStrings.emailDescription,
                   style: AppTextStyles.s14w400(AppColors.black),
                   textAlign: TextAlign.center,
                 ),
@@ -102,9 +106,9 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody> {
                     TextFormField(
                       controller: cubit.emailController,
                       decoration: InputDecoration(
-                        hintText: 'Enter your email',
+                        hintText: AppStrings.enterYourEmail,
                         label: Text(
-                          'Email',
+                          AppStrings.email,
                           style: AppTextStyles.s14w400(AppColors.black),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -115,7 +119,16 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody> {
                       ),
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.done,
-                      validator: Validators.email,
+                      validator: (value) => AppValidators.compose([
+                        (v) => AppValidators.required(
+                          v,
+                          message: AppStrings.pleaseEnterYourEmail,
+                        ),
+                        (v) => AppValidators.email(
+                          v,
+                          message: AppStrings.thisEmailIsNotValid,
+                        ),
+                      ], value),
                       onChanged: (_) {
                         if (!_isEmailValid) {
                           setState(() => _isEmailValid = true);
@@ -131,7 +144,7 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody> {
                           height: AppSizes.h(55),
                           child: PrimaryButton(
                             isLoading: isLoading,
-                            text: 'Continue',
+                            text: AppStrings.continueText,
                             onPressed: _isEmailValid && !isLoading
                                 ? () {
                                     if (cubit.emailFormKey.currentState!
