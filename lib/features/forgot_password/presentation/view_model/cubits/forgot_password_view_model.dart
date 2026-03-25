@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:online_exam_app_v/config/base_responce/base_responce.dart';
+import 'package:online_exam_app_v/config/base_responce/base_response.dart';
 import 'package:online_exam_app_v/features/forgot_password/domain/entities/forget_password_entity.dart';
 import 'package:online_exam_app_v/features/forgot_password/domain/use_cases/forgot_password_use_case.dart';
 import 'package:online_exam_app_v/features/forgot_password/domain/use_cases/reset_password_use_case.dart';

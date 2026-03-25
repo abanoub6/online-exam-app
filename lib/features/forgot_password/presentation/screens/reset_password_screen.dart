@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
-import 'package:online_exam_app_v/core/utilies/validators.dart';
+import 'package:online_exam_app_v/core/utilies/app_validators.dart';
 import 'package:online_exam_app_v/core/widgets/primary_button.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/cubits/forgot_password_view_model.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/states/forgot_password_events.dart';
@@ -97,7 +97,7 @@ class _ResetPasswordView extends StatelessWidget {
                     filled: false,
                   ),
                   textInputAction: TextInputAction.next,
-                  validator: Validators.strongPassword,
+                  validator: AppValidators.strongPassword,
                 ),
                 SizedBox(height: AppSizes.h(24)),
                 TextFormField(
@@ -114,7 +114,7 @@ class _ResetPasswordView extends StatelessWidget {
                     filled: false,
                   ),
                   textInputAction: TextInputAction.done,
-                  validator: (value) => Validators.confirmPassword(
+                  validator: (value) => AppValidators.confirmPassword(
                     value,
                     cubit.passwordController.text,
                   ),

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-import 'package:online_exam_app_v/config/base_responce/base_responce.dart';
+import 'package:online_exam_app_v/config/base_responce/base_response.dart';
 import 'package:online_exam_app_v/features/forgot_password/data/api/api_service.dart';
 import 'package:online_exam_app_v/features/forgot_password/data/models/request/forgot_password_request.dart';
 import 'package:online_exam_app_v/features/forgot_password/data/models/request/reset_password_request.dart';
@@ -29,7 +29,7 @@ class ForgetPasswordRepoImpl implements ForgetPasswordRepoContract {
         errorMessage: ServerFailure.fromDioException(e).message,
       );
     } catch (e) {
-      return ErrorBaseResponse(errorMessage: e.toString());
+      return ErrorBaseResponse.fromException(e);
     }
   }
 
@@ -47,7 +47,7 @@ class ForgetPasswordRepoImpl implements ForgetPasswordRepoContract {
         errorMessage: ServerFailure.fromDioException(e).message,
       );
     } catch (e) {
-      return ErrorBaseResponse(errorMessage: e.toString());
+      return ErrorBaseResponse.fromException(e);
     }
   }
 
@@ -66,7 +66,7 @@ class ForgetPasswordRepoImpl implements ForgetPasswordRepoContract {
         errorMessage: ServerFailure.fromDioException(e).message,
       );
     } catch (e) {
-      return ErrorBaseResponse(errorMessage: e.toString());
+      return ErrorBaseResponse.fromException(e);
     }
   }
 }
