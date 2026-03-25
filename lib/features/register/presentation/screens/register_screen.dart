@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:online_exam_app_v/config/di/di.dart';
+import 'package:online_exam_app_v/core/constants/app_strings.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/utilies/app_validators.dart';
@@ -46,7 +47,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             icon: const Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context),
           ),
-          title: const Text('Sign up'),
+          title: const Text(AppStrings.signUp),
         ),
         body: SafeArea(
           child: SingleChildScrollView(
@@ -65,8 +66,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onChanged: (_) => _registerViewModel.validateForm(),
                     textInputAction: TextInputAction.next,
                     decoration: const InputDecoration(
-                      labelText: 'User name',
-                      hintText: 'Enter your user name',
+                      labelText: AppStrings.userName,
+                      hintText: AppStrings.enterYourUserName,
                     ),
                     validator: (v) => AppValidators.compose([
                       (v) => AppValidators.required(v),
@@ -83,7 +84,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           controller: _registerViewModel.firstNameController,
                           onChanged: (_) => _registerViewModel.validateForm(),
                           decoration: const InputDecoration(
-                            labelText: 'First name',
+                            labelText: AppStrings.firstName,
                           ),
                           validator: (v) => AppValidators.compose([
                             (v) => AppValidators.required(v),
@@ -97,7 +98,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           controller: _registerViewModel.lastNameController,
                           onChanged: (_) => _registerViewModel.validateForm(),
                           decoration: const InputDecoration(
-                            labelText: 'Last name',
+                            labelText: AppStrings.lastName,
                           ),
                           validator: (v) => AppValidators.compose([
                             (v) => AppValidators.required(v),
@@ -115,7 +116,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     controller: _registerViewModel.emailController,
                     keyboardType: TextInputType.emailAddress,
                     onChanged: (_) => _registerViewModel.validateForm(),
-                    decoration: const InputDecoration(labelText: 'Email'),
+                    decoration: const InputDecoration(
+                      labelText: AppStrings.email,
+                    ),
                     validator: (v) => AppValidators.compose([
                       (v) => AppValidators.required(v),
                       (v) => AppValidators.email(v),
@@ -133,7 +136,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           obscureText: true,
                           onChanged: (_) => _registerViewModel.validateForm(),
                           decoration: const InputDecoration(
-                            labelText: 'Password',
+                            labelText: AppStrings.password,
                           ),
                           validator: (v) => AppValidators.compose([
                             (v) => AppValidators.required(v),
@@ -149,7 +152,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           obscureText: true,
                           onChanged: (_) => _registerViewModel.validateForm(),
                           decoration: const InputDecoration(
-                            labelText: 'Confirm password',
+                            labelText: AppStrings.confirmPassword,
                           ),
                           validator: (v) => AppValidators.compose([
                             (v) => AppValidators.required(v),
@@ -171,7 +174,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     keyboardType: TextInputType.phone,
                     onChanged: (_) => _registerViewModel.validateForm(),
                     decoration: const InputDecoration(
-                      labelText: 'Phone number',
+                      labelText: AppStrings.phoneNumber,
                     ),
                     validator: (v) => AppValidators.compose([
                       (v) => AppValidators.required(v),
@@ -217,7 +220,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 RegisterUserEvent(),
                               )
                             : null,
-                        text: 'Sign up',
+                        text: AppStrings.signUp,
                         isLoading: state.registerState.isLoading,
                       );
                     },
@@ -226,8 +229,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(height: AppSizes.h(24)),
 
                   RichTextWithLink(
-                    normalText: "Already have an account? ",
-                    linkText: "Login",
+                    normalText: AppStrings.alreadyHaveAnAccount,
+                    linkText: AppStrings.login,
                     linkTextColor: AppColors.blue,
                     onLinkTap: () =>
                         Navigator.pushNamed(context, LoginScreen.routeName),
