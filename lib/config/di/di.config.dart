@@ -27,10 +27,6 @@ import '../../features/forgot_password/domain/use_cases/verify_reset_code_use_ca
     as _i717;
 import '../../features/forgot_password/presentation/view_model/cubits/forgot_password_view_model.dart'
     as _i1024;
-import '../../features/forgot_password/presentation/view_model/cubits/reset_password_view_model.dart'
-    as _i216;
-import '../../features/forgot_password/presentation/view_model/cubits/verify_reset_code_view_model.dart'
-    as _i170;
 import '../dio/dio_interceptor.dart' as _i297;
 import '../dio/dio_module.dart' as _i977;
 import '../storage/secure_storage_module.dart' as _i391;
@@ -73,17 +69,12 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i717.VerifyResetCodeUseCase(gh<_i511.ForgetPasswordRepoContract>()),
     );
-    gh.factory<_i170.VerifyResetCodeCubit>(
-      () => _i170.VerifyResetCodeCubit(
-        gh<_i717.VerifyResetCodeUseCase>(),
+    gh.factory<_i1024.ForgotPasswordViewModel>(
+      () => _i1024.ForgotPasswordViewModel(
         gh<_i597.ForgotPasswordUseCase>(),
+        gh<_i717.VerifyResetCodeUseCase>(),
+        gh<_i578.ResetPasswordUseCase>(),
       ),
-    );
-    gh.factory<_i216.ResetPasswordCubit>(
-      () => _i216.ResetPasswordCubit(gh<_i578.ResetPasswordUseCase>()),
-    );
-    gh.factory<_i1024.ForgotPasswordCubit>(
-      () => _i1024.ForgotPasswordCubit(gh<_i597.ForgotPasswordUseCase>()),
     );
     return this;
   }

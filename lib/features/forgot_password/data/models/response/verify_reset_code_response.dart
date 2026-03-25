@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:online_exam_app_v/features/forgot_password/domain/entities/forget_password_entity.dart';
 
 part 'verify_reset_code_response.g.dart';
 
@@ -12,4 +13,7 @@ class VerifyResetCodeResponse {
   factory VerifyResetCodeResponse.fromJson(Map<String, dynamic> json) =>
       _$VerifyResetCodeResponseFromJson(json);
   Map<String, dynamic> toJson() => _$VerifyResetCodeResponseToJson(this);
+
+  ForgotPasswordEntity toEntity() =>
+      ForgotPasswordEntity(status: status, message: message);
 }
