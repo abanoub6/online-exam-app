@@ -19,4 +19,13 @@ class AuthInterceptor extends Interceptor {
 
     super.onRequest(options, handler);
   }
+
+  @override
+  Future<void> onResponse(
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) async {
+    await secureStorage.write(key: AppApiParam.token, value: response.data["token"]);
+    super.onResponse(response, handler);
+  }
 }

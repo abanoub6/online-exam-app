@@ -15,6 +15,18 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
+import '../../feature/login/api/data_source/login_remote_data_source_imp.dart'
+    as _i981;
+import '../../feature/login/api/login_api_client/login_api_client.dart'
+    as _i779;
+import '../../feature/login/data/datasources/login_remote_data_source_contract.dart'
+    as _i385;
+import '../../feature/login/data/repositories/login_repo_imp.dart' as _i1003;
+import '../../feature/login/domain/repositories/login_repo_contract.dart'
+    as _i408;
+import '../../feature/login/domain/usecases/login_use_case.dart' as _i91;
+import '../../feature/login/domain/usecases/remember_me.dart' as _i176;
+import '../../feature/login/persentation/cubit/login_view_model.dart' as _i852;
 import '../../features/forgot_password/data/api/api_service.dart' as _i793;
 import '../../features/forgot_password/data/repo/forget_password_repo_impl.dart'
     as _i320;
@@ -73,8 +85,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i361.Dio>(
       () => dioModule.dio(gh<_i297.AuthInterceptor>()),
     );
+    gh.factory<_i779.LoginApiClient>(
+      () => _i779.LoginApiClient(gh<_i361.Dio>()),
+    );
     gh.factory<_i793.AuthApiService>(
       () => _i793.AuthApiService(gh<_i361.Dio>()),
+    );
+    gh.factory<_i410.RegisterApiClient>(
+      () => _i410.RegisterApiClient(gh<_i361.Dio>()),
     );
     gh.lazySingleton<_i511.ForgetPasswordRepoContract>(
       () => _i320.ForgetPasswordRepoImpl(gh<_i793.AuthApiService>()),
@@ -89,6 +107,17 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i717.VerifyResetCodeUseCase(gh<_i511.ForgetPasswordRepoContract>()),
     );
+    gh.factory<_i385.LoginRemoteDataSourceContract>(
+      () => _i981.LoginRemoteDataSourceImp(gh<_i779.LoginApiClient>()),
+    );
+    gh.factory<_i684.RegisterRemoteDataSourceContract>(
+      () => _i845.RegisterRemoteDataSourceImpl(gh<_i410.RegisterApiClient>()),
+    );
+    gh.factory<_i210.RegisterRepositoryContract>(
+      () => _i921.AuthRepositoryImpl(
+        gh<_i684.RegisterRemoteDataSourceContract>(),
+      ),
+    );
     gh.factory<_i170.VerifyResetCodeCubit>(
       () => _i170.VerifyResetCodeCubit(
         gh<_i717.VerifyResetCodeUseCase>(),
@@ -101,22 +130,28 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1024.ForgotPasswordCubit>(
       () => _i1024.ForgotPasswordCubit(gh<_i597.ForgotPasswordUseCase>()),
     );
-    gh.factory<_i410.RegisterApiClient>(
-      () => _i410.RegisterApiClient(gh<_i361.Dio>()),
+    gh.factory<_i408.LoginRepoContract>(
+      () => _i1003.LoginRepoImp(gh<_i385.LoginRemoteDataSourceContract>()),
     );
-    gh.factory<_i684.RegisterRemoteDataSourceContract>(
-      () => _i845.RegisterRemoteDataSourceImpl(gh<_i410.RegisterApiClient>()),
-    );
-    gh.factory<_i210.RegisterRepositoryContract>(
-      () => _i921.AuthRepositoryImpl(
-        gh<_i684.RegisterRemoteDataSourceContract>(),
-      ),
+    gh.lazySingleton<_i91.LoginUseCase>(
+      () => _i91.LoginUseCase(gh<_i408.LoginRepoContract>()),
     );
     gh.factory<_i679.RegisterUseCase>(
       () => _i679.RegisterUseCase(gh<_i210.RegisterRepositoryContract>()),
     );
+    gh.lazySingleton<_i176.RememberMeUseCase>(
+      () => _i176.RememberMeUseCase(
+        loginRepoContract: gh<_i408.LoginRepoContract>(),
+      ),
+    );
     gh.singleton<_i166.RegisterViewModel>(
       () => _i166.RegisterViewModel(gh<_i679.RegisterUseCase>()),
+    );
+    gh.factory<_i852.LoginViewModel>(
+      () => _i852.LoginViewModel(
+        gh<_i91.LoginUseCase>(),
+        rememberMeUseCase: gh<_i176.RememberMeUseCase>(),
+      ),
     );
     return this;
   }
