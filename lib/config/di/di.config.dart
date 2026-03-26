@@ -28,6 +28,7 @@ import '../../features/forgot_password/domain/use_cases/verify_reset_code_use_ca
     as _i717;
 import '../../features/forgot_password/presentation/view_model/cubits/forgot_password_view_model.dart'
     as _i1024;
+<<<<<<< HEAD
 import '../../features/forgot_password/presentation/view_model/cubits/reset_password_view_model.dart'
     as _i216;
 import '../../features/forgot_password/presentation/view_model/cubits/verify_reset_code_view_model.dart'
@@ -48,6 +49,8 @@ import '../../features/register/presentation/screens/register_screen.dart'
     as _i502;
 import '../../features/register/presentation/view_model/cubit/register_view_model.dart'
     as _i166;
+=======
+>>>>>>> origin/feature/forgot_password
 import '../dio/dio_interceptor.dart' as _i297;
 import '../dio/dio_module.dart' as _i977;
 import '../storage/secure_storage_module.dart' as _i391;
@@ -64,9 +67,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i558.FlutterSecureStorage>(
       () => storageModule.secureStorage(),
     );
+<<<<<<< HEAD
     gh.factory<_i502.RegisterScreen>(
       () => _i502.RegisterScreen(key: gh<_i409.Key>()),
     );
+=======
+>>>>>>> origin/feature/forgot_password
     gh.lazySingleton<_i297.AuthInterceptor>(
       () => _i297.AuthInterceptor(gh<_i558.FlutterSecureStorage>()),
     );
@@ -89,10 +95,11 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i717.VerifyResetCodeUseCase(gh<_i511.ForgetPasswordRepoContract>()),
     );
-    gh.factory<_i170.VerifyResetCodeCubit>(
-      () => _i170.VerifyResetCodeCubit(
-        gh<_i717.VerifyResetCodeUseCase>(),
+    gh.factory<_i1024.ForgotPasswordViewModel>(
+      () => _i1024.ForgotPasswordViewModel(
         gh<_i597.ForgotPasswordUseCase>(),
+        gh<_i717.VerifyResetCodeUseCase>(),
+        gh<_i578.ResetPasswordUseCase>(),
       ),
     );
     gh.factory<_i216.ResetPasswordCubit>(

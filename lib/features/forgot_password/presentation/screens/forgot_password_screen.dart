@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:online_exam_app_v/config/di/di.dart';
+import 'package:online_exam_app_v/core/constants/app_strings.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
+import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
 import 'package:online_exam_app_v/core/utilies/app_validators.dart';
 import 'package:online_exam_app_v/core/widgets/primary_button.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/screens/verify_reset_code_screen.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/cubits/forgot_password_view_model.dart';
+import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/states/forgot_password_events.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/states/forgot_password_state.dart';
 import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
-  static const String routeName = "forgetPassword";
+  static const String routeName = AppStrings.forgetPassword;
   const ForgotPasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<ForgotPasswordCubit>(),
+      create: (_) => getIt<ForgotPasswordViewModel>(),
       child: const _ForgotPasswordBody(),
     );
   }
@@ -35,7 +38,7 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody> {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<ForgotPasswordCubit>();
+    final cubit = context.read<ForgotPasswordViewModel>();
 
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -48,61 +51,64 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody> {
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
             color: AppColors.black,
-            weight: 20,
           ),
         ),
-        title: Text("Password", style: AppTextStyles.s20w500(AppColors.black)),
+        title: Text(
+          AppStrings.password,
+          style: AppTextStyles.s20w500(AppColors.black),
+        ),
       ),
-      body: BlocListener<ForgotPasswordCubit, ForgotPasswordState>(
+      body: BlocListener<ForgotPasswordViewModel, ForgotPasswordState>(
         listener: (context, state) {
-          if (state is ForgotPasswordSuccess) {
+          if (state is ForgotPasswordEmailSuccess) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) => VerifyResetCodeScreen(
-                  email: cubit.emailController.text.trim(),
+                builder: (_) => BlocProvider.value(
+                  value: cubit,
+                  child: const VerifyResetCodeScreen(),
                 ),
               ),
             );
-          } else if (state is ForgotPasswordFailure) {
+          } else if (state is ForgotPasswordEmailFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
-                backgroundColor: Colors.red,
+                backgroundColor: AppColors.red,
               ),
             );
           }
         },
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: EdgeInsets.symmetric(horizontal: AppSizes.h(24)),
           child: Column(
             children: [
-              const SizedBox(height: 24),
+              SizedBox(height: AppSizes.h(24)),
               Text(
-                'Forget password',
+                AppStrings.forgetPasswordTitle,
                 style: AppTextStyles.s18w500(AppColors.black),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSizes.h(8)),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 45),
+                padding: EdgeInsets.symmetric(horizontal: AppSizes.h(45)),
                 child: Text(
-                  'Please enter your email associated to your account',
+                  AppStrings.emailDescription,
                   style: AppTextStyles.s14w400(AppColors.black),
                   textAlign: TextAlign.center,
                 ),
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: AppSizes.h(32)),
               Form(
-                key: cubit.formKey,
+                key: cubit.emailFormKey,
                 child: Column(
                   children: [
                     TextFormField(
                       controller: cubit.emailController,
                       decoration: InputDecoration(
-                        hintText: 'Enter your email',
+                        hintText: AppStrings.enterYourEmail,
                         label: Text(
-                          'Email',
+                          AppStrings.email,
                           style: AppTextStyles.s14w400(AppColors.black),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -113,33 +119,39 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody> {
                       ),
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.done,
-                      validator: AppValidators.email,
+                      validator: (value) => AppValidators.compose([
+                        (v) => AppValidators.required(
+                          v,
+                          message: AppStrings.pleaseEnterYourEmail,
+                        ),
+                        (v) => AppValidators.email(
+                          v,
+                          message: AppStrings.thisEmailIsNotValid,
+                        ),
+                      ], value),
                       onChanged: (_) {
                         if (!_isEmailValid) {
-                          setState(() {
-                            _isEmailValid = true;
-                          });
+                          setState(() => _isEmailValid = true);
                         }
                       },
                     ),
-                    const SizedBox(height: 50),
-                    BlocBuilder<ForgotPasswordCubit, ForgotPasswordState>(
+                    SizedBox(height: AppSizes.h(50)),
+                    BlocBuilder<ForgotPasswordViewModel, ForgotPasswordState>(
                       builder: (context, state) {
+                        final isLoading = state is ForgotPasswordEmailLoading;
                         return SizedBox(
                           width: double.infinity,
-                          height: 55,
+                          height: AppSizes.h(55),
                           child: PrimaryButton(
-                            isLoading: state is ForgotPasswordLoading,
-                            text: 'Continue',
-                            onPressed: _isEmailValid
+                            isLoading: isLoading,
+                            text: AppStrings.continueText,
+                            onPressed: _isEmailValid && !isLoading
                                 ? () {
-                                    if (cubit.formKey.currentState!
+                                    if (cubit.emailFormKey.currentState!
                                         .validate()) {
-                                      cubit.forgotPassword();
+                                      cubit.doEvent(SendEmailEvent());
                                     } else {
-                                      setState(() {
-                                        _isEmailValid = false;
-                                      });
+                                      setState(() => _isEmailValid = false);
                                     }
                                   }
                                 : null,
