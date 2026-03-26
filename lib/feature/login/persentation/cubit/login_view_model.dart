@@ -1,22 +1,73 @@
-import 'package:dio/dio.dart';
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:online_exam_app_v/config/base_responce/base_responce.dart';
+import 'package:online_exam_app_v/config/base_state/base_state.dart';
 import 'package:online_exam_app_v/feature/login/data/models/login_request.dart';
-import 'package:online_exam_app_v/feature/login/data/models/login_response_model.dart';
-import 'package:online_exam_app_v/feature/login/data/models/user_model.dart';
 import 'package:online_exam_app_v/feature/login/domain/entities/user_entity.dart';
-import 'package:online_exam_app_v/feature/login/persentation/cubit/login_state.dart';
+import 'package:online_exam_app_v/feature/login/domain/usecases/remember_me.dart';
+import 'package:online_exam_app_v/feature/login/persentation/states/login_events.dart';
+import 'package:online_exam_app_v/feature/login/persentation/states/login_state.dart';
 
 import '../../domain/usecases/login_use_case.dart';
 
 @injectable
-class LoginViewModel extends Cubit<LoginState> {
-  LoginViewModel(this.loginUseCase) : super(LoginInitial());
+class LoginViewModel extends Cubit<LoginStates> {
+  LoginViewModel(
+    this.loginUseCase, {
+    required RememberMeUseCase rememberMeUseCase,
+  }) : _rememberMeUseCase = rememberMeUseCase,
+       super(LoginStates(loginState: BaseState<UserEntity>()));
   final LoginUseCase loginUseCase;
+  final RememberMeUseCase _rememberMeUseCase;
 
-  Future<void> login(LoginRequest loginRequest) async {
-    emit(LoginLoading());
-    final response = await loginUseCase(loginRequest);
+  void doEvent(LoginEvents event) async {
+    switch (event) {
+      case LoginUserEvent(login: final login):
+        await _login(login);
+        break;
+      // case ClearUserEvent() : _Error();break ;
+    }
+  }
+
+  Future<void> _login(LoginRequest loginRequest) async {
+    emit(
+      state.copyWith(
+        loginStateParam: state.loginState.copyWith(
+          isLoading: true,
+          errorMessage: null,
+          data: null,
+        ),
+      ),
+    );
+    final responce = await loginUseCase.call(loginRequest);
+    switch (responce) {
+      case SuccessBaseResponse<UserEntity>(data: final data):
+        {
+          log(data.toString());
+          final base = state.loginState.copyWith(
+                isLoading: false,
+                data: data,
+              );
+          emit(
+            state.copyWith(
+              loginStateParam: base,
+            ),
+          );
+          _rememberMeUseCase.rememberMe(loginRequest.rememberMe);
+        }
+      case ErrorBaseResponse<UserEntity>(errorMessage: final errorMessage):
+        {
+          emit(
+            state.copyWith(
+              loginStateParam: state.loginState.copyWith(
+                isLoading: false,
+                errorMessage: errorMessage,
+              ),
+            ),
+          );
+        }
+    }
   }
 }
