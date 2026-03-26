@@ -24,10 +24,11 @@ import '../../feature/login/data/repositories/login_repo_imp.dart' as _i1003;
 import '../../feature/login/domain/repositories/login_repo_contract.dart'
     as _i408;
 import '../../feature/login/domain/usecases/login_use_case.dart' as _i91;
+import '../../feature/login/domain/usecases/remember_me.dart' as _i176;
+import '../../feature/login/persentation/cubit/login_view_model.dart' as _i852;
 import '../dio/dio_interceptor.dart' as _i297;
 import '../dio/dio_module.dart' as _i977;
 import '../storage/secure_storage_module.dart' as _i391;
-import '../storage/token_service.dart' as _i761;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -41,11 +42,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i558.FlutterSecureStorage>(
       () => storageModule.secureStorage(),
     );
-    gh.lazySingleton<_i761.TokenService>(
-      () => _i761.TokenService(gh<_i558.FlutterSecureStorage>()),
-    );
     gh.lazySingleton<_i297.AuthInterceptor>(
-      () => _i297.AuthInterceptor(gh<_i761.TokenService>()),
+      () => _i297.AuthInterceptor(gh<_i558.FlutterSecureStorage>()),
     );
     gh.lazySingleton<_i361.Dio>(
       () => dioModule.dio(gh<_i297.AuthInterceptor>()),
@@ -59,8 +57,19 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i408.LoginRepoContract>(
       () => _i1003.LoginRepoImp(gh<_i385.LoginRemoteDataSourceContract>()),
     );
-    gh.factory<_i91.LoginUseCase>(
+    gh.lazySingleton<_i91.LoginUseCase>(
       () => _i91.LoginUseCase(gh<_i408.LoginRepoContract>()),
+    );
+    gh.lazySingleton<_i176.RememberMeUseCase>(
+      () => _i176.RememberMeUseCase(
+        loginRepoContract: gh<_i408.LoginRepoContract>(),
+      ),
+    );
+    gh.factory<_i852.LoginViewModel>(
+      () => _i852.LoginViewModel(
+        gh<_i91.LoginUseCase>(),
+        rememberMeUseCase: gh<_i176.RememberMeUseCase>(),
+      ),
     );
     return this;
   }
