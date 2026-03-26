@@ -3,21 +3,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:online_exam_app_v/config/di/di.dart';
 import 'package:online_exam_app_v/config/observer/bloc_observer.dart';
+import 'package:online_exam_app_v/core/constants/screen_names.dart';
+import 'package:online_exam_app_v/core/routes.dart';
 import 'package:online_exam_app_v/core/theme/app_theme.dart';
-import 'package:online_exam_app_v/features/forget_password/presentation/screens/forget_password_screen.dart';
-import 'package:online_exam_app_v/features/home/presentation/screens/home_screen.dart';
-import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
-import 'package:online_exam_app_v/features/register/presentation/screens/register_screen.dart';
+import 'package:online_exam_app_v/feature/login/domain/usecases/remember_me.dart';
 
-void main() {
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = AppBlocObserver();
   configureDependencies();
-  runApp(const MyApp());
+  final rememberUseCase = getIt<RememberMeUseCase>();
+
+  runApp(MyApp(await rememberUseCase.isRememberedMe()));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp(this.isRememberedMe, {super.key});
+  final bool? isRememberedMe;
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -28,13 +30,14 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           theme: AppTheme.lightTheme(),
           debugShowCheckedModeBanner: false,
-          initialRoute: LoginScreen.routeName,
-          routes: {
-            LoginScreen.routeName: (context) => LoginScreen(),
-            RegisterScreen.routeName: (context) => RegisterScreen(),
-            ForgetPasswordScreen.routeName: (context) => ForgetPasswordScreen(),
-            HomeScreen.routeName: (context) => HomeScreen(),
-          },
+          onGenerateRoute: onGenerateRoute,
+          initialRoute: isRememberedMe??false ? ScreenNames.homeScreen : ScreenNames.loginScreen,
+          // routes: {
+          //   LoginPage.routeName: (context) => LoginPage(),
+          //   RegisterScreen.routeName: (context) => RegisterScreen(),
+          //   ForgetPasswordScreen.routeName: (context) => ForgetPasswordScreen(),
+          //   HomeScreen.routeName: (context) => HomeScreen(),
+          // },
         );
       },
     );
