@@ -84,17 +84,12 @@ class QuestionsViewModel extends Cubit<QuestionsStates> {
     );
   }
 
-  // Helper methods
   String? getSelectedAnswer(String questionId) {
     return _userAnswers[questionId];
   }
 
   bool isAnswerSelected(String questionId, String answerKey) {
     return _userAnswers[questionId] == answerKey;
-  }
-
-  int getAnsweredQuestionsCount() {
-    return _userAnswers.length;
   }
 
   @override
