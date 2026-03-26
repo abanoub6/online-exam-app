@@ -54,27 +54,41 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 spacing: 24,
                 children: [
-                  TextField(
+                  TextFormField(
                     controller: emailContorller,
                     decoration: InputDecoration(
                       labelText: 'Email',
                       hintText: 'Enter your email',
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Enter email";
+                      }
+                      return null;
+                    },
                     keyboardType: TextInputType.emailAddress,
                   ),
-                  TextField(
+                  TextFormField(
                     controller: passwordContorller,
                     decoration: InputDecoration(
                       labelText: 'Paswword',
                       hintText: 'Enter your password',
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Enter Password";
+                      }
+                      if (value.length < 8) {
+                        return "Enter strong password more than 8";
+                      }
+                      return null;
+                    },
                     keyboardType: TextInputType.visiblePassword,
                   ),
                   Row(
                     children: [
                       Checkbox(
                         value: rememberMe,
-                        tristate: true,
                         onChanged: (value) => setState(() {
                           rememberMe = value ?? false;
                         }),
@@ -83,7 +97,12 @@ class _LoginPageState extends State<LoginPage> {
                       Spacer(),
 
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            ScreenNames.forgetPassword,
+                          );
+                        },
                         child: Text(
                           'Forget password?',
                           style: TextStyle(
@@ -106,8 +125,10 @@ class _LoginPageState extends State<LoginPage> {
                               //   context,
                               //   MaterialPageRoute(builder: (context) => HomeScreen()),
                               // );
-                              Navigator.pushNamed(context, ScreenNames.homeScreen);
-                             
+                              Navigator.pushNamed(
+                                context,
+                                ScreenNames.homeScreen,
+                              );
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
@@ -122,7 +143,8 @@ class _LoginPageState extends State<LoginPage> {
                           builder: (context, state) {
                             return PrimaryButton(
                               onPressed: () {
-                                if (_formState.currentState!.validate()) {
+                                if (_formState.currentState?.validate() ??
+                                    false) {
                                   LoginRequest params = LoginRequest(
                                     email: emailContorller.text.trim(),
                                     password: passwordContorller.text,
@@ -146,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
                     linkText: ' Sign up ',
                     linkTextColor: Colors.blue,
                     onLinkTap: () =>
-                        Navigator.pushNamed(context, HomeScreen.routeName),
+                        Navigator.pushNamed(context, ScreenNames.signup),
                   ),
                 ],
               ),

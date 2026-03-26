@@ -44,8 +44,7 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody> {
         backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          onPressed: () =>
-              Navigator.pushReplacementNamed(context, ScreenNames.loginScreen),
+          onPressed: () => Navigator.pop(context),
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
             color: AppColors.black,

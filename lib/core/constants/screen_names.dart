@@ -4,4 +4,5 @@ class ScreenNames {
   static const loginScreen = "login";
   static const homeScreen = "home";
   static const signup = "signup";
+  static const forgetPassword = "forgetPassword";
 }
