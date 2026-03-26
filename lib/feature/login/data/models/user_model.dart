@@ -7,7 +7,6 @@ part 'user_model.g.dart';
 class UserModel {
   @JsonKey(name: '_id')
   final String id;
-
   final String username;
   final String firstName;
   final String lastName;
@@ -30,14 +29,14 @@ class UserModel {
   });
 
   UserEntity toEntity() => UserEntity(
-    id: id ?? '',
-    username: username ?? '',
-    firstName: firstName ?? '',
-    lastName: lastName ?? '',
-    email: email ?? '',
-    phone: phone ?? '',
-    role: role ?? '',
-    isVerified: isVerified ?? false,
+    id: id,
+    username: username,
+    firstName: firstName,
+    lastName: lastName,
+    email: email,
+    phone: phone,
+    role: role,
+    isVerified: isVerified,
     createdAt: createdAt,
   );
   factory UserModel.fromJson(Map<String, dynamic> json) =>
