@@ -1,5 +1,5 @@
 import 'package:injectable/injectable.dart';
-import 'package:online_exam_app_v/feature/login/domain/repositories/login_repo_contract.dart';
+import 'package:online_exam_app_v/features/login/domain/repositories/login_repo_contract.dart';
 @lazySingleton
 class RememberMeUseCase {
   final LoginRepoContract loginRepoContract;

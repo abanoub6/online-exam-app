@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:online_exam_app_v/feature/login/domain/entities/user_entity.dart';
+import 'package:online_exam_app_v/features/login/domain/entities/user_entity.dart';
 
 class BaseState<T> {
   bool isLoading = false;

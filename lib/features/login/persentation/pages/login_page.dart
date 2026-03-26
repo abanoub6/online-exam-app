@@ -6,10 +6,10 @@ import 'package:online_exam_app_v/config/di/di.dart';
 import 'package:online_exam_app_v/core/constants/screen_names.dart';
 import 'package:online_exam_app_v/core/widgets/primary_button.dart';
 import 'package:online_exam_app_v/core/widgets/rich_text_with_link.dart';
-import 'package:online_exam_app_v/feature/login/data/models/login_request.dart';
-import 'package:online_exam_app_v/feature/login/persentation/cubit/login_view_model.dart';
-import 'package:online_exam_app_v/feature/login/persentation/states/login_events.dart';
-import 'package:online_exam_app_v/feature/login/persentation/states/login_state.dart';
+import 'package:online_exam_app_v/features/login/data/models/login_request.dart';
+import 'package:online_exam_app_v/features/login/persentation/cubit/login_view_model.dart';
+import 'package:online_exam_app_v/features/login/persentation/states/login_events.dart';
+import 'package:online_exam_app_v/features/login/persentation/states/login_state.dart';
 import 'package:online_exam_app_v/features/home/presentation/screens/home_screen.dart';
 
 class LoginPage extends StatefulWidget {
