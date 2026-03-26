@@ -1,7 +1,4 @@
 import 'dart:developer';
-
-import 'package:online_exam_app_v/feature/login/domain/entities/user_entity.dart';
-
 class BaseState<T> {
   bool isLoading = false;
   String? errorMessage;
@@ -10,15 +7,12 @@ class BaseState<T> {
   BaseState({this.isLoading = false, this.errorMessage, this.data});
 
   BaseState<T> copyWith({
-    bool? isLoadingParam,
-    String? errorMessageParam,
-    T? dataParam,
-    required bool isLoading,
+    bool? isLoading,
     String? errorMessage,
     T? data,
   }) {
     return BaseState<T>(
-      isLoading: isLoadingParam ?? isLoading,
+      isLoading:isLoading?? this.isLoading,
       data: data ?? this.data,
       errorMessage: errorMessage ?? this.errorMessage
     );

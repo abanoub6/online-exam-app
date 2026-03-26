@@ -65,7 +65,7 @@ class RegisterViewModel extends Cubit<RegisterStates> {
     emit(
       state.copyWith(
         registerStateParam: state.registerState.copyWith(
-          errorMessageParam: null,
+          errorMessage: null,
         ),
       ),
     );
@@ -88,8 +88,8 @@ class RegisterViewModel extends Cubit<RegisterStates> {
     emit(
       state.copyWith(
         registerStateParam: state.registerState.copyWith(
-          isLoadingParam: true,
-          errorMessageParam: null,
+          isLoading: true,
+          errorMessage: null,
         ),
       ),
     );
@@ -101,8 +101,8 @@ class RegisterViewModel extends Cubit<RegisterStates> {
         emit(
           state.copyWith(
             registerStateParam: state.registerState.copyWith(
-              isLoadingParam: false,
-              dataParam: response.data,
+              isLoading: false,
+              data: response.data,
             ),
           ),
         );
@@ -112,8 +112,8 @@ class RegisterViewModel extends Cubit<RegisterStates> {
         emit(
           state.copyWith(
             registerStateParam: state.registerState.copyWith(
-              isLoadingParam: false,
-              errorMessageParam: response.errorMessage,
+              isLoading: false,
+              errorMessage: response.errorMessage,
             ),
           ),
         );

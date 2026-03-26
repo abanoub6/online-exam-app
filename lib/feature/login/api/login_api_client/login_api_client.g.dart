@@ -40,7 +40,6 @@ class _LoginApiClient implements LoginApiClient {
     late LoginResponseModel _value;
     try {
       _value = LoginResponseModel.fromJson(_result.data!);
-      log("value ${_value.toString()}");
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

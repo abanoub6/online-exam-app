@@ -1,6 +1,4 @@
 
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:online_exam_app_v/core/constants/app_endpoints.dart';
