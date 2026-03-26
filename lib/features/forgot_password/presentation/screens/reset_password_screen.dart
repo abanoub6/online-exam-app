@@ -7,7 +7,8 @@ import 'package:online_exam_app_v/core/utilies/app_validators.dart';
 import 'package:online_exam_app_v/core/widgets/primary_button.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/cubits/reset_password_view_model.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/states/reset_password_state.dart';
-import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
+
+import '../../../../core/constants/screen_names.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   static const String routeName = 'resetPassword';
@@ -40,7 +41,7 @@ class _ResetPasswordView extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           onPressed: () =>
-              Navigator.pushReplacementNamed(context, LoginScreen.routeName),
+              Navigator.pushReplacementNamed(context, ScreenNames.loginScreen),
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
             color: AppColors.black,
@@ -58,7 +59,7 @@ class _ResetPasswordView extends StatelessWidget {
                 backgroundColor: Colors.green,
               ),
             );
-            Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+            Navigator.pushReplacementNamed(context, ScreenNames.loginScreen);
           } else if (state is ResetPasswordFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

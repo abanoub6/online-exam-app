@@ -1,5 +1,5 @@
 import 'package:online_exam_app_v/config/base_state/base_state.dart';
-import 'package:online_exam_app_v/feature/login/domain/entities/user_entity.dart';
+import 'package:online_exam_app_v/features/login/domain/entities/user_entity.dart';
 
 class LoginStates {
   BaseState<UserEntity> loginState = BaseState<UserEntity>(isLoading: false);

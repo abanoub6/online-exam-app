@@ -5,7 +5,7 @@ import 'package:online_exam_app_v/config/di/di.dart';
 import 'package:online_exam_app_v/config/observer/bloc_observer.dart';
 import 'package:online_exam_app_v/core/routes.dart';
 import 'package:online_exam_app_v/core/theme/app_theme.dart';
-import 'package:online_exam_app_v/feature/login/domain/usecases/remember_me.dart';
+import 'package:online_exam_app_v/features/login/domain/usecases/remember_me.dart';
 
 import 'core/constants/screen_names.dart';
 

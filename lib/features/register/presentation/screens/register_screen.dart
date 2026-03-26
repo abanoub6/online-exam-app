@@ -8,10 +8,11 @@ import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/utilies/app_validators.dart';
 import 'package:online_exam_app_v/core/widgets/primary_button.dart';
 import 'package:online_exam_app_v/core/widgets/rich_text_with_link.dart';
-import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
 import 'package:online_exam_app_v/features/register/presentation/view_model/cubit/register_view_model.dart';
 import 'package:online_exam_app_v/features/register/presentation/view_model/states/register_events.dart';
 import 'package:online_exam_app_v/features/register/presentation/view_model/states/register_states.dart';
+
+import '../../../../core/constants/screen_names.dart';
 
 @injectable
 class RegisterScreen extends StatefulWidget {
@@ -197,7 +198,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       if (registerState.data != null) {
                         Navigator.pushReplacementNamed(
                           context,
-                          LoginScreen.routeName,
+                          ScreenNames.loginScreen,
                         );
                       }
 
@@ -233,7 +234,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     linkText: AppStrings.login,
                     linkTextColor: AppColors.blue,
                     onLinkTap: () =>
-                        Navigator.pushNamed(context, LoginScreen.routeName),
+                        Navigator.pushNamed(context, ScreenNames.loginScreen),
                     textAlign: TextAlign.center,
                   ),
                 ],

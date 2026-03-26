@@ -8,7 +8,8 @@ import 'package:online_exam_app_v/core/widgets/primary_button.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/screens/verify_reset_code_screen.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/cubits/forgot_password_view_model.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/states/forgot_password_state.dart';
-import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
+
+import '../../../../core/constants/screen_names.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   static const String routeName = "forgetPassword";
@@ -44,7 +45,7 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody> {
         elevation: 0,
         leading: IconButton(
           onPressed: () =>
-              Navigator.pushReplacementNamed(context, LoginScreen.routeName),
+              Navigator.pushReplacementNamed(context, ScreenNames.loginScreen),
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
             color: AppColors.black,
