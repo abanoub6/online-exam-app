@@ -9,4 +9,5 @@ class AppApiParam {
   static const String rePassword = "rePassword";
   static const String phone = "phone";
   static const String token = "token";
+  static const String exam = "exam";
 }
