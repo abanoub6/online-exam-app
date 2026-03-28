@@ -28,11 +28,6 @@ import '../../features/forgot_password/domain/use_cases/verify_reset_code_use_ca
     as _i717;
 import '../../features/forgot_password/presentation/view_model/cubits/forgot_password_view_model.dart'
     as _i1024;
-<<<<<<< HEAD
-import '../../features/forgot_password/presentation/view_model/cubits/reset_password_view_model.dart'
-    as _i216;
-import '../../features/forgot_password/presentation/view_model/cubits/verify_reset_code_view_model.dart'
-    as _i170;
 import '../../features/register/api/data_source/register_remote_data_source_impl.dart'
     as _i845;
 import '../../features/register/api/home_api_client/register_api_client.dart'
@@ -49,8 +44,6 @@ import '../../features/register/presentation/screens/register_screen.dart'
     as _i502;
 import '../../features/register/presentation/view_model/cubit/register_view_model.dart'
     as _i166;
-=======
->>>>>>> origin/feature/forgot_password
 import '../dio/dio_interceptor.dart' as _i297;
 import '../dio/dio_module.dart' as _i977;
 import '../storage/secure_storage_module.dart' as _i391;
@@ -67,12 +60,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i558.FlutterSecureStorage>(
       () => storageModule.secureStorage(),
     );
-<<<<<<< HEAD
     gh.factory<_i502.RegisterScreen>(
       () => _i502.RegisterScreen(key: gh<_i409.Key>()),
     );
-=======
->>>>>>> origin/feature/forgot_password
     gh.lazySingleton<_i297.AuthInterceptor>(
       () => _i297.AuthInterceptor(gh<_i558.FlutterSecureStorage>()),
     );
@@ -81,6 +71,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i793.AuthApiService>(
       () => _i793.AuthApiService(gh<_i361.Dio>()),
+    );
+    gh.factory<_i410.RegisterApiClient>(
+      () => _i410.RegisterApiClient(gh<_i361.Dio>()),
     );
     gh.lazySingleton<_i511.ForgetPasswordRepoContract>(
       () => _i320.ForgetPasswordRepoImpl(gh<_i793.AuthApiService>()),
@@ -101,15 +94,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i717.VerifyResetCodeUseCase>(),
         gh<_i578.ResetPasswordUseCase>(),
       ),
-    );
-    gh.factory<_i216.ResetPasswordCubit>(
-      () => _i216.ResetPasswordCubit(gh<_i578.ResetPasswordUseCase>()),
-    );
-    gh.factory<_i1024.ForgotPasswordCubit>(
-      () => _i1024.ForgotPasswordCubit(gh<_i597.ForgotPasswordUseCase>()),
-    );
-    gh.factory<_i410.RegisterApiClient>(
-      () => _i410.RegisterApiClient(gh<_i361.Dio>()),
     );
     gh.factory<_i684.RegisterRemoteDataSourceContract>(
       () => _i845.RegisterRemoteDataSourceImpl(gh<_i410.RegisterApiClient>()),
