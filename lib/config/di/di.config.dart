@@ -15,6 +15,18 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
+import '../../features/explore/api/data_sources/explor_remote_data_source_impl.dart'
+    as _i394;
+import '../../features/explore/api/explor_api_client/explor_api_client.dart'
+    as _i734;
+import '../../features/explore/data/data_sources/explor_remote_data_source_contract.dart'
+    as _i320;
+import '../../features/explore/data/repo/explor_repo_impl.dart' as _i1068;
+import '../../features/explore/domain/repo/explor_repo_contract.dart' as _i692;
+import '../../features/explore/domain/use_cases/get_subjects_use_case.dart'
+    as _i593;
+import '../../features/explore/presentation/view_model/cubit/explor_view_model.dart'
+    as _i241;
 import '../../features/forgot_password/data/api/api_service.dart' as _i793;
 import '../../features/forgot_password/data/repo/forget_password_repo_impl.dart'
     as _i320;
@@ -69,6 +81,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i361.Dio>(
       () => dioModule.dio(gh<_i297.AuthInterceptor>()),
     );
+    gh.factory<_i734.ExplorApiClient>(
+      () => _i734.ExplorApiClient(gh<_i361.Dio>()),
+    );
     gh.factory<_i793.AuthApiService>(
       () => _i793.AuthApiService(gh<_i361.Dio>()),
     );
@@ -98,13 +113,25 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i684.RegisterRemoteDataSourceContract>(
       () => _i845.RegisterRemoteDataSourceImpl(gh<_i410.RegisterApiClient>()),
     );
+    gh.lazySingleton<_i320.ExplorRemoteDataSourceContract>(
+      () => _i394.ExplorRemoteDataSourceImpl(gh<_i734.ExplorApiClient>()),
+    );
     gh.factory<_i210.RegisterRepositoryContract>(
       () => _i921.AuthRepositoryImpl(
         gh<_i684.RegisterRemoteDataSourceContract>(),
       ),
     );
+    gh.lazySingleton<_i692.ExplorRepoContract>(
+      () => _i1068.ExplorRepoImpl(gh<_i320.ExplorRemoteDataSourceContract>()),
+    );
+    gh.factory<_i593.GetSubjectsUseCase>(
+      () => _i593.GetSubjectsUseCase(gh<_i692.ExplorRepoContract>()),
+    );
     gh.factory<_i679.RegisterUseCase>(
       () => _i679.RegisterUseCase(gh<_i210.RegisterRepositoryContract>()),
+    );
+    gh.factory<_i241.ExplorViewModel>(
+      () => _i241.ExplorViewModel(gh<_i593.GetSubjectsUseCase>()),
     );
     gh.singleton<_i166.RegisterViewModel>(
       () => _i166.RegisterViewModel(gh<_i679.RegisterUseCase>()),

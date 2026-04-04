@@ -38,4 +38,10 @@ class AppStrings {
       "Please enter the complete 6-digit code";
   static const String pleaseEnterYourEmail = "Please enter your email";
   static const String thisEmailIsNotValid = "This Email is not valid";
+  static const String search = "Search";
+  static const String survey = "Survey";
+  static const String browseBySubject = "Browse by subject";
+  static const String explore = "Explore";
+  static const String result = "Result";
+  static const String profile = "Profile";
 }

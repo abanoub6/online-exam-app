@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:online_exam_app_v/core/constants/app_strings.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/features/explore/presentation/screens/explore_screen.dart';
 import 'package:online_exam_app_v/features/profile/presentation/screens/profile_screen.dart';
-import 'package:online_exam_app_v/features/results/presentation/screens/results_screen.dart';
+import 'package:online_exam_app_v/features/results/presentation/screens/results_screen.dart'
+    show ResultsScreen;
 
 class HomeScreen extends StatefulWidget {
-  static const String routeName = "routeName";
   const HomeScreen({super.key});
+
+  static const String routeName = 'home';
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -24,14 +27,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF9F9F9),
+      backgroundColor: Colors.white,
       body: screens[currentIndex],
       bottomNavigationBar: NavigationBar(
         selectedIndex: currentIndex,
         onDestinationSelected: (index) {
           setState(() => currentIndex = index);
         },
-        elevation: 0, // بيشيل الـ shadow
+        elevation: 0,
         backgroundColor: AppColors.lightBlue,
         indicatorColor: AppColors.blue10,
         destinations: const [
@@ -40,21 +43,21 @@ class _HomeScreenState extends State<HomeScreen> {
               AssetImage("assets/icons/explore_icon.png"),
               color: AppColors.blue,
             ),
-            label: 'Explore',
+            label: AppStrings.explore,
           ),
           NavigationDestination(
             icon: ImageIcon(
               AssetImage("assets/icons/results_icon.png"),
               color: AppColors.blue,
             ),
-            label: 'Result',
+            label: AppStrings.result,
           ),
           NavigationDestination(
             icon: ImageIcon(
               AssetImage("assets/icons/person_icon.png"),
               color: AppColors.blue,
             ),
-            label: 'Profile',
+            label: AppStrings.profile,
           ),
         ],
       ),
