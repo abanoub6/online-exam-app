@@ -6,8 +6,8 @@ import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
 import 'package:online_exam_app_v/features/explore/presentation/view_model/cubit/explor_view_model.dart';
-import 'package:online_exam_app_v/features/explore/presentation/view_model/states/explor_states.dart';
-import 'package:online_exam_app_v/features/explore/presentation/view_model/states/expolr_events.dart';
+import 'package:online_exam_app_v/features/explore/presentation/view_model/states/subject_states.dart';
+import 'package:online_exam_app_v/features/explore/presentation/view_model/states/subject_events.dart';
 import 'package:online_exam_app_v/features/explore/presentation/widgets/search_text_field.dart';
 import 'package:online_exam_app_v/features/explore/presentation/widgets/subject_card.dart';
 
@@ -19,7 +19,7 @@ class ExploreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => getIt<SubjectCubit>()..doEvent(GetSubjectEvent()),
+      create: (context) => getIt<ExplorViewModel>()..doEvent(GetSubjectEvent()),
       child: SafeArea(
         child: Scaffold(
           body: Column(
@@ -38,7 +38,7 @@ class ExploreScreen extends StatelessWidget {
                     Builder(
                       builder: (context) => SearchTextField(
                         onChanged: (value) {
-                          context.read<SubjectCubit>().doEvent(
+                          context.read<ExplorViewModel>().doEvent(
                             SearchSubjectsEvent(value),
                           );
                         },
@@ -54,7 +54,7 @@ class ExploreScreen extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: BlocBuilder<SubjectCubit, SubjectState>(
+                child: BlocBuilder<ExplorViewModel, SubjectState>(
                   builder: (context, state) {
                     if (state is GetSubjectLoading) {
                       return const Center(child: CircularProgressIndicator());
