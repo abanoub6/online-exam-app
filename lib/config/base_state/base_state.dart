@@ -1,7 +1,3 @@
-import 'dart:developer';
-
-import 'package:online_exam_app_v/feature/login/domain/entities/user_entity.dart';
-
 class BaseState<T> {
   bool isLoading = false;
   String? errorMessage;
@@ -13,22 +9,11 @@ class BaseState<T> {
     bool? isLoadingParam,
     String? errorMessageParam,
     T? dataParam,
-    required bool isLoading,
-    String? errorMessage,
-    T? data,
   }) {
     return BaseState<T>(
       isLoading: isLoadingParam ?? isLoading,
-      data: data ?? this.data,
-      errorMessage: errorMessage ?? this.errorMessage
+      errorMessage: errorMessageParam ?? errorMessage,
+      data: dataParam ?? data,
     );
-  }
-
-  @override
-  String toString() {
-    log(
-      "isLoading: $isLoading\ndata ${data.toString()}\nerrorMessage ${errorMessage.toString()}",
-    );
-    return super.toString();
   }
 }
