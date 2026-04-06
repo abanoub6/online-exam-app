@@ -8,7 +8,9 @@ class AppStrings {
   static const String rememberMe = "Remember me";
   static const String forgetPassword = "Forget password?";
   static const String work = "Work";
-  static const String noErrorMessages = "No error messages";
   static const String signUp = "Sign up";
+  static const String pleaseEnterYourEmail = "Please enter your email ";
+  static const String thisEmailIsNotValid = "This Email is not valid ";
+  static const String pleaseEnterYourPassword = "Please enter your password";
   static const String dontHaveAnAccount = "Don't have an account?";
 }

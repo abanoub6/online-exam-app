@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:online_exam_app_v/config/di/di.dart';
@@ -7,14 +5,16 @@ import 'package:online_exam_app_v/core/constants/app_strings.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
+import 'package:online_exam_app_v/core/utilies/app_validators.dart';
 import 'package:online_exam_app_v/core/widgets/primary_button.dart';
 import 'package:online_exam_app_v/core/widgets/rich_text_with_link.dart';
 import 'package:online_exam_app_v/features/forget_password/presentation/screens/forget_password_screen.dart';
+import 'package:online_exam_app_v/features/home/presentation/screens/home_screen.dart';
 import 'package:online_exam_app_v/features/login/data/models/login_request.dart';
-import 'package:online_exam_app_v/features/login/presentation/cubit/login_view_model/login_view_model.dart';
-import 'package:online_exam_app_v/features/login/presentation/cubit/states/login_events.dart';
-import 'package:online_exam_app_v/features/login/presentation/cubit/states/login_state.dart';
+import 'package:online_exam_app_v/features/login/presentation/view_model/states/login_events.dart';
 import 'package:online_exam_app_v/features/register/presentation/screens/register_screen.dart';
+import 'package:online_exam_app_v/features/login/presentation/view_model/cubit/login_view_model.dart';
+import 'package:online_exam_app_v/features/login/presentation/view_model/states/login_state.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = 'loginScreen';
@@ -25,19 +25,18 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // LoginViewModel viewModel = getIt.get<LoginViewModel>();
-  final TextEditingController emailContorller = TextEditingController();
-  final TextEditingController passwordContorller = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formState = GlobalKey<FormState>();
+  bool rememberMe = false;
 
   @override
   void dispose() {
-    emailContorller.dispose();
-    passwordContorller.dispose();
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 
-  bool rememberMe = false;
   @override
   Widget build(BuildContext context) {
     return BlocProvider<LoginViewModel>(
@@ -54,8 +53,8 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 spacing: AppSizes.h(24),
                 children: [
-                  TextField(
-                    controller: emailContorller,
+                  TextFormField(
+                    controller: emailController,
                     decoration: InputDecoration(
                       label: Text(
                         AppStrings.email,
@@ -69,9 +68,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       filled: false,
                     ),
                     keyboardType: TextInputType.emailAddress,
+                    validator: (value) => AppValidators.compose([
+                      (v) => AppValidators.required(
+                        v,
+                        message: AppStrings.pleaseEnterYourEmail,
+                      ),
+                      (v) => AppValidators.email(
+                        v,
+                        message: AppStrings.thisEmailIsNotValid,
+                      ),
+                    ], value),
                   ),
-                  TextField(
-                    controller: passwordContorller,
+                  TextFormField(
+                    controller: passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
                       label: Text(
@@ -86,6 +95,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       filled: false,
                     ),
                     keyboardType: TextInputType.visiblePassword,
+                    validator: (value) => AppValidators.required(
+                      value,
+                      message: AppStrings.pleaseEnterYourPassword,
+                    ),
                   ),
                   Row(
                     children: [
@@ -100,15 +113,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         AppStrings.rememberMe,
                         style: AppTextStyles.s14w400(),
                       ),
-                      Spacer(),
-
+                      const Spacer(),
                       GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            ForgetPasswordScreen.routeName,
-                          );
-                        },
+                        onTap: () => Navigator.pushNamed(
+                          context,
+                          ForgetPasswordScreen.routeName,
+                        ),
                         child: Text(
                           AppStrings.forgetPassword,
                           style: AppTextStyles.s12w400().copyWith(
@@ -123,36 +133,40 @@ class _LoginScreenState extends State<LoginScreen> {
                       Expanded(
                         child: BlocConsumer<LoginViewModel, LoginStates>(
                           listener: (context, state) {
-                            log(state.loginState.toString());
+                            if (state.loginState.isLoading) return;
+
                             if (state.loginState.data != null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(AppStrings.work)),
+                              Navigator.pushReplacementNamed(
+                                context,
+                                HomeScreen.routeName,
                               );
-                            } else {
+                            } else if (state.loginState.errorMessage != null) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(
-                                    state.loginState.errorMessage ??
-                                        AppStrings.noErrorMessages,
-                                  ),
+                                  content: Text(state.loginState.errorMessage!),
+                                  backgroundColor: AppColors.red,
                                 ),
                               );
                             }
                           },
                           builder: (context, state) {
                             return PrimaryButton(
-                              onPressed: () {
-                                if (_formState.currentState!.validate()) {
-                                  LoginRequest params = LoginRequest(
-                                    email: emailContorller.text.trim(),
-                                    password: passwordContorller.text,
-                                    rememberMe: rememberMe,
-                                  );
-                                  context.read<LoginViewModel>().doEvent(
-                                    LoginUserEvent(login: params),
-                                  );
-                                }
-                              },
+                              onPressed: state.loginState.isLoading
+                                  ? null
+                                  : () {
+                                      if (_formState.currentState!.validate()) {
+                                        context.read<LoginViewModel>().doEvent(
+                                          LoginUserEvent(
+                                            login: LoginRequest(
+                                              email: emailController.text
+                                                  .trim(),
+                                              password: passwordController.text,
+                                              rememberMe: rememberMe,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
                               text: AppStrings.login,
                               isLoading: state.loginState.isLoading,
                             );

@@ -3,9 +3,11 @@ import 'package:online_exam_app_v/features/login/domain/entities/user_entity.dar
 
 class LoginStates {
   BaseState<UserEntity> loginState = BaseState<UserEntity>(isLoading: false);
+
   LoginStates({BaseState<UserEntity>? loginState}) {
     this.loginState = loginState ?? BaseState<UserEntity>(isLoading: false);
   }
+
   LoginStates copyWith({BaseState<UserEntity>? loginStateParam}) {
     return LoginStates(loginState: loginStateParam ?? loginState);
   }
