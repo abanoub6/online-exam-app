@@ -44,4 +44,9 @@ class AppStrings {
   static const String explore = "Explore";
   static const String result = "Result";
   static const String profile = "Profile";
+  static const String rememberMe = "Remember me";
+  static const String forgetPasswordLink = "Forget password?";
+  static const String work = "Work";
+  static const String pleaseEnterYourPassword = "Please enter your password";
+  static const String dontHaveAnAccount = "Don't have an account?";
 }
