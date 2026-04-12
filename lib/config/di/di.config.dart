@@ -15,7 +15,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
-<<<<<<< HEAD
 import '../../features/forgot_password/data/api/api_service.dart' as _i793;
 import '../../features/forgot_password/data/repo/forget_password_repo_impl.dart'
     as _i320;
@@ -29,11 +28,18 @@ import '../../features/forgot_password/domain/use_cases/verify_reset_code_use_ca
     as _i717;
 import '../../features/forgot_password/presentation/view_model/cubits/forgot_password_view_model.dart'
     as _i1024;
-<<<<<<< HEAD
-import '../../features/forgot_password/presentation/view_model/cubits/reset_password_view_model.dart'
-    as _i216;
-import '../../features/forgot_password/presentation/view_model/cubits/verify_reset_code_view_model.dart'
-    as _i170;
+import '../../features/login/api/data_sources/login_remote_data_source_imp.dart'
+    as _i211;
+import '../../features/login/api/login_api_client/login_api_client.dart'
+    as _i315;
+import '../../features/login/data/data_sources/login_remote_data_source_contract.dart'
+    as _i159;
+import '../../features/login/data/repo/login_repo_imp.dart' as _i185;
+import '../../features/login/domain/repo/login_repo_contract.dart' as _i180;
+import '../../features/login/domain/use_cases/login_use_case.dart' as _i191;
+import '../../features/login/domain/use_cases/remember_me.dart' as _i844;
+import '../../features/login/presentation/view_model/cubit/login_view_model.dart'
+    as _i705;
 import '../../features/register/api/data_source/register_remote_data_source_impl.dart'
     as _i845;
 import '../../features/register/api/home_api_client/register_api_client.dart'
@@ -50,22 +56,6 @@ import '../../features/register/presentation/screens/register_screen.dart'
     as _i502;
 import '../../features/register/presentation/view_model/cubit/register_view_model.dart'
     as _i166;
-=======
->>>>>>> origin/feature/forgot_password
-=======
-import '../../features/login/api/data_sources/login_remote_data_source_imp.dart'
-    as _i211;
-import '../../features/login/api/login_api_client/login_api_client.dart'
-    as _i315;
-import '../../features/login/data/data_sources/login_remote_data_source_contract.dart'
-    as _i159;
-import '../../features/login/data/repo/login_repo_imp.dart' as _i185;
-import '../../features/login/domain/repo/login_repo_contract.dart' as _i180;
-import '../../features/login/domain/use_cases/login_use_case.dart' as _i191;
-import '../../features/login/domain/use_cases/remember_me.dart' as _i844;
-import '../../features/login/presentation/view_model/cubit/login_view_model.dart'
-    as _i705;
->>>>>>> feature/login-n
 import '../dio/dio_interceptor.dart' as _i297;
 import '../dio/dio_module.dart' as _i977;
 import '../storage/secure_storage_module.dart' as _i391;
@@ -82,24 +72,23 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i558.FlutterSecureStorage>(
       () => storageModule.secureStorage(),
     );
-<<<<<<< HEAD
-<<<<<<< HEAD
     gh.factory<_i502.RegisterScreen>(
       () => _i502.RegisterScreen(key: gh<_i409.Key>()),
     );
-=======
->>>>>>> origin/feature/forgot_password
-=======
->>>>>>> feature/login-n
     gh.lazySingleton<_i297.AuthInterceptor>(
       () => _i297.AuthInterceptor(gh<_i558.FlutterSecureStorage>()),
     );
     gh.lazySingleton<_i361.Dio>(
       () => dioModule.dio(gh<_i297.AuthInterceptor>()),
     );
-<<<<<<< HEAD
     gh.factory<_i793.AuthApiService>(
       () => _i793.AuthApiService(gh<_i361.Dio>()),
+    );
+    gh.factory<_i315.LoginApiClient>(
+      () => _i315.LoginApiClient(gh<_i361.Dio>()),
+    );
+    gh.factory<_i410.RegisterApiClient>(
+      () => _i410.RegisterApiClient(gh<_i361.Dio>()),
     );
     gh.lazySingleton<_i511.ForgetPasswordRepoContract>(
       () => _i320.ForgetPasswordRepoImpl(gh<_i793.AuthApiService>()),
@@ -121,15 +110,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i578.ResetPasswordUseCase>(),
       ),
     );
-    gh.factory<_i216.ResetPasswordCubit>(
-      () => _i216.ResetPasswordCubit(gh<_i578.ResetPasswordUseCase>()),
-    );
-    gh.factory<_i1024.ForgotPasswordCubit>(
-      () => _i1024.ForgotPasswordCubit(gh<_i597.ForgotPasswordUseCase>()),
-    );
-    gh.factory<_i410.RegisterApiClient>(
-      () => _i410.RegisterApiClient(gh<_i361.Dio>()),
-    );
     gh.factory<_i684.RegisterRemoteDataSourceContract>(
       () => _i845.RegisterRemoteDataSourceImpl(gh<_i410.RegisterApiClient>()),
     );
@@ -137,15 +117,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i921.AuthRepositoryImpl(
         gh<_i684.RegisterRemoteDataSourceContract>(),
       ),
-    );
-    gh.factory<_i679.RegisterUseCase>(
-      () => _i679.RegisterUseCase(gh<_i210.RegisterRepositoryContract>()),
-    );
-    gh.singleton<_i166.RegisterViewModel>(
-      () => _i166.RegisterViewModel(gh<_i679.RegisterUseCase>()),
-=======
-    gh.factory<_i315.LoginApiClient>(
-      () => _i315.LoginApiClient(gh<_i361.Dio>()),
     );
     gh.factory<_i159.LoginRemoteDataSourceContract>(
       () => _i211.LoginRemoteDataSourceImp(gh<_i315.LoginApiClient>()),
@@ -156,6 +127,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i558.FlutterSecureStorage>(),
       ),
     );
+    gh.factory<_i679.RegisterUseCase>(
+      () => _i679.RegisterUseCase(gh<_i210.RegisterRepositoryContract>()),
+    );
     gh.lazySingleton<_i844.RememberMeUseCase>(
       () => _i844.RememberMeUseCase(
         loginRepoContract: gh<_i180.LoginRepoContract>(),
@@ -164,12 +138,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i191.LoginUseCase>(
       () => _i191.LoginUseCase(gh<_i180.LoginRepoContract>()),
     );
+    gh.singleton<_i166.RegisterViewModel>(
+      () => _i166.RegisterViewModel(gh<_i679.RegisterUseCase>()),
+    );
     gh.factory<_i705.LoginViewModel>(
       () => _i705.LoginViewModel(
         gh<_i191.LoginUseCase>(),
         rememberMeUseCase: gh<_i844.RememberMeUseCase>(),
       ),
->>>>>>> feature/login-n
     );
     return this;
   }
