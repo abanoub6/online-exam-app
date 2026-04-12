@@ -50,139 +50,150 @@ class _LoginScreenState extends State<LoginScreen> {
             padding: EdgeInsets.all(AppSizes.h(16)),
             child: Form(
               key: _formState,
-              child: Column(
-                spacing: AppSizes.h(24),
-                children: [
-                  TextFormField(
-                    controller: emailController,
-                    decoration: InputDecoration(
-                      label: Text(
-                        AppStrings.email,
-                        style: AppTextStyles.s14w400(AppColors.black),
-                      ),
-                      hintText: AppStrings.enterYourEmail,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      floatingLabelStyle: AppTextStyles.s14w400(
-                        AppColors.black,
-                      ),
-                      filled: false,
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) => AppValidators.compose([
-                      (v) => AppValidators.required(
-                        v,
-                        message: AppStrings.pleaseEnterYourEmail,
-                      ),
-                      (v) => AppValidators.email(
-                        v,
-                        message: AppStrings.thisEmailIsNotValid,
-                      ),
-                    ], value),
-                  ),
-                  TextFormField(
-                    controller: passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      label: Text(
-                        AppStrings.password,
-                        style: AppTextStyles.s14w400(AppColors.black),
-                      ),
-                      hintText: AppStrings.enterYourPassword,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      floatingLabelStyle: AppTextStyles.s14w400(
-                        AppColors.black,
-                      ),
-                      filled: false,
-                    ),
-                    keyboardType: TextInputType.visiblePassword,
-                    validator: (value) => AppValidators.required(
-                      value,
-                      message: AppStrings.pleaseEnterYourPassword,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: rememberMe,
-                        tristate: true,
-                        onChanged: (value) => setState(() {
-                          rememberMe = value ?? false;
-                        }),
-                      ),
-                      Text(
-                        AppStrings.rememberMe,
-                        style: AppTextStyles.s14w400(),
-                      ),
-                      const Spacer(),
-                      GestureDetector(
-                        onTap: () => Navigator.pushNamed(
-                          context,
-                          ForgetPasswordScreen.routeName,
+              child: SingleChildScrollView(
+                child: Column(
+                  spacing: AppSizes.h(24),
+                  children: [
+                    TextFormField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        label: Text(
+                          AppStrings.email,
+                          style: AppTextStyles.s14w400(AppColors.black),
                         ),
-                        child: Text(
-                          AppStrings.forgetPassword,
-                          style: AppTextStyles.s12w400().copyWith(
-                            decoration: TextDecoration.underline,
+                        hintText: AppStrings.enterYourEmail,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        floatingLabelStyle: AppTextStyles.s14w400(
+                          AppColors.black,
+                        ),
+                        filled: false,
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) => AppValidators.compose([
+                        (v) => AppValidators.required(
+                          v,
+                          message: AppStrings.pleaseEnterYourEmail,
+                        ),
+                        (v) => AppValidators.email(
+                          v,
+                          message: AppStrings.thisEmailIsNotValid,
+                        ),
+                      ], value),
+                    ),
+                    TextFormField(
+                      controller: passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        label: Text(
+                          AppStrings.password,
+                          style: AppTextStyles.s14w400(AppColors.black),
+                        ),
+                        hintText: AppStrings.enterYourPassword,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        floatingLabelStyle: AppTextStyles.s14w400(
+                          AppColors.black,
+                        ),
+                        filled: false,
+                      ),
+                      keyboardType: TextInputType.visiblePassword,
+                      validator: (value) => AppValidators.required(
+                        value,
+                        message: AppStrings.pleaseEnterYourPassword,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: rememberMe,
+                          tristate: true,
+                          onChanged: (value) => setState(() {
+                            rememberMe = value ?? false;
+                          }),
+                        ),
+                        Text(
+                          AppStrings.rememberMe,
+                          style: AppTextStyles.s14w400(),
+                        ),
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            ForgetPasswordScreen.routeName,
+                          ),
+                          child: Text(
+                            AppStrings.forgetPassword,
+                            style: AppTextStyles.s12w400().copyWith(
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: BlocConsumer<LoginViewModel, LoginStates>(
-                          listener: (context, state) {
-                            if (state.loginState.isLoading) return;
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: BlocConsumer<LoginViewModel, LoginStates>(
+                            listener: (context, state) {
+                              if (state.loginState.isLoading) return;
 
-                            if (state.loginState.data != null) {
-                              Navigator.pushReplacementNamed(
-                                context,
-                                HomeScreen.routeName,
+                              if (state.loginState.data != null) {
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  HomeScreen.routeName,
+                                );
+                              } else if (state.loginState.errorMessage !=
+                                  null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      state.loginState.errorMessage!,
+                                    ),
+                                    backgroundColor: AppColors.red,
+                                  ),
+                                );
+                              }
+                            },
+                            builder: (context, state) {
+                              return PrimaryButton(
+                                onPressed: state.loginState.isLoading
+                                    ? null
+                                    : () {
+                                        if (_formState.currentState!
+                                            .validate()) {
+                                          context
+                                              .read<LoginViewModel>()
+                                              .doEvent(
+                                                LoginUserEvent(
+                                                  login: LoginRequest(
+                                                    email: emailController.text
+                                                        .trim(),
+                                                    password:
+                                                        passwordController.text,
+                                                    rememberMe: rememberMe,
+                                                  ),
+                                                ),
+                                              );
+                                        }
+                                      },
+                                text: AppStrings.login,
+                                isLoading: state.loginState.isLoading,
                               );
-                            } else if (state.loginState.errorMessage != null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(state.loginState.errorMessage!),
-                                  backgroundColor: AppColors.red,
-                                ),
-                              );
-                            }
-                          },
-                          builder: (context, state) {
-                            return PrimaryButton(
-                              onPressed: state.loginState.isLoading
-                                  ? null
-                                  : () {
-                                      if (_formState.currentState!.validate()) {
-                                        context.read<LoginViewModel>().doEvent(
-                                          LoginUserEvent(
-                                            login: LoginRequest(
-                                              email: emailController.text
-                                                  .trim(),
-                                              password: passwordController.text,
-                                              rememberMe: rememberMe,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
-                              text: AppStrings.login,
-                              isLoading: state.loginState.isLoading,
-                            );
-                          },
+                            },
+                          ),
                         ),
+                      ],
+                    ),
+                    RichTextWithLink(
+                      normalText: AppStrings.dontHaveAnAccount,
+                      linkText: AppStrings.signUp,
+                      linkTextColor: AppColors.blue,
+                      onLinkTap: () => Navigator.pushNamed(
+                        context,
+                        RegisterScreen.routeName,
                       ),
-                    ],
-                  ),
-                  RichTextWithLink(
-                    normalText: AppStrings.dontHaveAnAccount,
-                    linkText: AppStrings.signUp,
-                    linkTextColor: AppColors.blue,
-                    onLinkTap: () =>
-                        Navigator.pushNamed(context, RegisterScreen.routeName),
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
