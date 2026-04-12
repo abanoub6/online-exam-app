@@ -9,19 +9,23 @@ import 'package:online_exam_app_v/features/exams/presentation/screens/exams_scre
 import 'package:online_exam_app_v/features/forgot_password/presentation/screens/forgot_password_screen.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/screens/reset_password_screen.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/screens/verify_reset_code_screen.dart';
-import 'package:online_exam_app_v/features/home/presentation/screens/home_screen.dart';
 import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
+import 'package:online_exam_app_v/features/forget_password/presentation/screens/forget_password_screen.dart';
+import 'package:online_exam_app_v/features/home/presentation/screens/home_screen.dart';
+import 'package:online_exam_app_v/features/login/domain/use_cases/remember_me.dart';
 import 'package:online_exam_app_v/features/register/presentation/screens/register_screen.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = AppBlocObserver();
-  configureDependencies();
-  runApp(const MyApp());
+  await configureDependencies();
+  final rememberUseCase = getIt<RememberMeUseCase>();
+  runApp(MyApp(await rememberUseCase.isRememberedMe()));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp(this.isRememberedMe, {super.key});
+  final bool? isRememberedMe;
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -32,9 +36,10 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           theme: AppTheme.lightTheme(),
           debugShowCheckedModeBanner: false,
-          initialRoute: HomeScreen.routeName,
+          initialRoute: isRememberedMe ?? false
+              ? HomeScreen.routeName
+              : LoginScreen.routeName,
           routes: {
-            LoginScreen.routeName: (context) => LoginScreen(),
             RegisterScreen.routeName: (context) => RegisterScreen(),
             ForgotPasswordScreen.routeName: (context) => ForgotPasswordScreen(),
             VerifyResetCodeScreen.routeName: (context) =>
@@ -43,6 +48,7 @@ class MyApp extends StatelessWidget {
             HomeScreen.routeName: (context) => HomeScreen(),
             ExamsScreen.routeName: (context) => ExamsScreen(),
             ExamDetailsScreen.routeName: (context) => ExamDetailsScreen(),
+            LoginScreen.routeName: (context) => LoginScreen(),
           },
         );
       },

@@ -31,7 +31,9 @@ class RichTextWithLink extends StatelessWidget {
           ),
           TextSpan(
             text: linkText,
-            style: AppTextStyles.s14w600(linkTextColor),
+            style: AppTextStyles.s14w600(
+              linkTextColor,
+            ).copyWith(decoration: TextDecoration.underline),
             recognizer: TapGestureRecognizer()..onTap = onLinkTap,
           ),
         ],
