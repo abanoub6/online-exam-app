@@ -1,56 +1,51 @@
-sealed class ForgotPasswordState {
-  const ForgotPasswordState();
+import 'package:online_exam_app_v/config/base_state/base_state.dart';
+import 'package:online_exam_app_v/features/forgot_password/domain/entities/forget_password_entity.dart';
+
+sealed class ForgotPasswordState extends BaseState<ForgotPasswordEntity> {
+  ForgotPasswordState({super.isLoading, super.errorMessage, super.data});
 }
 
-// ── email step ──────────────────────────────
 class ForgotPasswordInitial extends ForgotPasswordState {
-  const ForgotPasswordInitial();
+  ForgotPasswordInitial() : super();
 }
 
 class ForgotPasswordEmailLoading extends ForgotPasswordState {
-  const ForgotPasswordEmailLoading();
+  ForgotPasswordEmailLoading() : super(isLoading: true);
 }
 
 class ForgotPasswordEmailSuccess extends ForgotPasswordState {
-  final String? message;
-  const ForgotPasswordEmailSuccess(this.message);
+  ForgotPasswordEmailSuccess(ForgotPasswordEntity entity) : super(data: entity);
 }
 
 class ForgotPasswordEmailFailure extends ForgotPasswordState {
-  final String message;
-  const ForgotPasswordEmailFailure(this.message);
+  ForgotPasswordEmailFailure(String error) : super(errorMessage: error);
 }
 
-// ── verify step ─────────────────────────────
 class ForgotPasswordVerifyLoading extends ForgotPasswordState {
-  const ForgotPasswordVerifyLoading();
+  ForgotPasswordVerifyLoading() : super(isLoading: true);
 }
 
 class ForgotPasswordVerifySuccess extends ForgotPasswordState {
-  final String? status;
-  const ForgotPasswordVerifySuccess(this.status);
+  ForgotPasswordVerifySuccess(ForgotPasswordEntity entity)
+    : super(data: entity);
 }
 
 class ForgotPasswordVerifyFailure extends ForgotPasswordState {
-  final String message;
-  const ForgotPasswordVerifyFailure(this.message);
+  ForgotPasswordVerifyFailure(String error) : super(errorMessage: error);
 }
 
 class ForgotPasswordCodeResent extends ForgotPasswordState {
-  const ForgotPasswordCodeResent();
+  ForgotPasswordCodeResent() : super();
 }
 
-// ── reset step ──────────────────────────────
 class ForgotPasswordResetLoading extends ForgotPasswordState {
-  const ForgotPasswordResetLoading();
+  ForgotPasswordResetLoading() : super(isLoading: true);
 }
 
 class ForgotPasswordResetSuccess extends ForgotPasswordState {
-  final String? token;
-  const ForgotPasswordResetSuccess(this.token);
+  ForgotPasswordResetSuccess(ForgotPasswordEntity entity) : super(data: entity);
 }
 
 class ForgotPasswordResetFailure extends ForgotPasswordState {
-  final String message;
-  const ForgotPasswordResetFailure(this.message);
+  ForgotPasswordResetFailure(String error) : super(errorMessage: error);
 }

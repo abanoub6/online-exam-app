@@ -14,7 +14,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
-import '../../features/forgot_password/data/api/api_service.dart' as _i793;
+import '../../features/forgot_password/api/api/forgot_password_api_client.dart'
+    as _i609;
+import '../../features/forgot_password/api/data_source/forgot_password_remote_data_source_impl.dart'
+    as _i902;
+import '../../features/forgot_password/data/data_source/forgot_password_remote_data_source_contract.dart'
+    as _i395;
 import '../../features/forgot_password/data/repo/forget_password_repo_impl.dart'
     as _i320;
 import '../../features/forgot_password/domain/repo/forget_password_repo_contract.dart'
@@ -49,19 +54,26 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i361.Dio>(
       () => dioModule.dio(gh<_i297.AuthInterceptor>()),
     );
-    gh.factory<_i793.AuthApiService>(
-      () => _i793.AuthApiService(gh<_i361.Dio>()),
+    gh.factory<_i609.ForgotPasswordApiClient>(
+      () => _i609.ForgotPasswordApiClient(gh<_i361.Dio>()),
     );
-    gh.lazySingleton<_i511.ForgetPasswordRepoContract>(
-      () => _i320.ForgetPasswordRepoImpl(gh<_i793.AuthApiService>()),
+    gh.factory<_i395.ForgotPasswordRemoteDataSourceContract>(
+      () => _i902.ForgotPasswordRemoteDataSourceImpl(
+        gh<_i609.ForgotPasswordApiClient>(),
+      ),
     );
-    gh.lazySingleton<_i597.ForgotPasswordUseCase>(
+    gh.factory<_i511.ForgetPasswordRepoContract>(
+      () => _i320.ForgetPasswordRepoImpl(
+        gh<_i395.ForgotPasswordRemoteDataSourceContract>(),
+      ),
+    );
+    gh.factory<_i597.ForgotPasswordUseCase>(
       () => _i597.ForgotPasswordUseCase(gh<_i511.ForgetPasswordRepoContract>()),
     );
-    gh.lazySingleton<_i578.ResetPasswordUseCase>(
+    gh.factory<_i578.ResetPasswordUseCase>(
       () => _i578.ResetPasswordUseCase(gh<_i511.ForgetPasswordRepoContract>()),
     );
-    gh.lazySingleton<_i717.VerifyResetCodeUseCase>(
+    gh.factory<_i717.VerifyResetCodeUseCase>(
       () =>
           _i717.VerifyResetCodeUseCase(gh<_i511.ForgetPasswordRepoContract>()),
     );

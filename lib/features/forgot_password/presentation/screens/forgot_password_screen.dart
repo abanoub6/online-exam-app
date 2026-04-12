@@ -34,12 +34,26 @@ class _ForgotPasswordBody extends StatefulWidget {
 }
 
 class _ForgotPasswordBodyState extends State<_ForgotPasswordBody> {
-  bool _isEmailValid = true;
+  final ValueNotifier<bool> _isEmailValid = ValueNotifier(true);
+  final emailController = TextEditingController();
+  final emailFormKey = GlobalKey<FormState>();
+  late ForgotPasswordViewModel cubit;
+
+  @override
+  void initState() {
+    super.initState();
+    cubit = context.read<ForgotPasswordViewModel>();
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    _isEmailValid.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<ForgotPasswordViewModel>();
-
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -73,7 +87,7 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody> {
           } else if (state is ForgotPasswordEmailFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
+                content: Text(state.errorMessage ?? ''),
                 backgroundColor: AppColors.red,
               ),
             );
@@ -91,7 +105,7 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody> {
               ),
               SizedBox(height: AppSizes.h(8)),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: AppSizes.h(45)),
+                padding: EdgeInsets.symmetric(horizontal: AppSizes.h(44)),
                 child: Text(
                   AppStrings.emailDescription,
                   style: AppTextStyles.s14w400(AppColors.black),
@@ -100,11 +114,11 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody> {
               ),
               SizedBox(height: AppSizes.h(32)),
               Form(
-                key: cubit.emailFormKey,
+                key: emailFormKey,
                 child: Column(
                   children: [
                     TextFormField(
-                      controller: cubit.emailController,
+                      controller: emailController,
                       decoration: InputDecoration(
                         hintText: AppStrings.enterYourEmail,
                         label: Text(
@@ -130,32 +144,43 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody> {
                         ),
                       ], value),
                       onChanged: (_) {
-                        if (!_isEmailValid) {
-                          setState(() => _isEmailValid = true);
-                        }
+                        if (!_isEmailValid.value) _isEmailValid.value = true;
                       },
                     ),
                     SizedBox(height: AppSizes.h(50)),
-                    BlocBuilder<ForgotPasswordViewModel, ForgotPasswordState>(
-                      builder: (context, state) {
-                        final isLoading = state is ForgotPasswordEmailLoading;
-                        return SizedBox(
-                          width: double.infinity,
-                          height: AppSizes.h(55),
-                          child: PrimaryButton(
-                            isLoading: isLoading,
-                            text: AppStrings.continueText,
-                            onPressed: _isEmailValid && !isLoading
-                                ? () {
-                                    if (cubit.emailFormKey.currentState!
-                                        .validate()) {
-                                      cubit.doEvent(SendEmailEvent());
-                                    } else {
-                                      setState(() => _isEmailValid = false);
-                                    }
-                                  }
-                                : null,
-                          ),
+                    ValueListenableBuilder<bool>(
+                      valueListenable: _isEmailValid,
+                      builder: (context, isEmailValid, _) {
+                        return BlocBuilder<
+                          ForgotPasswordViewModel,
+                          ForgotPasswordState
+                        >(
+                          builder: (context, state) {
+                            final isLoading =
+                                state is ForgotPasswordEmailLoading;
+                            return SizedBox(
+                              width: double.infinity,
+                              height: AppSizes.h(56),
+                              child: PrimaryButton(
+                                isLoading: isLoading,
+                                text: AppStrings.continueText,
+                                onPressed: isEmailValid && !isLoading
+                                    ? () {
+                                        if (emailFormKey.currentState!
+                                            .validate()) {
+                                          cubit.doEvent(
+                                            SendEmailEvent(
+                                              emailController.text.trim(),
+                                            ),
+                                          );
+                                        } else {
+                                          _isEmailValid.value = false;
+                                        }
+                                      }
+                                    : null,
+                              ),
+                            );
+                          },
                         );
                       },
                     ),
