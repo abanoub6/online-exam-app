@@ -12,7 +12,7 @@ import 'package:online_exam_app_v/features/explore/presentation/widgets/search_t
 import 'package:online_exam_app_v/features/explore/presentation/widgets/subject_card.dart';
 
 class ExploreScreen extends StatelessWidget {
-  static const String routeName = "ExploreScreen";
+  static const String routeName = AppStrings.exploreScreen;
 
   const ExploreScreen({super.key});
 

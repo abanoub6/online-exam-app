@@ -1,17 +1,30 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/equatable.dart';
 import 'package:online_exam_app_v/features/explore/data/models/subject_dto.dart';
 
-part 'subject_response_model.g.dart';
+class SubjectResponseModel extends Equatable {
+  final String? message;
+  final List<SubjectDto?>? subjects;
 
-@JsonSerializable()
-class SubjectResponseModel {
-  String? message;
-  List<SubjectDto?>? subjects;
+  const SubjectResponseModel({this.message, this.subjects});
 
-  SubjectResponseModel(this.message, this.subjects);
+  factory SubjectResponseModel.fromJson(Map<String, dynamic> json) {
+    return SubjectResponseModel(
+      message: json['message'] as String?,
+      subjects: (json['subjects'] as List<dynamic>?)
+          ?.map(
+            (e) => e == null
+                ? null
+                : SubjectDto.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
+    );
+  }
 
-  factory SubjectResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$SubjectResponseModelFromJson(json);
+  Map<String, dynamic> toJson() => {
+    'message': message,
+    'subjects': subjects?.map((e) => e?.toJson()).toList(),
+  };
 
-  Map<String, dynamic> toJson() => _$SubjectResponseModelToJson(this);
+  @override
+  List<Object?> get props => [message, subjects];
 }

@@ -6,7 +6,7 @@ import 'package:online_exam_app_v/features/explore/data/data_sources/explor_remo
 import 'package:online_exam_app_v/features/explore/domain/entities/subject.dart';
 import 'package:online_exam_app_v/features/explore/domain/repo/explor_repo_contract.dart';
 
-@LazySingleton(as: ExplorRepoContract)
+@Injectable(as: ExplorRepoContract)
 class ExplorRepoImpl implements ExplorRepoContract {
   final ExplorRemoteDataSourceContract _remoteDataSource;
 

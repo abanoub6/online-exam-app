@@ -4,7 +4,7 @@ import 'package:online_exam_app_v/features/explore/data/data_sources/explor_remo
 import 'package:online_exam_app_v/features/explore/data/mapper/subject_mapper.dart';
 import 'package:online_exam_app_v/features/explore/domain/entities/subject.dart';
 
-@LazySingleton(as: ExplorRemoteDataSourceContract)
+@Injectable(as: ExplorRemoteDataSourceContract)
 class ExplorRemoteDataSourceImpl implements ExplorRemoteDataSourceContract {
   ExplorApiClient apiClient;
 

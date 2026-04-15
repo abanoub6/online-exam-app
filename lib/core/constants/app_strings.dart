@@ -49,4 +49,5 @@ class AppStrings {
   static const String work = "Work";
   static const String pleaseEnterYourPassword = "Please enter your password";
   static const String dontHaveAnAccount = "Don't have an account?";
+  static const String exploreScreen = "ExploreScreen";
 }

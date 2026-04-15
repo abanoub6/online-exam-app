@@ -1,17 +1,29 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/equatable.dart';
 
-part 'subject_dto.g.dart';
+class SubjectDto extends Equatable {
+  final String? id;
+  final String? name;
+  final String? icon;
+  final String? createdAt;
 
-@JsonSerializable()
-class SubjectDto {
-  @JsonKey(name: '_id')
-  String? id;
-  String? name;
-  String? icon;
-  String? createdAt;
+  const SubjectDto({this.id, this.name, this.icon, this.createdAt});
 
-  SubjectDto(this.id, this.name, this.icon, this.createdAt);
+  factory SubjectDto.fromJson(Map<String, dynamic> json) {
+    return SubjectDto(
+      id: json['_id'] as String?,
+      name: json['name'] as String?,
+      icon: json['icon'] as String?,
+      createdAt: json['createdAt'] as String?,
+    );
+  }
 
-  factory SubjectDto.fromJson(Map<String, dynamic> json) =>
-      _$SubjectDtoFromJson(json);
+  Map<String, dynamic> toJson() => {
+    '_id': id,
+    'name': name,
+    'icon': icon,
+    'createdAt': createdAt,
+  };
+
+  @override
+  List<Object?> get props => [id, name, icon, createdAt];
 }
