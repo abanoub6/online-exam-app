@@ -8,7 +8,7 @@ import 'package:online_exam_app_v/features/register/domain/use_cases/register_us
 import 'package:online_exam_app_v/features/register/presentation/view_model/states/register_events.dart';
 import 'package:online_exam_app_v/features/register/presentation/view_model/states/register_states.dart';
 
-@singleton
+@injectable
 class RegisterViewModel extends Cubit<RegisterStates> {
   final RegisterUseCase registerUseCase;
 
