@@ -11,10 +11,12 @@ class AuthInterceptor extends Interceptor {
 
   @override
   void onRequest(options, handler) async {
-    final token = await secureStorage.read(key: AppApiParam.token);
+    // final token = await secureStorage.read(key: AppApiParam.token);
+    final token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZGFmY2Q1MDRkYTBkNGNmNTU2OTFjZiIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzc1OTU5MjUzfQ.nIdRCRYf1qY1uIVpmBlXpH6K1DSIC2Jhar1bWn4VWMQ";
 
     if (token != null) {
-      options.headers["Authorization"] = "Bearer $token";
+      options.headers["token"] = token;
     }
 
     super.onRequest(options, handler);

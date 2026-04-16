@@ -15,6 +15,19 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
+import '../../features/exam-details/api/questions_api_client.dart' as _i558;
+import '../../features/exam-details/data/data-sources/questions_remote_data_source_contract.dart'
+    as _i572;
+import '../../features/exam-details/data/data-sources/questions_remote_data_source_impl.dart'
+    as _i684;
+import '../../features/exam-details/data/repo/questions_repository_impl.dart'
+    as _i1032;
+import '../../features/exam-details/domain/repo/questions_repository_contract.dart'
+    as _i563;
+import '../../features/exam-details/domain/use_cases/get_questions_on_exam_use_case.dart'
+    as _i902;
+import '../../features/exam-details/presentation/view_model/cubit/questions_view_model.dart'
+    as _i472;
 import '../../features/forgot_password/data/api/api_service.dart' as _i793;
 import '../../features/forgot_password/data/repo/forget_password_repo_impl.dart'
     as _i320;
@@ -73,8 +86,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i361.Dio>(
       () => dioModule.dio(gh<_i297.AuthInterceptor>()),
     );
+    gh.factory<_i558.QuestionsApiClient>(
+      () => _i558.QuestionsApiClient(gh<_i361.Dio>()),
+    );
     gh.factory<_i793.AuthApiService>(
       () => _i793.AuthApiService(gh<_i361.Dio>()),
+    );
+    gh.factory<_i410.RegisterApiClient>(
+      () => _i410.RegisterApiClient(gh<_i361.Dio>()),
     );
     gh.lazySingleton<_i511.ForgetPasswordRepoContract>(
       () => _i320.ForgetPasswordRepoImpl(gh<_i793.AuthApiService>()),
@@ -89,20 +108,13 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i717.VerifyResetCodeUseCase(gh<_i511.ForgetPasswordRepoContract>()),
     );
-    gh.factory<_i170.VerifyResetCodeCubit>(
-      () => _i170.VerifyResetCodeCubit(
-        gh<_i717.VerifyResetCodeUseCase>(),
-        gh<_i597.ForgotPasswordUseCase>(),
+    gh.factory<_i572.QuestionsRemoteDataSourceContract>(
+      () => _i684.QuestionsRemoteDataSourceImpl(gh<_i558.QuestionsApiClient>()),
+    );
+    gh.factory<_i563.QuestionsRepositoryContract>(
+      () => _i1032.QuestionsRepositoryImpl(
+        gh<_i572.QuestionsRemoteDataSourceContract>(),
       ),
-    );
-    gh.factory<_i216.ResetPasswordCubit>(
-      () => _i216.ResetPasswordCubit(gh<_i578.ResetPasswordUseCase>()),
-    );
-    gh.factory<_i1024.ForgotPasswordCubit>(
-      () => _i1024.ForgotPasswordCubit(gh<_i597.ForgotPasswordUseCase>()),
-    );
-    gh.factory<_i410.RegisterApiClient>(
-      () => _i410.RegisterApiClient(gh<_i361.Dio>()),
     );
     gh.factory<_i684.RegisterRemoteDataSourceContract>(
       () => _i845.RegisterRemoteDataSourceImpl(gh<_i410.RegisterApiClient>()),
@@ -112,8 +124,28 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i684.RegisterRemoteDataSourceContract>(),
       ),
     );
+    gh.factory<_i170.VerifyResetCodeCubit>(
+      () => _i170.VerifyResetCodeCubit(
+        gh<_i717.VerifyResetCodeUseCase>(),
+        gh<_i597.ForgotPasswordUseCase>(),
+      ),
+    );
+    gh.factory<_i216.ResetPasswordCubit>(
+      () => _i216.ResetPasswordCubit(gh<_i578.ResetPasswordUseCase>()),
+    );
+    gh.factory<_i902.GetQuestionsOnExamUseCase>(
+      () => _i902.GetQuestionsOnExamUseCase(
+        gh<_i563.QuestionsRepositoryContract>(),
+      ),
+    );
+    gh.factory<_i1024.ForgotPasswordCubit>(
+      () => _i1024.ForgotPasswordCubit(gh<_i597.ForgotPasswordUseCase>()),
+    );
     gh.factory<_i679.RegisterUseCase>(
       () => _i679.RegisterUseCase(gh<_i210.RegisterRepositoryContract>()),
+    );
+    gh.singleton<_i472.QuestionsViewModel>(
+      () => _i472.QuestionsViewModel(gh<_i902.GetQuestionsOnExamUseCase>()),
     );
     gh.singleton<_i166.RegisterViewModel>(
       () => _i166.RegisterViewModel(gh<_i679.RegisterUseCase>()),

@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:online_exam_app_v/config/base_responce/base_response.dart';
+import 'package:online_exam_app_v/features/exam-details/data/models/socre_result.dart';
 import 'package:online_exam_app_v/features/exam-details/domain/entities/question_entity.dart';
 import 'package:online_exam_app_v/features/exam-details/domain/use_cases/get_questions_on_exam_use_case.dart';
 import 'package:online_exam_app_v/features/exam-details/presentation/view_model/states/questions_events.dart';
@@ -12,7 +14,6 @@ class QuestionsViewModel extends Cubit<QuestionsStates> {
 
   QuestionsViewModel(this.getQuestionsOnExamUseCase) : super(QuestionsStates());
 
-  // لتخزين الإجابات المختارة
   final Map<String, String> _userAnswers = {};
 
   void doEvent(QuestionsEvents event) {
@@ -28,8 +29,22 @@ class QuestionsViewModel extends Cubit<QuestionsStates> {
       case ClearQuestionsErrorEvent():
         _clearError();
         break;
+
+      case CalculateScoreEvent():
+        // يمكن إرجاع الـ Score عبر State لو احتجت
+        break;
+
+      case ClearAnswersEvent():
+        _clearAnswers();
+        break;
+
+      case CanGoNextEvent():
+        // يمكنك إضافة Logic إضافي هنا لو احتجت
+        break;
     }
   }
+
+  // ====================== Private Methods ======================
 
   Future<void> _getQuestionsOnExam(String examId) async {
     emit(
@@ -70,7 +85,6 @@ class QuestionsViewModel extends Cubit<QuestionsStates> {
 
   void _selectAnswer(String questionId, String selectedAnswerKey) {
     _userAnswers[questionId] = selectedAnswerKey;
-
     emit(state.copyWith(userAnswersParam: Map.from(_userAnswers)));
   }
 
@@ -84,13 +98,57 @@ class QuestionsViewModel extends Cubit<QuestionsStates> {
     );
   }
 
-  String? getSelectedAnswer(String questionId) {
-    return _userAnswers[questionId];
+  // ====================== Score & Answers (Private) ======================
+  ScoreResult _calculateScore() {
+    final questions = state.questionsState.data ?? [];
+
+    if (questions.isEmpty) {
+      return ScoreResult(
+        correctAnswers: 0,
+        totalQuestions: 0,
+        scorePercentage: 0.0,
+      );
+    }
+
+    int correctCount = 0;
+    for (var question in questions) {
+      final userAnswer = _userAnswers[question.id];
+      if (userAnswer != null && userAnswer == question.correctAnswerKey) {
+        correctCount++;
+      }
+    }
+
+    final total = questions.length;
+    final percentage = (correctCount / total) * 100;
+
+    return ScoreResult(
+      correctAnswers: correctCount,
+      totalQuestions: total,
+      scorePercentage: percentage,
+    );
   }
 
-  bool isAnswerSelected(String questionId, String answerKey) {
-    return _userAnswers[questionId] == answerKey;
+  void _clearAnswers() {
+    _userAnswers.clear();
   }
+
+  bool _canGoNext(String questionId) {
+    return _userAnswers.containsKey(questionId) &&
+        _userAnswers[questionId] != null &&
+        _userAnswers[questionId]!.isNotEmpty;
+  }
+
+  // ====================== Public Helpers (للـ UI فقط) ======================
+  String? getSelectedAnswer(String questionId) => _userAnswers[questionId];
+
+  bool isAnswerSelected(String questionId, String answerKey) =>
+      _userAnswers[questionId] == answerKey;
+
+  int getAnsweredQuestionsCount() => _userAnswers.length;
+
+  bool canGoNext(String questionId) => _canGoNext(questionId);
+
+  ScoreResult calculateScore() => _calculateScore();
 
   @override
   Future<void> close() {

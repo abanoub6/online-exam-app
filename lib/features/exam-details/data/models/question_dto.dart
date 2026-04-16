@@ -1,4 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:online_exam_app_v/features/exam-details/data/models/exam_dto.dart';
+import 'package:online_exam_app_v/features/exam-details/data/models/subject_dto.dart';
 import 'package:online_exam_app_v/features/exam-details/domain/entities/question_entity.dart';
 import 'answer_dto.dart';
 
@@ -8,11 +10,12 @@ part 'question_dto.g.dart';
 class QuestionDto {
   final List<AnswerDto> answers;
   final String type;
+  @JsonKey(name: '_id')
   final String id;
   final String question;
   final String correct;
-  final String? subject;
-  final dynamic exam; // أو ExamModel لو عايز تعمله
+  final SubjectDto? subject;
+  final ExamDto? exam;
   final DateTime? createdAt;
 
   QuestionDto({

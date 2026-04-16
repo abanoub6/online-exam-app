@@ -5,7 +5,7 @@ import 'package:online_exam_app_v/features/exam-details/presentation/screens/exa
 class ExamsScreen extends StatelessWidget {
   static const String routeName = "exams-screen";
 
-  static const String examId = "670070a830a3c3c1944a9c63";
+  static const String examId = "69d980117c82914570305dd5";
 
   const ExamsScreen({super.key});
 
@@ -25,7 +25,7 @@ class ExamsScreen extends StatelessWidget {
             Navigator.pushNamed(
               context,
               ExamDetailsScreen.routeName,
-              arguments: examId,
+              arguments: {'examId': examId, 'examTitle': "JS Basics"},
             );
           },
           child: const Text("Go to Exam"),
