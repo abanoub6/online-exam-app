@@ -98,7 +98,6 @@ class QuestionsViewModel extends Cubit<QuestionsStates> {
     );
   }
 
-  // ====================== Score & Answers (Private) ======================
   ScoreResult _calculateScore() {
     final questions = state.questionsState.data ?? [];
 

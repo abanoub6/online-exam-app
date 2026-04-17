@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:online_exam_app_v/core/constants/app_strings.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
 import 'package:online_exam_app_v/core/widgets/primary_button.dart';
+import 'package:online_exam_app_v/features/exam-details/presentation/widgets/build_state_row.dart';
 
 class ScoreScreen extends StatelessWidget {
   static const String routeName = "score-screen";
@@ -14,12 +16,13 @@ class ScoreScreen extends StatelessWidget {
     final args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
 
-    final int correct = args["correct"];
-    final int incorrect = args["incorrect"];
-    final double percentage = args["percentage"];
+    final int correct = args[AppStrings.correct];
+    final int incorrect = args[AppStrings.incorrect];
+    final double percentage = args[AppStrings.percentage];
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Exam score", style: AppTextStyles.s20w600()),
+        title: Text(AppStrings.examScore, style: AppTextStyles.s20w600()),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -30,13 +33,12 @@ class ScoreScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Your score", style: AppTextStyles.s18w600()),
+            Text(AppStrings.yourScore, style: AppTextStyles.s18w600()),
 
             SizedBox(height: AppSizes.h(24)),
 
             Row(
               children: [
-                // 🔵 Circular Progress
                 Stack(
                   alignment: Alignment.center,
                   children: [
@@ -59,18 +61,18 @@ class ScoreScreen extends StatelessWidget {
 
                 SizedBox(width: AppSizes.w(40)),
 
-                // 📊 Stats
+                // Stats
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildStatRow(
-                      label: "Correct",
+                    BuildStateRow(
+                      label: AppStrings.correct,
                       value: correct,
                       color: AppColors.blue,
                     ),
                     SizedBox(height: AppSizes.h(12)),
-                    _buildStatRow(
-                      label: "Incorrect",
+                    BuildStateRow(
+                      label: AppStrings.incorrect,
                       value: incorrect,
                       color: Colors.red,
                     ),
@@ -78,18 +80,15 @@ class ScoreScreen extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 70),
 
-            const Spacer(),
-
-            // 🔵 Show Results Button
+            // Show Results Button
             Row(
               children: [
                 Expanded(
                   child: PrimaryButton(
-                    onPressed: () {
-                      // ممكن تروح لصفحة تفصيل الإجابات
-                    },
-                    text: "Show results",
+                    onPressed: () {},
+                    text: AppStrings.showResults,
                   ),
                 ),
               ],
@@ -97,10 +96,10 @@ class ScoreScreen extends StatelessWidget {
 
             SizedBox(height: AppSizes.h(16)),
 
-            // 🔄 Start Again
+            // Start Again
             OutlinedButton(
               onPressed: () {
-                Navigator.pop(context); //  تعيد الامتحان
+                Navigator.pop(context);
               },
               style: OutlinedButton.styleFrom(
                 minimumSize: Size(double.infinity, AppSizes.h(56)),
@@ -110,38 +109,13 @@ class ScoreScreen extends StatelessWidget {
                 ),
               ),
               child: Text(
-                "Start again",
+                AppStrings.startAgain,
                 style: AppTextStyles.s16w600(AppColors.blue),
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildStatRow({
-    required String label,
-    required int value,
-    required Color color,
-  }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Text(label, style: AppTextStyles.s16w500(color)),
-        SizedBox(width: AppSizes.w(12)),
-        Container(
-          padding: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: color),
-          ),
-          child: Text(
-            value.toString(),
-            style: TextStyle(color: color, fontWeight: FontWeight.w600),
-          ),
-        ),
-      ],
     );
   }
 }

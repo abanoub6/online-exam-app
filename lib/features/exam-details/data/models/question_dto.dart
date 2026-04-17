@@ -39,6 +39,7 @@ class QuestionDto {
     answers: answers.map((e) => e.toEntity()).toList(),
     correctAnswerKey: correct,
     type: type,
+    exam: exam,
     createdAt: createdAt ?? DateTime.now(),
   );
 }

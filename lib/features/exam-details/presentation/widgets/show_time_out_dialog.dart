@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:online_exam_app_v/core/constants/app_strings.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
+import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
 import 'package:online_exam_app_v/features/exam-details/data/models/socre_result.dart';
 import 'package:online_exam_app_v/features/exam-details/presentation/screens/score_screen.dart';
 
@@ -10,21 +12,30 @@ class ShowTimeOutDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.timer_off, size: 60, color: Colors.red),
-            const SizedBox(height: 16),
-            const Text(
-              "Time out !!",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
-              ),
+            Row(
+              children: [
+                const ImageIcon(
+                  size: 50,
+                  AssetImage("assets/icons/time_out_iocn.png"),
+                  color: Colors.grey,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  AppStrings.timeOut,
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 24),
             SizedBox(
@@ -36,9 +47,10 @@ class ShowTimeOutDialog extends StatelessWidget {
                     context,
                     ScoreScreen.routeName,
                     arguments: {
-                      "correct": score.correctAnswers,
-                      "incorrect": score.totalQuestions - score.correctAnswers,
-                      "percentage": score.scorePercentage,
+                      AppStrings.correct: score.correctAnswers,
+                      AppStrings.incorrect:
+                          score.totalQuestions - score.correctAnswers,
+                      AppStrings.percentage: score.scorePercentage,
                     },
                   );
                 },
@@ -49,7 +61,10 @@ class ShowTimeOutDialog extends StatelessWidget {
                     borderRadius: BorderRadius.circular(28),
                   ),
                 ),
-                child: const Text("View Score", style: TextStyle(fontSize: 16)),
+                child: Text(
+                  AppStrings.viewSocre,
+                  style: AppTextStyles.s16w500(AppColors.white),
+                ),
               ),
             ),
           ],

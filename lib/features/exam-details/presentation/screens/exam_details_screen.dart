@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:online_exam_app_v/config/di/di.dart';
+import 'package:online_exam_app_v/core/constants/app_strings.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
@@ -12,7 +13,6 @@ import 'package:online_exam_app_v/features/exam-details/presentation/view_model/
 import 'package:online_exam_app_v/features/exam-details/presentation/view_model/states/questions_states.dart';
 import 'package:online_exam_app_v/features/exam-details/presentation/widgets/exam_app_bar.dart';
 import 'package:online_exam_app_v/features/exam-details/presentation/widgets/show_time_out_dialog.dart';
-import 'package:online_exam_app_v/features/exam-details/presentation/widgets/timer_widget.dart';
 
 class ExamDetailsScreen extends StatefulWidget {
   static const String routeName = "questions-screen";
@@ -37,21 +37,16 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
       final args =
           ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
-      final examId = args?['examId'] as String?;
+      final examId = args?[AppStrings.examId] as String?;
       if (examId != null) {
-        _examTitle = args?['examTitle'] as String? ?? "Exam";
+        _examTitle = args?[AppStrings.examTitle] as String? ?? AppStrings.exam;
         _viewModel.doEvent(GetQuestionsOnExamEvent(examId));
       } else {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text("No Exam ID provided!")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text(AppStrings.noExamIdProvided)),
+        );
       }
     });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   void _onTimeFinished() {
@@ -76,10 +71,30 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
     return BlocProvider.value(
       value: _viewModel,
       child: Scaffold(
-        appBar: ExamAppBar(
-          title: _examTitle ?? "Exam",
-          onBack: () => Navigator.pop(context),
-          onTimeFinished: _onTimeFinished,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: BlocBuilder<QuestionsViewModel, QuestionsStates>(
+            builder: (context, state) {
+              final questions = state.questionsState.data;
+
+              if (questions == null || questions.isEmpty) {
+                return AppBar(
+                  title: Text(_examTitle ?? AppStrings.exam),
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                );
+              }
+
+              return ExamAppBar(
+                timeInSeconds: questions[0].exam!.duration,
+                title: _examTitle ?? AppStrings.exam,
+                onBack: () => Navigator.pop(context),
+                onTimeFinished: _onTimeFinished,
+              );
+            },
+          ),
         ),
 
         body: BlocBuilder<QuestionsViewModel, QuestionsStates>(
@@ -103,12 +118,12 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
                       onPressed: () {
                         final args =
                             ModalRoute.of(context)?.settings.arguments as Map?;
-                        final examId = args?['examId'] as String?;
+                        final examId = args?[AppStrings.examId] as String?;
                         if (examId != null) {
                           _viewModel.doEvent(GetQuestionsOnExamEvent(examId));
                         }
                       },
-                      child: const Text("Try Again"),
+                      child: const Text(AppStrings.tryAgain),
                     ),
                   ],
                 ),
@@ -116,7 +131,7 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
             }
 
             if (questions.isEmpty) {
-              return const Center(child: Text("No questions found"));
+              return const Center(child: Text(AppStrings.noQuestionsFound));
             }
 
             final currentQuestion = questions[_currentQuestionIndex];
@@ -126,7 +141,6 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Progress Indicator
                   LinearProgressIndicator(
                     value: (_currentQuestionIndex + 1) / questions.length,
                     backgroundColor: AppColors.ligtGrey,
@@ -135,15 +149,13 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
                   ),
                   SizedBox(height: AppSizes.h(12)),
 
-                  // Question Counter
                   Text(
-                    "Question ${_currentQuestionIndex + 1} of ${questions.length}",
+                    "${AppStrings.questionOf} ${_currentQuestionIndex + 1} ${AppStrings.of} ${questions.length}",
                     style: AppTextStyles.s16w500(),
                   ),
 
                   SizedBox(height: AppSizes.h(24)),
 
-                  // Question Text
                   Text(
                     currentQuestion.question,
                     style: AppTextStyles.s20w600(),
@@ -151,12 +163,10 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
 
                   SizedBox(height: AppSizes.h(32)),
 
-                  // Answers List
                   Expanded(
                     child: ListView.builder(
                       itemCount: currentQuestion.answers.length,
                       itemBuilder: (context, index) {
-                        print("1111111111"); // بتتطبع كل مره الزمن بيتغير
                         final answer = currentQuestion.answers[index];
                         final isSelected = _viewModel.isAnswerSelected(
                           currentQuestion.id,
@@ -185,7 +195,6 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
                                 color: isSelected
                                     ? AppColors.blue
                                     : AppColors.ligtGrey,
-                                width: isSelected ? 2 : 1,
                               ),
                             ),
                             child: Row(
@@ -217,7 +226,6 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
                     ),
                   ),
 
-                  // Navigation Buttons
                   Row(
                     children: [
                       Expanded(
@@ -225,20 +233,8 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
                           onPressed: _currentQuestionIndex > 0
                               ? () => setState(() => _currentQuestionIndex--)
                               : null,
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor: _currentQuestionIndex > 0
-                                ? AppColors.white
-                                : AppColors.gray.withValues(alpha: 0.2),
-                            padding: EdgeInsets.symmetric(
-                              vertical: AppSizes.h(16),
-                            ),
-                            side: const BorderSide(color: AppColors.blue),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(28),
-                            ),
-                          ),
                           child: Text(
-                            "Back",
+                            AppStrings.back,
                             style: AppTextStyles.s16w600(AppColors.blue),
                           ),
                         ),
@@ -246,14 +242,12 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
                       SizedBox(width: AppSizes.w(16)),
                       Expanded(
                         child: PrimaryButton(
-                          // زر Next يكون مفعل فقط لو المستخدم جاوب على السؤال الحالي
                           onPressed: _viewModel.canGoNext(currentQuestion.id)
                               ? () {
                                   if (_currentQuestionIndex <
                                       questions.length - 1) {
                                     setState(() => _currentQuestionIndex++);
                                   } else {
-                                    // Submit Exam
                                     final score = _viewModel.calculateScore();
                                     _viewModel.doEvent(ClearAnswersEvent());
                                     _currentQuestionIndex = 0;
@@ -262,19 +256,21 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
                                       context,
                                       ScoreScreen.routeName,
                                       arguments: {
-                                        "correct": score.correctAnswers,
-                                        "incorrect":
+                                        AppStrings.correct:
+                                            score.correctAnswers,
+                                        AppStrings.incorrect:
                                             score.totalQuestions -
                                             score.correctAnswers,
-                                        "percentage": score.scorePercentage,
+                                        AppStrings.percentage:
+                                            score.scorePercentage,
                                       },
                                     );
                                   }
                                 }
                               : null,
                           text: _currentQuestionIndex < questions.length - 1
-                              ? "Next"
-                              : "Submit",
+                              ? AppStrings.next
+                              : AppStrings.submit,
                         ),
                       ),
                     ],
