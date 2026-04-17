@@ -88,7 +88,7 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
               }
 
               return ExamAppBar(
-                timeInSeconds: questions[0].exam!.duration,
+                timeInSeconds: questions[0].exam!.duration * 60,
                 title: _examTitle ?? AppStrings.exam,
                 onBack: () => Navigator.pop(context),
                 onTimeFinished: _onTimeFinished,

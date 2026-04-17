@@ -8,7 +8,7 @@ import 'package:online_exam_app_v/features/exam-details/domain/use_cases/get_que
 import 'package:online_exam_app_v/features/exam-details/presentation/view_model/states/questions_events.dart';
 import 'package:online_exam_app_v/features/exam-details/presentation/view_model/states/questions_states.dart';
 
-@singleton
+@injectable
 class QuestionsViewModel extends Cubit<QuestionsStates> {
   final GetQuestionsOnExamUseCase getQuestionsOnExamUseCase;
 
