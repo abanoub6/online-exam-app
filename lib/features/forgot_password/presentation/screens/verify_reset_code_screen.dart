@@ -12,25 +12,18 @@ import 'package:online_exam_app_v/features/forgot_password/presentation/view_mod
 import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-class VerifyResetCodeScreen extends StatelessWidget {
+class VerifyResetCodeScreen extends StatefulWidget {
   static const String routeName = AppStrings.verifyResetCode;
-  const VerifyResetCodeScreen({super.key});
+  final String email;
+  const VerifyResetCodeScreen({super.key, required this.email});
 
   @override
-  Widget build(BuildContext context) {
-    return const _VerifyResetCodeView();
-  }
+  State<VerifyResetCodeScreen> createState() => _VerifyResetCodeScreenState();
 }
 
-class _VerifyResetCodeView extends StatefulWidget {
-  const _VerifyResetCodeView();
-
-  @override
-  State<_VerifyResetCodeView> createState() => _VerifyResetCodeViewState();
-}
-
-class _VerifyResetCodeViewState extends State<_VerifyResetCodeView> {
+class _VerifyResetCodeScreenState extends State<VerifyResetCodeScreen> {
   final ValueNotifier<bool> _hasError = ValueNotifier(false);
+  String _code = '';
   late ForgotPasswordViewModel cubit;
 
   @override
@@ -74,7 +67,7 @@ class _VerifyResetCodeViewState extends State<_VerifyResetCodeView> {
               MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
                   value: cubit,
-                  child: const ResetPasswordScreen(),
+                  child: ResetPasswordScreen(email: widget.email),
                 ),
               ),
             );
@@ -124,10 +117,11 @@ class _VerifyResetCodeViewState extends State<_VerifyResetCodeView> {
                         appContext: context,
                         length: 6,
                         onChanged: (value) {
-                          cubit.setCode(value);
+                          _code = value;
                           if (hasError) _hasError.value = false;
                         },
-                        onCompleted: (_) => cubit.doEvent(VerifyCodeEvent()),
+                        onCompleted: (_) =>
+                            cubit.doEvent(VerifyCodeEvent(_code)),
                         keyboardType: TextInputType.number,
                         animationType: AnimationType.scale,
                         animationDuration: const Duration(milliseconds: 200),
@@ -187,7 +181,7 @@ class _VerifyResetCodeViewState extends State<_VerifyResetCodeView> {
               RichTextWithLink(
                 normalText: AppStrings.didntReceiveCode,
                 linkText: AppStrings.resend,
-                onLinkTap: () => cubit.doEvent(ResendCodeEvent()),
+                onLinkTap: () => cubit.doEvent(ResendCodeEvent(widget.email)),
                 linkTextColor: AppColors.blue,
               ),
             ],

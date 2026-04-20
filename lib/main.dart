@@ -35,9 +35,6 @@ class MyApp extends StatelessWidget {
             LoginScreen.routeName: (context) => LoginScreen(),
             RegisterScreen.routeName: (context) => RegisterScreen(),
             ForgotPasswordScreen.routeName: (context) => ForgotPasswordScreen(),
-            VerifyResetCodeScreen.routeName: (context) =>
-                VerifyResetCodeScreen(),
-            ResetPasswordScreen.routeName: (context) => ResetPasswordScreen(),
             HomeScreen.routeName: (context) => HomeScreen(),
           },
         );

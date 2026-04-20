@@ -11,24 +11,16 @@ import 'package:online_exam_app_v/features/forgot_password/presentation/view_mod
 import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/states/forgot_password_state.dart';
 import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
 
-class ResetPasswordScreen extends StatelessWidget {
+class ResetPasswordScreen extends StatefulWidget {
   static const String routeName = AppStrings.resetPassword;
-  const ResetPasswordScreen({super.key});
+  final String email;
+  const ResetPasswordScreen({super.key, required this.email});
 
   @override
-  Widget build(BuildContext context) {
-    return const _ResetPasswordView();
-  }
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
-class _ResetPasswordView extends StatefulWidget {
-  const _ResetPasswordView();
-
-  @override
-  State<_ResetPasswordView> createState() => _ResetPasswordViewState();
-}
-
-class _ResetPasswordViewState extends State<_ResetPasswordView> {
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final resetFormKey = GlobalKey<FormState>();
@@ -159,7 +151,10 @@ class _ResetPasswordViewState extends State<_ResetPasswordView> {
                             : () {
                                 if (resetFormKey.currentState!.validate()) {
                                   cubit.doEvent(
-                                    ResetPasswordEvent(passwordController.text),
+                                    ResetPasswordEvent(
+                                      widget.email,
+                                      passwordController.text,
+                                    ),
                                   );
                                 }
                               },

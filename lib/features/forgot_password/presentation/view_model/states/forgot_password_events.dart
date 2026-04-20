@@ -5,11 +5,18 @@ class SendEmailEvent extends ForgotPasswordEvents {
   SendEmailEvent(this.email);
 }
 
-class VerifyCodeEvent extends ForgotPasswordEvents {}
+class VerifyCodeEvent extends ForgotPasswordEvents {
+  final String code;
+  VerifyCodeEvent(this.code);
+}
 
-class ResendCodeEvent extends ForgotPasswordEvents {}
+class ResendCodeEvent extends ForgotPasswordEvents {
+  final String email;
+  ResendCodeEvent(this.email);
+}
 
 class ResetPasswordEvent extends ForgotPasswordEvents {
+  final String email;
   final String password;
-  ResetPasswordEvent(this.password);
+  ResetPasswordEvent(this.email, this.password);
 }

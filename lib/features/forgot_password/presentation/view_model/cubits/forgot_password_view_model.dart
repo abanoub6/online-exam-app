@@ -21,80 +21,66 @@ class ForgotPasswordViewModel extends Cubit<ForgotPasswordState> {
     this._resetPasswordUseCase,
   ) : super(ForgotPasswordInitial());
 
-  String _email = '';
-  String _verifyCode = '';
-
-  void setCode(String code) => _verifyCode = code;
-
   Future<void> doEvent(ForgotPasswordEvents event) async {
     switch (event) {
       case SendEmailEvent():
         await _sendEmail(event.email);
       case VerifyCodeEvent():
-        await _verifyCode_();
+        await _verifyCode(event.code);
       case ResendCodeEvent():
-        await _resendCode();
+        await _resendCode(event.email);
       case ResetPasswordEvent():
-        await _resetPassword(event.password);
+        await _resetPassword(event.email, event.password);
     }
   }
 
   Future<void> _sendEmail(String email) async {
-    _email = email;
     emit(ForgotPasswordEmailLoading());
-
-    final result = await _forgotPasswordUseCase(email: _email);
-
+    final result = await _forgotPasswordUseCase(email: email);
     switch (result) {
       case SuccessBaseResponse<ForgotPasswordEntity>():
         emit(ForgotPasswordEmailSuccess(result.data));
       case ErrorBaseResponse<ForgotPasswordEntity>():
-        emit(ForgotPasswordEmailFailure(result.errorMessage ?? ''));
+        emit(ForgotPasswordEmailFailure(result.errorMessage));
     }
   }
 
-  Future<void> _verifyCode_() async {
-    if (_verifyCode.length != 6) {
+  Future<void> _verifyCode(String code) async {
+    if (code.length != 6) {
       emit(ForgotPasswordVerifyFailure(AppStrings.pleaseEnterTheCompleteCode));
       return;
     }
-
     emit(ForgotPasswordVerifyLoading());
-
-    final result = await _verifyResetCodeUseCase(resetCode: _verifyCode);
-
+    final result = await _verifyResetCodeUseCase(resetCode: code);
     switch (result) {
       case SuccessBaseResponse<ForgotPasswordEntity>():
         emit(ForgotPasswordVerifySuccess(result.data));
       case ErrorBaseResponse<ForgotPasswordEntity>():
-        emit(ForgotPasswordVerifyFailure(result.errorMessage ?? ''));
+        emit(ForgotPasswordVerifyFailure(result.errorMessage));
     }
   }
 
-  Future<void> _resendCode() async {
-    final result = await _forgotPasswordUseCase(email: _email);
-
+  Future<void> _resendCode(String email) async {
+    final result = await _forgotPasswordUseCase(email: email);
     switch (result) {
       case SuccessBaseResponse<ForgotPasswordEntity>():
         emit(ForgotPasswordCodeResent());
       case ErrorBaseResponse<ForgotPasswordEntity>():
-        emit(ForgotPasswordVerifyFailure(result.errorMessage ?? ''));
+        emit(ForgotPasswordVerifyFailure(result.errorMessage));
     }
   }
 
-  Future<void> _resetPassword(String password) async {
+  Future<void> _resetPassword(String email, String password) async {
     emit(ForgotPasswordResetLoading());
-
     final result = await _resetPasswordUseCase(
-      email: _email,
+      email: email,
       newPassword: password,
     );
-
     switch (result) {
       case SuccessBaseResponse<ForgotPasswordEntity>():
         emit(ForgotPasswordResetSuccess(result.data));
       case ErrorBaseResponse<ForgotPasswordEntity>():
-        emit(ForgotPasswordResetFailure(result.errorMessage ?? ''));
+        emit(ForgotPasswordResetFailure(result.errorMessage));
     }
   }
 }
