@@ -13,7 +13,6 @@ import 'package:online_exam_app_v/features/register/presentation/view_model/cubi
 import 'package:online_exam_app_v/features/register/presentation/view_model/states/register_events.dart';
 import 'package:online_exam_app_v/features/register/presentation/view_model/states/register_states.dart';
 
-@injectable
 class RegisterScreen extends StatefulWidget {
   static const String routeName = "register";
 
