@@ -10,7 +10,6 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:dio/dio.dart' as _i361;
-import 'package:flutter/material.dart' as _i409;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
@@ -64,8 +63,6 @@ import '../../features/register/domain/repo/register_repository_contract.dart'
     as _i210;
 import '../../features/register/domain/use_cases/register_usecase.dart'
     as _i679;
-import '../../features/register/presentation/screens/register_screen.dart'
-    as _i502;
 import '../../features/register/presentation/view_model/cubit/register_view_model.dart'
     as _i166;
 import '../dio/dio_interceptor.dart' as _i297;
@@ -83,9 +80,6 @@ extension GetItInjectableX on _i174.GetIt {
     final dioModule = _$DioModule();
     gh.lazySingleton<_i558.FlutterSecureStorage>(
       () => storageModule.secureStorage(),
-    );
-    gh.factory<_i502.RegisterScreen>(
-      () => _i502.RegisterScreen(key: gh<_i409.Key>()),
     );
     gh.lazySingleton<_i297.AuthInterceptor>(
       () => _i297.AuthInterceptor(gh<_i558.FlutterSecureStorage>()),
@@ -131,13 +125,13 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i320.ExplorRemoteDataSourceContract>(
       () => _i394.ExplorRemoteDataSourceImpl(gh<_i734.ExplorApiClient>()),
     );
-    gh.factory<_i210.RegisterRepositoryContract>(
-      () => _i921.AuthRepositoryImpl(
-        gh<_i684.RegisterRemoteDataSourceContract>(),
-      ),
-    );
     gh.factory<_i159.LoginRemoteDataSourceContract>(
       () => _i211.LoginRemoteDataSourceImp(gh<_i315.LoginApiClient>()),
+    );
+    gh.factory<_i210.RegisterRepositoryContract>(
+      () => _i921.RegisterRepositoryImpl(
+        gh<_i684.RegisterRemoteDataSourceContract>(),
+      ),
     );
     gh.factory<_i692.ExplorRepoContract>(
       () => _i1068.ExplorRepoImpl(gh<_i320.ExplorRemoteDataSourceContract>()),
@@ -165,7 +159,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i241.ExplorViewModel>(
       () => _i241.ExplorViewModel(gh<_i593.GetSubjectsUseCase>()),
     );
-    gh.singleton<_i166.RegisterViewModel>(
+    gh.factory<_i166.RegisterViewModel>(
       () => _i166.RegisterViewModel(gh<_i679.RegisterUseCase>()),
     );
     gh.factory<_i705.LoginViewModel>(
