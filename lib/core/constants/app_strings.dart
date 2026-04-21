@@ -50,4 +50,25 @@ class AppStrings {
   static const String pleaseEnterYourPassword = "Please enter your password";
   static const String dontHaveAnAccount = "Don't have an account?";
   static const String exploreScreen = "ExploreScreen";
+  static const String profileScreen = "profileScreen";
+  static const String username = 'Username';
+  static const String phone = 'Phone';
+  static const String update = 'Update';
+  static const String profileUpdatedSuccessfully =
+      'Profile updated successfully!';
+  static const String pleaseEnterYourUsername = 'Please enter your username';
+  static const String pleaseEnterYourFirstName = 'Please enter your first name';
+  static const String pleaseEnterYourLastName = 'Please enter your last name';
+  static const String pleaseEnterYourPhone = 'Please enter your phone number';
+  static const String changePassword = 'Change password';
+  static const String oldPassword = 'Old password';
+  static const String passwordChangedSuccessfully =
+      'Password changed successfully!';
+  static const String pleaseEnterYourOldPassword =
+      'Please enter your old password';
+  static const String editProfile = 'Edit profile';
+  static const String change = 'Change';
+  static const String currentPassword = 'Current password';
+  static const String pleaseEnterYourCurrentPassword =
+      'Please enter your current password';
 }

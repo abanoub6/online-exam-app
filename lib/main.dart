@@ -12,6 +12,9 @@ import 'package:online_exam_app_v/features/forgot_password/presentation/screens/
 import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
 import 'package:online_exam_app_v/features/home/presentation/screens/home_screen.dart';
 import 'package:online_exam_app_v/features/login/domain/use_cases/remember_me.dart';
+import 'package:online_exam_app_v/features/profile/presentation/screens/change_password_screen.dart';
+import 'package:online_exam_app_v/features/profile/presentation/screens/edit_profile_screen.dart';
+import 'package:online_exam_app_v/features/profile/presentation/screens/profile_screen.dart';
 import 'package:online_exam_app_v/features/register/presentation/screens/register_screen.dart';
 
 void main() async {
@@ -48,6 +51,7 @@ class MyApp extends StatelessWidget {
             ExamsScreen.routeName: (context) => ExamsScreen(),
             ExamDetailsScreen.routeName: (context) => ExamDetailsScreen(),
             LoginScreen.routeName: (context) => LoginScreen(),
+            ProfileScreen.routeName: (context) => const ProfileScreen(),
           },
         );
       },
