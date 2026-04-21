@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           theme: AppTheme.lightTheme(),
           debugShowCheckedModeBanner: false,
-          initialRoute: LoginScreen.routeName,
+          initialRoute: RegisterScreen.routeName,
           routes: {
             LoginScreen.routeName: (context) => LoginScreen(),
             RegisterScreen.routeName: (context) => RegisterScreen(),

@@ -1,5 +1,6 @@
 class AppStrings {
   AppStrings._();
+<<<<<<< HEAD
   // static const String profile = "profile";
   static const String forgetPassword = "forgetPassword";
   static const String password = "Password";
@@ -30,4 +31,17 @@ class AppStrings {
       "Please enter the complete 6-digit code";
   static const String pleaseEnterYourEmail = "Please enter your email";
   static const String thisEmailIsNotValid = "This Email is not valid";
+=======
+  static const String signUp = "Sign up";
+  static const String userName = "User name";
+  static const String enterYourUserName = "Enter your user name";
+  static const String firstName = "First name";
+  static const String lastName = "Last name";
+  static const String email = "Email";
+  static const String password = "Password";
+  static const String confirmPassword = "Confirm password";
+  static const String phoneNumber = "Phone number";
+  static const String alreadyHaveAnAccount = "Already have an account?";
+  static const String login = "Login";
+>>>>>>> origin/development
 }
