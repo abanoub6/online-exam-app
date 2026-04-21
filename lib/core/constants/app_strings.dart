@@ -50,4 +50,7 @@ class AppStrings {
   static const String pleaseEnterYourPassword = "Please enter your password";
   static const String dontHaveAnAccount = "Don't have an account?";
   static const String exploreScreen = "ExploreScreen";
+  static const String iconHome = "assets/icons/explore_icon.png";
+  static const String iconResult = "assets/icons/results_icon.png";
+  static const String iconPerson = "assets/icons/person_icon.png";
 }
