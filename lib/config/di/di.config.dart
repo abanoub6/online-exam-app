@@ -15,6 +15,24 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
+import '../../features/forgot_password/api/api/forgot_password_api_client.dart'
+    as _i609;
+import '../../features/forgot_password/api/data_source/forgot_password_remote_data_source_impl.dart'
+    as _i902;
+import '../../features/forgot_password/data/data_source/forgot_password_remote_data_source_contract.dart'
+    as _i395;
+import '../../features/forgot_password/data/repo/forget_password_repo_impl.dart'
+    as _i320;
+import '../../features/forgot_password/domain/repo/forget_password_repo_contract.dart'
+    as _i511;
+import '../../features/forgot_password/domain/use_cases/forgot_password_use_case.dart'
+    as _i597;
+import '../../features/forgot_password/domain/use_cases/reset_password_use_case.dart'
+    as _i578;
+import '../../features/forgot_password/domain/use_cases/verify_reset_code_use_case.dart'
+    as _i717;
+import '../../features/forgot_password/presentation/view_model/cubits/forgot_password_view_model.dart'
+    as _i1024;
 import '../../features/register/api/data_source/register_remote_data_source_impl.dart'
     as _i845;
 import '../../features/register/api/home_api_client/register_api_client.dart'
@@ -56,6 +74,35 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i361.Dio>(
       () => dioModule.dio(gh<_i297.AuthInterceptor>()),
     );
+    gh.factory<_i609.ForgotPasswordApiClient>(
+      () => _i609.ForgotPasswordApiClient(gh<_i361.Dio>()),
+    );
+    gh.factory<_i395.ForgotPasswordRemoteDataSourceContract>(
+      () => _i902.ForgotPasswordRemoteDataSourceImpl(
+        gh<_i609.ForgotPasswordApiClient>(),
+      ),
+    );
+    gh.factory<_i511.ForgetPasswordRepoContract>(
+      () => _i320.ForgetPasswordRepoImpl(
+        gh<_i395.ForgotPasswordRemoteDataSourceContract>(),
+      ),
+    );
+    gh.factory<_i597.ForgotPasswordUseCase>(
+      () => _i597.ForgotPasswordUseCase(gh<_i511.ForgetPasswordRepoContract>()),
+    );
+    gh.factory<_i578.ResetPasswordUseCase>(
+      () => _i578.ResetPasswordUseCase(gh<_i511.ForgetPasswordRepoContract>()),
+    );
+    gh.factory<_i717.VerifyResetCodeUseCase>(
+      () =>
+          _i717.VerifyResetCodeUseCase(gh<_i511.ForgetPasswordRepoContract>()),
+    );
+    gh.factory<_i1024.ForgotPasswordViewModel>(
+      () => _i1024.ForgotPasswordViewModel(
+        gh<_i597.ForgotPasswordUseCase>(),
+        gh<_i717.VerifyResetCodeUseCase>(),
+        gh<_i578.ResetPasswordUseCase>(),
+      ),
     gh.factory<_i410.RegisterApiClient>(
       () => _i410.RegisterApiClient(gh<_i361.Dio>()),
     );
