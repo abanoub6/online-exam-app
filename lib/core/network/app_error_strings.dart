@@ -10,4 +10,6 @@ class AppErrorStrings {
 
   static const String unexpectedError =
       'An unexpected error occurred. Please try again';
+
+  static const String unauthorizedError = 'Session expired, please login again';
 }

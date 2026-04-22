@@ -1,21 +1,24 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/equatable.dart';
 import 'user_model.dart';
 
-part 'login_response_model.g.dart';
-
-@JsonSerializable()
-class LoginResponseModel {
+class LoginResponseModel extends Equatable {
   final String message;
   final String token;
   final UserModel user;
 
-  LoginResponseModel({
+  const LoginResponseModel({
     required this.message,
     required this.token,
     required this.user,
   });
-  factory LoginResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$LoginResponseModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$LoginResponseModelToJson(this);
+  factory LoginResponseModel.fromJson(Map<String, dynamic> json) =>
+      LoginResponseModel(
+        message: json['message'] ?? '',
+        token: json['token'] ?? '',
+        user: UserModel.fromJson(json['user']),
+      );
+
+  @override
+  List<Object?> get props => [message, token, user];
 }

@@ -11,23 +11,36 @@ import 'package:online_exam_app_v/features/forgot_password/presentation/view_mod
 import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/states/forgot_password_state.dart';
 import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
 
-class ResetPasswordScreen extends StatelessWidget {
+class ResetPasswordScreen extends StatefulWidget {
   static const String routeName = AppStrings.resetPassword;
-  const ResetPasswordScreen({super.key});
+  final String email;
+  const ResetPasswordScreen({super.key, required this.email});
 
   @override
-  Widget build(BuildContext context) {
-    return const _ResetPasswordView();
-  }
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
-class _ResetPasswordView extends StatelessWidget {
-  const _ResetPasswordView();
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  final resetFormKey = GlobalKey<FormState>();
+  late ForgotPasswordViewModel cubit;
+
+  @override
+  void initState() {
+    super.initState();
+    cubit = context.read<ForgotPasswordViewModel>();
+  }
+
+  @override
+  void dispose() {
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<ForgotPasswordViewModel>();
-
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -59,7 +72,7 @@ class _ResetPasswordView extends StatelessWidget {
           } else if (state is ForgotPasswordResetFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
+                content: Text(state.errorMessage ?? ''),
                 backgroundColor: AppColors.red,
               ),
             );
@@ -68,7 +81,7 @@ class _ResetPasswordView extends StatelessWidget {
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: AppSizes.h(24)),
           child: Form(
-            key: cubit.resetFormKey,
+            key: resetFormKey,
             child: Column(
               children: [
                 SizedBox(height: AppSizes.h(24)),
@@ -88,7 +101,7 @@ class _ResetPasswordView extends StatelessWidget {
                 ),
                 SizedBox(height: AppSizes.h(32)),
                 TextFormField(
-                  controller: cubit.passwordController,
+                  controller: passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     hintText: AppStrings.enterYourPassword,
@@ -105,7 +118,7 @@ class _ResetPasswordView extends StatelessWidget {
                 ),
                 SizedBox(height: AppSizes.h(24)),
                 TextFormField(
-                  controller: cubit.confirmPasswordController,
+                  controller: confirmPasswordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     hintText: AppStrings.confirmPassword,
@@ -120,7 +133,7 @@ class _ResetPasswordView extends StatelessWidget {
                   textInputAction: TextInputAction.done,
                   validator: (value) => AppValidators.confirmPassword(
                     value,
-                    cubit.passwordController.text,
+                    passwordController.text,
                   ),
                 ),
                 SizedBox(height: AppSizes.h(40)),
@@ -129,16 +142,20 @@ class _ResetPasswordView extends StatelessWidget {
                     final isLoading = state is ForgotPasswordResetLoading;
                     return SizedBox(
                       width: double.infinity,
-                      height: AppSizes.h(55),
+                      height: AppSizes.h(56),
                       child: PrimaryButton(
                         isLoading: isLoading,
                         text: AppStrings.continueText,
                         onPressed: isLoading
                             ? null
                             : () {
-                                if (cubit.resetFormKey.currentState!
-                                    .validate()) {
-                                  cubit.doEvent(ResetPasswordEvent());
+                                if (resetFormKey.currentState!.validate()) {
+                                  cubit.doEvent(
+                                    ResetPasswordEvent(
+                                      widget.email,
+                                      passwordController.text,
+                                    ),
+                                  );
                                 }
                               },
                       ),

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:online_exam_app_v/config/base_responce/base_response.dart';
@@ -20,107 +19,68 @@ class ForgotPasswordViewModel extends Cubit<ForgotPasswordState> {
     this._forgotPasswordUseCase,
     this._verifyResetCodeUseCase,
     this._resetPasswordUseCase,
-  ) : super(const ForgotPasswordInitial());
-
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-
-  final emailFormKey = GlobalKey<FormState>();
-  final resetFormKey = GlobalKey<FormState>();
-
-  String _verifyCode = '';
-  String _email = '';
-
-  void setCode(String code) => _verifyCode = code;
+  ) : super(ForgotPasswordInitial());
 
   Future<void> doEvent(ForgotPasswordEvents event) async {
     switch (event) {
       case SendEmailEvent():
-        await _sendEmail();
+        await _sendEmail(event.email);
       case VerifyCodeEvent():
-        await _verifyCode_();
+        await _verifyCode(event.code);
       case ResendCodeEvent():
-        await _resendCode();
+        await _resendCode(event.email);
       case ResetPasswordEvent():
-        await _resetPassword();
+        await _resetPassword(event.email, event.password);
     }
   }
 
-  Future<void> _sendEmail() async {
-    if (!emailFormKey.currentState!.validate()) return;
-
-    _email = emailController.text.trim();
-    emit(const ForgotPasswordEmailLoading());
-
-    final result = await _forgotPasswordUseCase(email: _email);
-
+  Future<void> _sendEmail(String email) async {
+    emit(ForgotPasswordEmailLoading());
+    final result = await _forgotPasswordUseCase(email: email);
     switch (result) {
       case SuccessBaseResponse<ForgotPasswordEntity>():
-        emit(
-          ForgotPasswordEmailSuccess(result.data.message ?? result.data.info),
-        );
+        emit(ForgotPasswordEmailSuccess(result.data));
       case ErrorBaseResponse<ForgotPasswordEntity>():
         emit(ForgotPasswordEmailFailure(result.errorMessage));
     }
   }
 
-  Future<void> _verifyCode_() async {
-    if (_verifyCode.length != 6) {
-      emit(
-        const ForgotPasswordVerifyFailure(
-          AppStrings.pleaseEnterTheCompleteCode,
-        ),
-      );
+  Future<void> _verifyCode(String code) async {
+    if (code.length != 6) {
+      emit(ForgotPasswordVerifyFailure(AppStrings.pleaseEnterTheCompleteCode));
       return;
     }
-
-    emit(const ForgotPasswordVerifyLoading());
-
-    final result = await _verifyResetCodeUseCase(resetCode: _verifyCode);
-
+    emit(ForgotPasswordVerifyLoading());
+    final result = await _verifyResetCodeUseCase(resetCode: code);
     switch (result) {
       case SuccessBaseResponse<ForgotPasswordEntity>():
-        emit(ForgotPasswordVerifySuccess(result.data.status));
+        emit(ForgotPasswordVerifySuccess(result.data));
       case ErrorBaseResponse<ForgotPasswordEntity>():
         emit(ForgotPasswordVerifyFailure(result.errorMessage));
     }
   }
 
-  Future<void> _resendCode() async {
-    final result = await _forgotPasswordUseCase(email: _email);
-
+  Future<void> _resendCode(String email) async {
+    final result = await _forgotPasswordUseCase(email: email);
     switch (result) {
       case SuccessBaseResponse<ForgotPasswordEntity>():
-        emit(const ForgotPasswordCodeResent());
+        emit(ForgotPasswordCodeResent());
       case ErrorBaseResponse<ForgotPasswordEntity>():
         emit(ForgotPasswordVerifyFailure(result.errorMessage));
     }
   }
 
-  Future<void> _resetPassword() async {
-    if (!resetFormKey.currentState!.validate()) return;
-
-    emit(const ForgotPasswordResetLoading());
-
+  Future<void> _resetPassword(String email, String password) async {
+    emit(ForgotPasswordResetLoading());
     final result = await _resetPasswordUseCase(
-      email: _email,
-      newPassword: passwordController.text,
+      email: email,
+      newPassword: password,
     );
-
     switch (result) {
       case SuccessBaseResponse<ForgotPasswordEntity>():
-        emit(ForgotPasswordResetSuccess(result.data.token));
+        emit(ForgotPasswordResetSuccess(result.data));
       case ErrorBaseResponse<ForgotPasswordEntity>():
         emit(ForgotPasswordResetFailure(result.errorMessage));
     }
-  }
-
-  @override
-  Future<void> close() {
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    return super.close();
   }
 }

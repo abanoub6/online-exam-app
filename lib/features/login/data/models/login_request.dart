@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:online_exam_app_v/core/constants/app_api_param.dart';
 
-class LoginRequest {
+class LoginRequest extends Equatable {
   final String email;
   final String password;
   final bool rememberMe;
@@ -16,11 +17,12 @@ class LoginRequest {
     AppApiParam.password: password,
   };
 
-  LoginRequest copyWith({bool? rememberMe}) {
-    return LoginRequest(
-      email: email,
-      password: password,
-      rememberMe: rememberMe ?? this.rememberMe,
-    );
-  }
+  LoginRequest copyWith({bool? rememberMe}) => LoginRequest(
+    email: email,
+    password: password,
+    rememberMe: rememberMe ?? this.rememberMe,
+  );
+
+  @override
+  List<Object?> get props => [email, password, rememberMe];
 }

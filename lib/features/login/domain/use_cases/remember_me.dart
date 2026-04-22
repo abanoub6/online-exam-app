@@ -6,11 +6,8 @@ class RememberMeUseCase {
   final LoginRepoContract loginRepoContract;
 
   RememberMeUseCase({required this.loginRepoContract});
-  void rememberMe(bool rememberMe) {
-    loginRepoContract.rememberMe(rememberMe);
-  }
 
-  Future<bool?> isRememberedMe() async {
-    return await loginRepoContract.isRememberedMe();
-  }
+  void rememberMe(bool rememberMe) => loginRepoContract.rememberMe(rememberMe);
+
+  Future<bool?> isRememberedMe() => loginRepoContract.isRememberedMe();
 }

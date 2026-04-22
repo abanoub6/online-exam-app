@@ -12,30 +12,34 @@ import 'package:online_exam_app_v/features/forgot_password/presentation/view_mod
 import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-class VerifyResetCodeScreen extends StatelessWidget {
+class VerifyResetCodeScreen extends StatefulWidget {
   static const String routeName = AppStrings.verifyResetCode;
-  const VerifyResetCodeScreen({super.key});
+  final String email;
+  const VerifyResetCodeScreen({super.key, required this.email});
 
   @override
-  Widget build(BuildContext context) {
-    return const _VerifyResetCodeView();
+  State<VerifyResetCodeScreen> createState() => _VerifyResetCodeScreenState();
+}
+
+class _VerifyResetCodeScreenState extends State<VerifyResetCodeScreen> {
+  final ValueNotifier<bool> _hasError = ValueNotifier(false);
+  String _code = '';
+  late ForgotPasswordViewModel cubit;
+
+  @override
+  void initState() {
+    super.initState();
+    cubit = context.read<ForgotPasswordViewModel>();
   }
-}
-
-class _VerifyResetCodeView extends StatefulWidget {
-  const _VerifyResetCodeView();
 
   @override
-  State<_VerifyResetCodeView> createState() => _VerifyResetCodeViewState();
-}
-
-class _VerifyResetCodeViewState extends State<_VerifyResetCodeView> {
-  bool _hasError = false;
+  void dispose() {
+    _hasError.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<ForgotPasswordViewModel>();
-
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -57,21 +61,21 @@ class _VerifyResetCodeViewState extends State<_VerifyResetCodeView> {
       body: BlocListener<ForgotPasswordViewModel, ForgotPasswordState>(
         listener: (context, state) {
           if (state is ForgotPasswordVerifySuccess) {
-            setState(() => _hasError = false);
+            _hasError.value = false;
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
                   value: cubit,
-                  child: const ResetPasswordScreen(),
+                  child: ResetPasswordScreen(email: widget.email),
                 ),
               ),
             );
           } else if (state is ForgotPasswordVerifyFailure) {
-            setState(() => _hasError = true);
+            _hasError.value = true;
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
+                content: Text(state.errorMessage ?? ''),
                 backgroundColor: AppColors.red,
               ),
             );
@@ -104,64 +108,80 @@ class _VerifyResetCodeViewState extends State<_VerifyResetCodeView> {
                 ),
               ),
               SizedBox(height: AppSizes.h(32)),
-              PinCodeTextField(
-                appContext: context,
-                length: 6,
-                onChanged: (value) {
-                  cubit.setCode(value);
-                  if (_hasError) setState(() => _hasError = false);
-                },
-                onCompleted: (_) => cubit.doEvent(VerifyCodeEvent()),
-                keyboardType: TextInputType.number,
-                animationType: AnimationType.scale,
-                animationDuration: const Duration(milliseconds: 200),
-                textStyle: AppTextStyles.s24w400(),
-                pinTheme: PinTheme(
-                  shape: PinCodeFieldShape.box,
-                  borderRadius: BorderRadius.circular(AppSizes.r(10)),
-                  fieldHeight: AppSizes.h(50),
-                  fieldWidth: AppSizes.w(50),
-                  activeFillColor: _hasError
-                      ? AppColors.white
-                      : AppColors.ligtGrey,
-                  inactiveFillColor: _hasError
-                      ? AppColors.white
-                      : AppColors.ligtGrey,
-                  selectedFillColor: _hasError
-                      ? AppColors.white
-                      : AppColors.ligtGrey,
-                  activeColor: _hasError ? AppColors.red : AppColors.ligtGrey,
-                  inactiveColor: _hasError ? AppColors.red : AppColors.ligtGrey,
-                  selectedColor: _hasError ? AppColors.red : AppColors.blue,
-                  borderWidth: 1.5,
-                ),
-                enableActiveFill: true,
-                cursorColor: AppColors.blue,
-              ),
-              if (_hasError)
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
+              ValueListenableBuilder<bool>(
+                valueListenable: _hasError,
+                builder: (context, hasError, _) {
+                  return Column(
                     children: [
-                      const Icon(
-                        Icons.error_outline,
-                        color: AppColors.red,
-                        size: 16,
+                      PinCodeTextField(
+                        appContext: context,
+                        length: 6,
+                        onChanged: (value) {
+                          _code = value;
+                          if (hasError) _hasError.value = false;
+                        },
+                        onCompleted: (_) =>
+                            cubit.doEvent(VerifyCodeEvent(_code)),
+                        keyboardType: TextInputType.number,
+                        animationType: AnimationType.scale,
+                        animationDuration: const Duration(milliseconds: 200),
+                        textStyle: AppTextStyles.s24w400(),
+                        pinTheme: PinTheme(
+                          shape: PinCodeFieldShape.box,
+                          borderRadius: BorderRadius.circular(AppSizes.r(10)),
+                          fieldHeight: AppSizes.h(50),
+                          fieldWidth: AppSizes.w(50),
+                          activeFillColor: hasError
+                              ? AppColors.white
+                              : AppColors.ligtGrey,
+                          inactiveFillColor: hasError
+                              ? AppColors.white
+                              : AppColors.ligtGrey,
+                          selectedFillColor: hasError
+                              ? AppColors.white
+                              : AppColors.ligtGrey,
+                          activeColor: hasError
+                              ? AppColors.red
+                              : AppColors.ligtGrey,
+                          inactiveColor: hasError
+                              ? AppColors.red
+                              : AppColors.ligtGrey,
+                          selectedColor: hasError
+                              ? AppColors.red
+                              : AppColors.blue,
+                          borderWidth: 1.5,
+                        ),
+                        enableActiveFill: true,
+                        cursorColor: AppColors.blue,
                       ),
-                      SizedBox(width: AppSizes.w(4)),
-                      Text(
-                        AppStrings.invalidCode,
-                        style: AppTextStyles.s14w400(AppColors.red),
-                      ),
+                      if (hasError)
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.error_outline,
+                                color: AppColors.red,
+                                size: 16,
+                              ),
+                              SizedBox(width: AppSizes.w(4)),
+                              Text(
+                                AppStrings.invalidCode,
+                                style: AppTextStyles.s14w400(AppColors.red),
+                              ),
+                            ],
+                          ),
+                        ),
                     ],
-                  ),
-                ),
+                  );
+                },
+              ),
               SizedBox(height: AppSizes.h(24)),
               RichTextWithLink(
                 normalText: AppStrings.didntReceiveCode,
                 linkText: AppStrings.resend,
-                onLinkTap: () => cubit.doEvent(ResendCodeEvent()),
+                onLinkTap: () => cubit.doEvent(ResendCodeEvent(widget.email)),
                 linkTextColor: AppColors.blue,
               ),
             ],
