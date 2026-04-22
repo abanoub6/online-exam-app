@@ -54,7 +54,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           ),
         ),
         title: Text(
-          AppStrings.resetPassword,
+          AppStrings.resetPasswordTitle,
           style: AppTextStyles.s20w500(AppColors.black),
         ),
       ),
