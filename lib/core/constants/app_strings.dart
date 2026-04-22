@@ -38,4 +38,21 @@ class AppStrings {
       "Please enter the complete 6-digit code";
   static const String pleaseEnterYourEmail = "Please enter your email";
   static const String thisEmailIsNotValid = "This Email is not valid";
+  static const String search = "Search";
+  static const String survey = "Survey";
+  static const String browseBySubject = "Browse by subject";
+  static const String explore = "Explore";
+  static const String result = "Result";
+  static const String profile = "Profile";
+  static const String loginScreen = "loginScreen";
+  static const String rememberMe = "Remember me";
+  static const String forgetPasswordLink = "Forget password?";
+  static const String work = "Work";
+  static const String pleaseEnterYourPassword = "Please enter your password";
+  static const String dontHaveAnAccount = "Don't have an account?";
+  static const String exploreScreen = "ExploreScreen";
+  static const String iconHome = "assets/icons/explore_icon.png";
+  static const String iconResult = "assets/icons/results_icon.png";
+  static const String iconPerson = "assets/icons/person_icon.png";
+  static const String forgetPasswordScreen = "forgetPasswordscreen";
 }

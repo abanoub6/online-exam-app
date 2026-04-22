@@ -7,10 +7,10 @@ import 'package:online_exam_app_v/features/register/domain/entities/user_entity.
 import 'package:online_exam_app_v/features/register/domain/repo/register_repository_contract.dart';
 
 @Injectable(as: RegisterRepositoryContract)
-class AuthRepositoryImpl implements RegisterRepositoryContract {
+class RegisterRepositoryImpl implements RegisterRepositoryContract {
   final RegisterRemoteDataSourceContract remoteDataSource;
 
-  AuthRepositoryImpl(this.remoteDataSource);
+  RegisterRepositoryImpl(this.remoteDataSource);
 
   @override
   Future<BaseResponse<UserEntity>> register({

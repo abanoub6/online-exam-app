@@ -11,6 +11,11 @@ class ApiErrorHandler {
         return error.response!.data['message'];
       }
 
+      // Unauthorized — الـ token انتهت صلاحيته
+      if (error.response?.statusCode == 401) {
+        return AppErrorStrings.unauthorizedError;
+      }
+
       // Timeout
       if (error.type == DioExceptionType.connectionTimeout ||
           error.type == DioExceptionType.sendTimeout ||

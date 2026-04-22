@@ -10,7 +10,6 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:dio/dio.dart' as _i361;
-import 'package:flutter/material.dart' as _i409;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
@@ -28,6 +27,18 @@ import '../../features/exams/domain/use_cases/get_exams_by_subject_use_case.dart
     as _i952;
 import '../../features/exams/presentation/view_model/cubit/exams_view_model.dart'
     as _i795;
+import '../../features/explore/api/data_sources/explor_remote_data_source_impl.dart'
+    as _i394;
+import '../../features/explore/api/explor_api_client/explor_api_client.dart'
+    as _i734;
+import '../../features/explore/data/data_sources/explor_remote_data_source_contract.dart'
+    as _i320;
+import '../../features/explore/data/repo/explor_repo_impl.dart' as _i1068;
+import '../../features/explore/domain/repo/explor_repo_contract.dart' as _i692;
+import '../../features/explore/domain/use_cases/get_subjects_use_case.dart'
+    as _i593;
+import '../../features/explore/presentation/view_model/cubit/explor_view_model.dart'
+    as _i241;
 import '../../features/forgot_password/data/api/api_service.dart' as _i793;
 import '../../features/forgot_password/data/repo/forget_password_repo_impl.dart'
     as _i320;
@@ -41,6 +52,18 @@ import '../../features/forgot_password/domain/use_cases/verify_reset_code_use_ca
     as _i717;
 import '../../features/forgot_password/presentation/view_model/cubits/forgot_password_view_model.dart'
     as _i1024;
+import '../../features/login/api/data_sources/login_remote_data_source_imp.dart'
+    as _i211;
+import '../../features/login/api/login_api_client/login_api_client.dart'
+    as _i315;
+import '../../features/login/data/data_sources/login_remote_data_source_contract.dart'
+    as _i159;
+import '../../features/login/data/repo/login_repo_imp.dart' as _i185;
+import '../../features/login/domain/repo/login_repo_contract.dart' as _i180;
+import '../../features/login/domain/use_cases/login_use_case.dart' as _i191;
+import '../../features/login/domain/use_cases/remember_me.dart' as _i844;
+import '../../features/login/presentation/view_model/cubit/login_view_model.dart'
+    as _i705;
 import '../../features/register/api/data_source/register_remote_data_source_impl.dart'
     as _i845;
 import '../../features/register/api/home_api_client/register_api_client.dart'
@@ -53,8 +76,6 @@ import '../../features/register/domain/repo/register_repository_contract.dart'
     as _i210;
 import '../../features/register/domain/use_cases/register_usecase.dart'
     as _i679;
-import '../../features/register/presentation/screens/register_screen.dart'
-    as _i502;
 import '../../features/register/presentation/view_model/cubit/register_view_model.dart'
     as _i166;
 import '../dio/dio_interceptor.dart' as _i297;
@@ -84,9 +105,14 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i127.ExamApiClient>(
       () => _i127.ExamApiClient(gh<_i361.Dio>()),
+    gh.factory<_i734.ExplorApiClient>(
+      () => _i734.ExplorApiClient(gh<_i361.Dio>()),
     );
     gh.factory<_i793.AuthApiService>(
       () => _i793.AuthApiService(gh<_i361.Dio>()),
+    );
+    gh.factory<_i315.LoginApiClient>(
+      () => _i315.LoginApiClient(gh<_i361.Dio>()),
     );
     gh.factory<_i410.RegisterApiClient>(
       () => _i410.RegisterApiClient(gh<_i361.Dio>()),
@@ -116,9 +142,14 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i40.ExamRemoteDataSourceContract>(
       () => _i557.ExamRemoteDataSourceImpl(gh<_i127.ExamApiClient>()),
+    gh.factory<_i320.ExplorRemoteDataSourceContract>(
+      () => _i394.ExplorRemoteDataSourceImpl(gh<_i734.ExplorApiClient>()),
+    );
+    gh.factory<_i159.LoginRemoteDataSourceContract>(
+      () => _i211.LoginRemoteDataSourceImp(gh<_i315.LoginApiClient>()),
     );
     gh.factory<_i210.RegisterRepositoryContract>(
-      () => _i921.AuthRepositoryImpl(
+      () => _i921.RegisterRepositoryImpl(
         gh<_i684.RegisterRemoteDataSourceContract>(),
       ),
     );
@@ -130,6 +161,17 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i952.GetExamsBySubjectUseCase>(
       () => _i952.GetExamsBySubjectUseCase(gh<_i960.ExamRepoContract>()),
+    gh.factory<_i692.ExplorRepoContract>(
+      () => _i1068.ExplorRepoImpl(gh<_i320.ExplorRemoteDataSourceContract>()),
+    );
+    gh.factory<_i180.LoginRepoContract>(
+      () => _i185.LoginRepoImp(
+        gh<_i159.LoginRemoteDataSourceContract>(),
+        gh<_i558.FlutterSecureStorage>(),
+      ),
+    );
+    gh.factory<_i593.GetSubjectsUseCase>(
+      () => _i593.GetSubjectsUseCase(gh<_i692.ExplorRepoContract>()),
     );
     gh.factory<_i679.RegisterUseCase>(
       () => _i679.RegisterUseCase(gh<_i210.RegisterRepositoryContract>()),
@@ -141,7 +183,25 @@ extension GetItInjectableX on _i174.GetIt {
       ),
     );
     gh.singleton<_i166.RegisterViewModel>(
+    gh.lazySingleton<_i844.RememberMeUseCase>(
+      () => _i844.RememberMeUseCase(
+        loginRepoContract: gh<_i180.LoginRepoContract>(),
+      ),
+    );
+    gh.lazySingleton<_i191.LoginUseCase>(
+      () => _i191.LoginUseCase(gh<_i180.LoginRepoContract>()),
+    );
+    gh.factory<_i241.ExplorViewModel>(
+      () => _i241.ExplorViewModel(gh<_i593.GetSubjectsUseCase>()),
+    );
+    gh.factory<_i166.RegisterViewModel>(
       () => _i166.RegisterViewModel(gh<_i679.RegisterUseCase>()),
+    );
+    gh.factory<_i705.LoginViewModel>(
+      () => _i705.LoginViewModel(
+        gh<_i191.LoginUseCase>(),
+        rememberMeUseCase: gh<_i844.RememberMeUseCase>(),
+      ),
     );
     return this;
   }
