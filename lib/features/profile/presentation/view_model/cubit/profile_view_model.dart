@@ -20,7 +20,7 @@ class ProfileViewModel extends Cubit<ProfileState> {
     this._getProfileUseCase,
     this._editProfileUseCase,
     this._changePasswordUseCase,
-  ) : super(ProfileInitial());
+  ) : super(const ProfileInitial());
 
   Future<void> doEvent(ProfileEvents event) async {
     switch (event) {
@@ -34,7 +34,7 @@ class ProfileViewModel extends Cubit<ProfileState> {
   }
 
   Future<void> _getProfile() async {
-    emit(GetProfileLoading());
+    emit(const GetProfileLoading());
     final result = await _getProfileUseCase();
     switch (result) {
       case SuccessBaseResponse<ProfileEntity>():
@@ -45,7 +45,7 @@ class ProfileViewModel extends Cubit<ProfileState> {
   }
 
   Future<void> _editProfile(EditProfileRequest request) async {
-    emit(EditProfileLoading());
+    emit(const EditProfileLoading());
     final result = await _editProfileUseCase(request);
     switch (result) {
       case SuccessBaseResponse<ProfileEntity>():
@@ -56,11 +56,11 @@ class ProfileViewModel extends Cubit<ProfileState> {
   }
 
   Future<void> _changePassword(ChangePasswordRequest request) async {
-    emit(ChangePasswordLoading());
+    emit(const ChangePasswordLoading());
     final result = await _changePasswordUseCase(request);
     switch (result) {
       case SuccessBaseResponse<String>():
-        emit(ChangePasswordSuccess());
+        emit(const ChangePasswordSuccess());
       case ErrorBaseResponse<String>():
         emit(ChangePasswordFailure(result.errorMessage));
     }
