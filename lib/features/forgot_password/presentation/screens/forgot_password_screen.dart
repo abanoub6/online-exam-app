@@ -14,7 +14,7 @@ import 'package:online_exam_app_v/features/forgot_password/presentation/view_mod
 import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
-  static const String routeName = AppStrings.forgetPassword;
+  static const String routeName = AppStrings.forgetPasswordScreen;
   const ForgotPasswordScreen({super.key});
 
   @override

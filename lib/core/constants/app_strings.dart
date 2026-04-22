@@ -15,7 +15,7 @@ class AppStrings {
   static const String pleaseEnterYourPassword = "Please enter your password";
   static const String dontHaveAnAccount = "Don't have an account?";
   // static const String profile = "profile";
-  static const String forgetPassword = "forgetPassword";
+  static const String forgetPasswordScreen = "forgetPasswordscreen";
   static const String forgetPasswordTitle = "Forget password";
   static const String emailDescription =
       "Please enter your email associated to your account";
