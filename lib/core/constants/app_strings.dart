@@ -44,6 +44,7 @@ class AppStrings {
   static const String explore = "Explore";
   static const String result = "Result";
   static const String profile = "Profile";
+  static const String loginScreen = "loginScreen";
   static const String rememberMe = "Remember me";
   static const String forgetPasswordLink = "Forget password?";
   static const String work = "Work";
@@ -53,4 +54,5 @@ class AppStrings {
   static const String iconHome = "assets/icons/explore_icon.png";
   static const String iconResult = "assets/icons/results_icon.png";
   static const String iconPerson = "assets/icons/person_icon.png";
+  static const String forgetPasswordScreen = "forgetPasswordscreen";
 }

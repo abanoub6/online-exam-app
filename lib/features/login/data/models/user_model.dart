@@ -1,11 +1,7 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/equatable.dart';
 import 'package:online_exam_app_v/features/login/domain/entities/user_entity.dart';
 
-part 'user_model.g.dart';
-
-@JsonSerializable()
-class UserModel {
-  @JsonKey(name: '_id')
+class UserModel extends Equatable {
   final String id;
   final String username;
   final String firstName;
@@ -14,9 +10,9 @@ class UserModel {
   final String phone;
   final String role;
   final bool isVerified;
-  late final String createdAt;
+  final String createdAt;
 
-  UserModel({
+  const UserModel({
     required this.id,
     required this.username,
     required this.firstName,
@@ -27,6 +23,18 @@ class UserModel {
     required this.isVerified,
     required this.createdAt,
   });
+
+  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+    id: json['_id'] ?? '',
+    username: json['username'] ?? '',
+    firstName: json['firstName'] ?? '',
+    lastName: json['lastName'] ?? '',
+    email: json['email'] ?? '',
+    phone: json['phone'] ?? '',
+    role: json['role'] ?? '',
+    isVerified: json['isVerified'] ?? false,
+    createdAt: json['createdAt'] ?? '',
+  );
 
   UserEntity toEntity() => UserEntity(
     id: id,
@@ -39,8 +47,17 @@ class UserModel {
     isVerified: isVerified,
     createdAt: createdAt,
   );
-  factory UserModel.fromJson(Map<String, dynamic> json) =>
-      _$UserModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$UserModelToJson(this);
+  @override
+  List<Object?> get props => [
+    id,
+    username,
+    firstName,
+    lastName,
+    email,
+    phone,
+    role,
+    isVerified,
+    createdAt,
+  ];
 }

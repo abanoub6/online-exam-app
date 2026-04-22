@@ -8,7 +8,7 @@ import 'package:online_exam_app_v/features/login/domain/repo/login_repo_contract
 class LoginUseCase {
   LoginUseCase(this.loginRepoContract);
   LoginRepoContract loginRepoContract;
-  Future<BaseResponse<UserEntity>> call(LoginRequest loginRequest) async {
-    return await loginRepoContract.login(loginRequest);
-  }
+
+  Future<BaseResponse<UserEntity>> call(LoginRequest loginRequest) =>
+      loginRepoContract.login(loginRequest);
 }
