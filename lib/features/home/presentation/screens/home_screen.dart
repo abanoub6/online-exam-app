@@ -40,21 +40,21 @@ class _HomeScreenState extends State<HomeScreen> {
         destinations: const [
           NavigationDestination(
             icon: ImageIcon(
-              AssetImage("assets/icons/explore_icon.png"),
+              AssetImage(AppStrings.iconHome),
               color: AppColors.blue,
             ),
             label: AppStrings.explore,
           ),
           NavigationDestination(
             icon: ImageIcon(
-              AssetImage("assets/icons/results_icon.png"),
+              AssetImage(AppStrings.iconResult),
               color: AppColors.blue,
             ),
             label: AppStrings.result,
           ),
           NavigationDestination(
             icon: ImageIcon(
-              AssetImage("assets/icons/person_icon.png"),
+              AssetImage(AppStrings.iconPerson),
               color: AppColors.blue,
             ),
             label: AppStrings.profile,

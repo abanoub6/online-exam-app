@@ -45,66 +45,14 @@ class AppStrings {
   static const String result = "Result";
   static const String profile = "Profile";
   static const String loginScreen = "loginScreen";
-  static const String login = "Login";
-  static const String email = "Email";
-  static const String enterYourEmail = "Enter your email";
-  static const String password = "Password";
-  static const String enterYourPassword = "Enter your password";
   static const String rememberMe = "Remember me";
   static const String forgetPasswordLink = "Forget password?";
   static const String work = "Work";
   static const String pleaseEnterYourPassword = "Please enter your password";
   static const String dontHaveAnAccount = "Don't have an account?";
   static const String exploreScreen = "ExploreScreen";
-  static const String profileScreen = "profileScreen";
-  static const String username = 'Username';
-  static const String phone = 'Phone';
-  static const String update = 'Update';
-  static const String profileUpdatedSuccessfully =
-      'Profile updated successfully!';
-  static const String pleaseEnterYourUsername = 'Please enter your username';
-  static const String pleaseEnterYourFirstName = 'Please enter your first name';
-  static const String pleaseEnterYourLastName = 'Please enter your last name';
-  static const String pleaseEnterYourPhone = 'Please enter your phone number';
-  static const String changePassword = 'Change password';
-  static const String oldPassword = 'Old password';
-  static const String passwordChangedSuccessfully =
-      'Password changed successfully!';
-  static const String pleaseEnterYourOldPassword =
-      'Please enter your old password';
-  static const String editProfile = 'Edit profile';
-  static const String change = 'Change';
-  static const String currentPassword = 'Current password';
-  static const String pleaseEnterYourCurrentPassword =
-      'Please enter your current password';
-  // static const String profile = "profile";
+  static const String iconHome = "assets/icons/explore_icon.png";
+  static const String iconResult = "assets/icons/results_icon.png";
+  static const String iconPerson = "assets/icons/person_icon.png";
   static const String forgetPasswordScreen = "forgetPasswordscreen";
-  static const String forgetPasswordTitle = "Forget password";
-  static const String emailDescription =
-      "Please enter your email associated to your account";
-  static const String continueText = "Continue";
-  static const String resetPassword = "resetPassword";
-  static const String passwordResetSuccessfully =
-      "Password reset successfully!";
-  static const String resetPasswordTitle = "Reset password";
-  static const String passwordRequirements =
-      "Password must not be empty and must contain 6 characters with upper case letter and one number at least";
-  static const String newPassword = "New password";
-  static const String verifyResetCode = "Verify reset code";
-  static const String codeResentToYourEmail = "Code resent to your email";
-  static const String emailVerification = "Email verification";
-  static const String enterYourCode =
-      "Please enter your code that send to your email address";
-  static const String invalidCode = "Invalid code";
-  static const String didntReceiveCode = "Didn't receive code? ";
-  static const String resend = "Resend";
-  static const String pleaseEnterTheCompleteCode =
-      "Please enter the complete 6-digit code";
-  static const String userName = "User name";
-  static const String enterYourUserName = "Enter your user name";
-  static const String firstName = "First name";
-  static const String lastName = "Last name";
-  static const String confirmPassword = "Confirm password";
-  static const String phoneNumber = "Phone number";
-  static const String alreadyHaveAnAccount = "Already have an account?";
 }

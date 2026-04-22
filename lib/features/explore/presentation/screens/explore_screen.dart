@@ -8,6 +8,7 @@ import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
 import 'package:online_exam_app_v/features/explore/presentation/view_model/cubit/explor_view_model.dart';
 import 'package:online_exam_app_v/features/explore/presentation/view_model/states/subject_states.dart';
 import 'package:online_exam_app_v/features/explore/presentation/view_model/states/subject_events.dart';
+import 'package:online_exam_app_v/features/explore/presentation/widgets/explore_shimmer.dart';
 import 'package:online_exam_app_v/features/explore/presentation/widgets/search_text_field.dart';
 import 'package:online_exam_app_v/features/explore/presentation/widgets/subject_card.dart';
 
@@ -57,7 +58,7 @@ class ExploreScreen extends StatelessWidget {
                 child: BlocBuilder<ExplorViewModel, SubjectState>(
                   builder: (context, state) {
                     if (state is GetSubjectLoading) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const ExploreShimmer();
                     }
                     if (state is GetSubjectSuccess) {
                       return GridView.builder(

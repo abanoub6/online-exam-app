@@ -1,8 +1,20 @@
-sealed class SubjectEvents {}
+import 'package:equatable/equatable.dart';
 
-class GetSubjectEvent extends SubjectEvents {}
+sealed class SubjectEvents extends Equatable {
+  const SubjectEvents();
+}
+
+class GetSubjectEvent extends SubjectEvents {
+  const GetSubjectEvent();
+
+  @override
+  List<Object?> get props => [];
+}
 
 class SearchSubjectsEvent extends SubjectEvents {
   final String query;
-  SearchSubjectsEvent(this.query);
+  const SearchSubjectsEvent(this.query);
+
+  @override
+  List<Object?> get props => [query];
 }
