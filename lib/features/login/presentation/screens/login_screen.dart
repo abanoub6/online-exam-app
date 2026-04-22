@@ -1,16 +1,23 @@
-// lib/features/auth/presentation/pages/login_page.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:online_exam_app_v/config/di/di.dart';
+import 'package:online_exam_app_v/core/constants/app_strings.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
+import 'package:online_exam_app_v/core/utilies/app_validators.dart';
 import 'package:online_exam_app_v/core/widgets/primary_button.dart';
 import 'package:online_exam_app_v/core/widgets/rich_text_with_link.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/screens/forgot_password_screen.dart';
 import 'package:online_exam_app_v/features/home/presentation/screens/home_screen.dart';
+import 'package:online_exam_app_v/features/login/data/models/login_request.dart';
+import 'package:online_exam_app_v/features/login/presentation/view_model/cubit/login_view_model.dart';
+import 'package:online_exam_app_v/features/login/presentation/view_model/states/login_events.dart';
+import 'package:online_exam_app_v/features/login/presentation/view_model/states/login_state.dart';
 import 'package:online_exam_app_v/features/register/presentation/screens/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  static const String routeName = "login";
+  static const String routeName = AppStrings.loginScreen;
   const LoginScreen({super.key});
 
   @override
@@ -18,118 +25,172 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _rememberMe = false;
-  bool _isLoading = false;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final GlobalKey<FormState> _formState = GlobalKey<FormState>();
+  bool rememberMe = false;
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
-  }
-
-  void _login() {
-    setState(() => _isLoading = true);
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() => _isLoading = false);
-      Navigator.pushReplacementNamed(context, HomeScreen.routeName);
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-        centerTitle: false,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppSizes.w(24),
-            vertical: AppSizes.h(16),
+    return BlocProvider<LoginViewModel>(
+      create: (context) => getIt<LoginViewModel>(),
+      child: Builder(
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            title: Text(AppStrings.login, style: AppTextStyles.s20w500()),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  hintText: 'Enter your email',
-                ),
-              ),
-
-              SizedBox(height: AppSizes.h(20)),
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  label: Text("data"),
-                  hintStyle: AppTextStyles.s14w400(AppColors.gray),
-                  hintText: 'Enter your password',
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.gray),
-                  ),
-                ),
-              ),
-
-              SizedBox(height: AppSizes.h(16)),
-
-              // Remember me + Forgot password
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: _rememberMe,
-                        onChanged: (value) {
-                          setState(() => _rememberMe = value ?? false);
-                        },
-                        activeColor: AppColors.blue,
+          body: Padding(
+            padding: EdgeInsets.all(AppSizes.h(16)),
+            child: Form(
+              key: _formState,
+              child: SingleChildScrollView(
+                child: Column(
+                  spacing: AppSizes.h(24),
+                  children: [
+                    TextFormField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        label: Text(
+                          AppStrings.email,
+                          style: AppTextStyles.s14w400(AppColors.black),
+                        ),
+                        hintText: AppStrings.enterYourEmail,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        floatingLabelStyle: AppTextStyles.s14w400(
+                          AppColors.black,
+                        ),
+                        filled: false,
                       ),
-                      Text('Remember me', style: AppTextStyles.s14w400()),
-                    ],
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        ForgotPasswordScreen.routeName,
-                      );
-                    },
-                    child: Text(
-                      'Forgot password?',
-                      style: AppTextStyles.s14w500(AppColors.blue),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) => AppValidators.compose([
+                        (v) => AppValidators.required(
+                          v,
+                          message: AppStrings.pleaseEnterYourEmail,
+                        ),
+                        (v) => AppValidators.email(
+                          v,
+                          message: AppStrings.thisEmailIsNotValid,
+                        ),
+                      ], value),
                     ),
-                  ),
-                ],
+                    TextFormField(
+                      controller: passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        label: Text(
+                          AppStrings.password,
+                          style: AppTextStyles.s14w400(AppColors.black),
+                        ),
+                        hintText: AppStrings.enterYourPassword,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        floatingLabelStyle: AppTextStyles.s14w400(
+                          AppColors.black,
+                        ),
+                        filled: false,
+                      ),
+                      keyboardType: TextInputType.visiblePassword,
+                      validator: (value) => AppValidators.required(
+                        value,
+                        message: AppStrings.pleaseEnterYourPassword,
+                      ),
+                    ),
+
+                    StatefulBuilder(
+                      builder: (context, setCheckboxState) => Row(
+                        children: [
+                          Checkbox(
+                            value: rememberMe,
+                            tristate: true,
+                            onChanged: (value) => setCheckboxState(() {
+                              rememberMe = value ?? false;
+                            }),
+                          ),
+                          Text(
+                            AppStrings.rememberMe,
+                            style: AppTextStyles.s14w400(),
+                          ),
+                          const Spacer(),
+                          GestureDetector(
+                            onTap: () => Navigator.pushNamed(
+                              context,
+                              ForgetPasswordScreen.routeName,
+                            ),
+                            child: Text(
+                              AppStrings.forgetPassword,
+                              style: AppTextStyles.s12w400().copyWith(
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    BlocConsumer<LoginViewModel, LoginStates>(
+                      listener: (context, state) {
+                        if (state.loginState.isLoading) return;
+
+                        if (state.loginState.data != null) {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            HomeScreen.routeName,
+                          );
+                        } else if (state.loginState.errorMessage != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(state.loginState.errorMessage!),
+                              backgroundColor: AppColors.red,
+                            ),
+                          );
+                        }
+                      },
+                      builder: (context, state) {
+                        return SizedBox(
+                          width: double.infinity,
+                          height: AppSizes.h(52),
+                          child: PrimaryButton(
+                            onPressed: state.loginState.isLoading
+                                ? null
+                                : () {
+                                    if (_formState.currentState!.validate()) {
+                                      context.read<LoginViewModel>().doEvent(
+                                        LoginUserEvent(
+                                          login: LoginRequest(
+                                            email: emailController.text.trim(),
+                                            password: passwordController.text,
+                                            rememberMe: rememberMe,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                            text: AppStrings.login,
+                            isLoading: state.loginState.isLoading,
+                          ),
+                        );
+                      },
+                    ),
+
+                    RichTextWithLink(
+                      normalText: AppStrings.dontHaveAnAccount,
+                      linkText: AppStrings.signUp,
+                      linkTextColor: AppColors.blue,
+                      onLinkTap: () => Navigator.pushNamed(
+                        context,
+                        RegisterScreen.routeName,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-
-              SizedBox(height: AppSizes.h(32)),
-
-              PrimaryButton(onPressed: _login, text: "login"),
-
-              SizedBox(height: AppSizes.h(24)),
-
-              RichTextWithLink(
-                linkTextColor: AppColors.blue,
-                normalText: "Don't have an account? ",
-                linkText: "Sign up",
-                onLinkTap: () {
-                  Navigator.pushNamed(context, RegisterScreen.routeName);
-                },
-                textAlign: TextAlign.center,
-              ),
-            ],
+            ),
           ),
         ),
       ),
