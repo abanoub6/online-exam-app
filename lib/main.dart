@@ -5,6 +5,7 @@ import 'package:online_exam_app_v/config/di/di.dart';
 import 'package:online_exam_app_v/config/observer/bloc_observer.dart';
 import 'package:online_exam_app_v/core/theme/app_theme.dart';
 import 'package:online_exam_app_v/features/exam-details/presentation/screens/exam_details_screen.dart';
+import 'package:online_exam_app_v/features/exams/presentation/screens/examStartScreen.dart';
 import 'package:online_exam_app_v/features/exams/presentation/screens/exams_screen.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/screens/forgot_password_screen.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/screens/reset_password_screen.dart';
@@ -43,6 +44,8 @@ class MyApp extends StatelessWidget {
             HomeScreen.routeName: (context) => HomeScreen(),
             ExamsScreen.routeName: (context) => ExamsScreen(),
             ExamDetailsScreen.routeName: (context) => ExamDetailsScreen(),
+            ExamsScreen.routeName: (context) => const ExamsScreen(),
+            ExamStartScreen.routeName: (context) => const ExamStartScreen(),
           },
         );
       },

@@ -1,50 +1,46 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/equatable.dart';
 import 'package:online_exam_app_v/features/exams/data/model/exam_dto.dart';
 
-part 'exams_response.g.dart';
+class ExamResponse extends Equatable {
+  final String message;
+  final PaginationInfo paginationInfo;
+  final List<ExamDto> exams;
 
-@JsonSerializable()
-class ExamResponse {
-  @JsonKey(name: "message")
-  String? message;
-
-  @JsonKey(name: "metadata")
-  PaginationInfo? paginationInfo;
-
-  @JsonKey(name: "exams")
-  List<ExamDto>? exams;
-
-  ExamResponse({
-    this.message,
-    this.paginationInfo,
-    this.exams,
+  const ExamResponse({
+    required this.message,
+    required this.paginationInfo,
+    required this.exams,
   });
 
-  factory ExamResponse.fromJson(Map<String, dynamic> json) =>
-      _$ExamResponseFromJson(json);
+  factory ExamResponse.fromJson(Map<String, dynamic> json) => ExamResponse(
+    message: json['message'] ?? '',
+    paginationInfo: PaginationInfo.fromJson(json['metadata'] ?? {}),
+    exams: (json['exams'] as List<dynamic>? ?? [])
+        .map((e) => ExamDto.fromJson(e))
+        .toList(),
+  );
 
-  Map<String, dynamic> toJson() => _$ExamResponseToJson(this);
+  @override
+  List<Object?> get props => [message, paginationInfo, exams];
 }
 
-@JsonSerializable()
-class PaginationInfo {
-  @JsonKey(name: "currentPage")
-  int? currentPage;
+class PaginationInfo extends Equatable {
+  final int currentPage;
+  final int numberOfPages;
+  final int limit;
 
-  @JsonKey(name: "numberOfPages")
-  int? numberOfPages;
-
-  @JsonKey(name: "limit")
-  int? limit;
-
-  PaginationInfo({
-    this.currentPage,
-    this.numberOfPages,
-    this.limit,
+  const PaginationInfo({
+    required this.currentPage,
+    required this.numberOfPages,
+    required this.limit,
   });
 
-  factory PaginationInfo.fromJson(Map<String, dynamic> json) =>
-      _$PaginationInfoFromJson(json);
+  factory PaginationInfo.fromJson(Map<String, dynamic> json) => PaginationInfo(
+    currentPage: json['currentPage'] ?? 1,
+    numberOfPages: json['numberOfPages'] ?? 1,
+    limit: json['limit'] ?? 40,
+  );
 
-  Map<String, dynamic> toJson() => _$PaginationInfoToJson(this);
+  @override
+  List<Object?> get props => [currentPage, numberOfPages, limit];
 }

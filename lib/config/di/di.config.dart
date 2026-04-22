@@ -20,9 +20,14 @@ import '../../features/exams/api/data_source/exam_remote_data_source_imp.dart'
 import '../../features/exams/api/exam_api_client/exam_api_client.dart' as _i127;
 import '../../features/exams/data/data_source/exam_remote_data_source_contract.dart'
     as _i40;
+import '../../features/exams/data/repo/exam_repo_imp.dart' as _i456;
 import '../../features/exams/domain/repo/exam_repo_contract.dart' as _i960;
 import '../../features/exams/domain/use_cases/get_all_exams_use_case.dart'
     as _i10;
+import '../../features/exams/domain/use_cases/get_exams_by_subject_use_case.dart'
+    as _i952;
+import '../../features/exams/presentation/view_model/cubit/exams_view_model.dart'
+    as _i795;
 import '../../features/forgot_password/data/api/api_service.dart' as _i793;
 import '../../features/forgot_password/data/repo/forget_password_repo_impl.dart'
     as _i320;
@@ -71,16 +76,15 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i502.RegisterScreen>(
       () => _i502.RegisterScreen(key: gh<_i409.Key>()),
     );
-    gh.factory<_i10.GetAllExamsUseCase>(
-      () => _i10.GetAllExamsUseCase(gh<_i960.ExamRepoContract>()),
-    );
     gh.lazySingleton<_i297.AuthInterceptor>(
       () => _i297.AuthInterceptor(gh<_i558.FlutterSecureStorage>()),
     );
     gh.lazySingleton<_i361.Dio>(
       () => dioModule.dio(gh<_i297.AuthInterceptor>()),
     );
-    gh.factory<_i127.ExamApiClient>(() => _i127.ExamApiClient(gh<_i361.Dio>()));
+    gh.lazySingleton<_i127.ExamApiClient>(
+      () => _i127.ExamApiClient(gh<_i361.Dio>()),
+    );
     gh.factory<_i793.AuthApiService>(
       () => _i793.AuthApiService(gh<_i361.Dio>()),
     );
@@ -111,15 +115,30 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i845.RegisterRemoteDataSourceImpl(gh<_i410.RegisterApiClient>()),
     );
     gh.factory<_i40.ExamRemoteDataSourceContract>(
-      () => _i557.ExamRemoteDataSourceImp(gh<_i127.ExamApiClient>()),
+      () => _i557.ExamRemoteDataSourceImpl(gh<_i127.ExamApiClient>()),
     );
     gh.factory<_i210.RegisterRepositoryContract>(
       () => _i921.AuthRepositoryImpl(
         gh<_i684.RegisterRemoteDataSourceContract>(),
       ),
     );
+    gh.factory<_i960.ExamRepoContract>(
+      () => _i456.ExamRepoImpl(gh<_i40.ExamRemoteDataSourceContract>()),
+    );
+    gh.lazySingleton<_i10.GetAllExamsUseCase>(
+      () => _i10.GetAllExamsUseCase(gh<_i960.ExamRepoContract>()),
+    );
+    gh.lazySingleton<_i952.GetExamsBySubjectUseCase>(
+      () => _i952.GetExamsBySubjectUseCase(gh<_i960.ExamRepoContract>()),
+    );
     gh.factory<_i679.RegisterUseCase>(
       () => _i679.RegisterUseCase(gh<_i210.RegisterRepositoryContract>()),
+    );
+    gh.factory<_i795.ExamsViewModel>(
+      () => _i795.ExamsViewModel(
+        gh<_i10.GetAllExamsUseCase>(),
+        gh<_i952.GetExamsBySubjectUseCase>(),
+      ),
     );
     gh.singleton<_i166.RegisterViewModel>(
       () => _i166.RegisterViewModel(gh<_i679.RegisterUseCase>()),

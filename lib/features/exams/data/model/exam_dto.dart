@@ -1,42 +1,53 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:equatable/equatable.dart';
+import 'package:online_exam_app_v/features/exams/domain/models/exam_entity.dart';
 
-part 'exam_dto.g.dart';
+class ExamDto extends Equatable {
+  final String id;
+  final String title;
+  final int duration;
+  final String subject;
+  final int numberOfQuestions;
+  final bool active;
+  final String createdAt;
 
-@JsonSerializable()
-class ExamDto {
-  @JsonKey(name: "_id")
-  String? id;
-
-  @JsonKey(name: "title")
-  String? title;
-
-  @JsonKey(name: "duration")
-  int? duration;
-
-  @JsonKey(name: "subject")
-  String? subject;
-
-  @JsonKey(name: "numberOfQuestions")
-  int? numberOfQuestions;
-
-  @JsonKey(name: "active")
-  bool? active;
-
-  @JsonKey(name: "createdAt")
-  String? createdAt;
-
-  ExamDto({
-    this.id,
-    this.title,
-    this.duration,
-    this.subject,
-    this.numberOfQuestions,
-    this.active,
-    this.createdAt,
+  const ExamDto({
+    required this.id,
+    required this.title,
+    required this.duration,
+    required this.subject,
+    required this.numberOfQuestions,
+    required this.active,
+    required this.createdAt,
   });
 
-  factory ExamDto.fromJson(Map<String, dynamic> json) =>
-      _$ExamDtoFromJson(json);
+  factory ExamDto.fromJson(Map<String, dynamic> json) => ExamDto(
+    id: json['_id'] ?? '',
+    title: json['title'] ?? '',
+    duration: json['duration'] ?? 0,
+    subject: json['subject'] ?? '',
+    numberOfQuestions: json['numberOfQuestions'] ?? 0,
+    active: json['active'] ?? false,
+    createdAt: json['createdAt'] ?? '',
+  );
 
-  Map<String, dynamic> toJson() => _$ExamDtoToJson(this);
+  ExamEntity toEntity() => ExamEntity(
+    id: id,
+    title: title,
+    duration: duration,
+    subject: subject,
+    numberOfQuestions: numberOfQuestions,
+    active: active,
+    createdAt: createdAt,
+  );
+
+  @override
+  List<Object?> get props => [
+    id,
+    title,
+    duration,
+    subject,
+    numberOfQuestions,
+    active,
+    createdAt,
+  ];
 }

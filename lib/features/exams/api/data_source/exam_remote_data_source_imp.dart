@@ -4,11 +4,19 @@ import 'package:online_exam_app_v/features/exams/data/data_source/exam_remote_da
 import 'package:online_exam_app_v/features/exams/data/model/exam_dto.dart';
 
 @Injectable(as: ExamRemoteDataSourceContract)
-class ExamRemoteDataSourceImp implements ExamRemoteDataSourceContract {
-  ExamRemoteDataSourceImp(this.examApiClient);
-  final ExamApiClient examApiClient;
+class ExamRemoteDataSourceImpl implements ExamRemoteDataSourceContract {
+  final ExamApiClient _apiClient;
+  const ExamRemoteDataSourceImpl(this._apiClient);
+
   @override
-  Future<List<ExamDto>> getAllExams() {
-    return Future.value(<ExamDto>[]);
+  Future<List<ExamDto>> getAllExams() async {
+    final response = await _apiClient.getAllExams();
+    return response.exams;
+  }
+
+  @override
+  Future<List<ExamDto>> getExamsBySubject(String subjectId) async {
+    final response = await _apiClient.getExamsBySubject(subjectId);
+    return response.exams;
   }
 }
