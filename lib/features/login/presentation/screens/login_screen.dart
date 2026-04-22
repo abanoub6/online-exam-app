@@ -8,7 +8,7 @@ import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
 import 'package:online_exam_app_v/core/utilies/app_validators.dart';
 import 'package:online_exam_app_v/core/widgets/primary_button.dart';
 import 'package:online_exam_app_v/core/widgets/rich_text_with_link.dart';
-import 'package:online_exam_app_v/features/forget_password/presentation/screens/forget_password_screen.dart';
+import 'package:online_exam_app_v/features/forgot_password/presentation/screens/forgot_password_screen.dart';
 import 'package:online_exam_app_v/features/home/presentation/screens/home_screen.dart';
 import 'package:online_exam_app_v/features/login/data/models/login_request.dart';
 import 'package:online_exam_app_v/features/login/presentation/view_model/cubit/login_view_model.dart';

@@ -7,7 +7,9 @@ import 'package:online_exam_app_v/config/observer/bloc_observer.dart';
 import 'package:online_exam_app_v/config/services/navigation_service.dart';
 import 'package:online_exam_app_v/core/theme/app_theme.dart';
 import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
-import 'package:online_exam_app_v/features/forget_password/presentation/screens/forget_password_screen.dart';
+import 'package:online_exam_app_v/features/forgot_password/presentation/screens/forgot_password_screen.dart';
+import 'package:online_exam_app_v/features/forgot_password/presentation/screens/reset_password_screen.dart';
+import 'package:online_exam_app_v/features/forgot_password/presentation/screens/verify_reset_code_screen.dart';
 import 'package:online_exam_app_v/features/home/presentation/screens/home_screen.dart';
 import 'package:online_exam_app_v/features/login/domain/use_cases/remember_me.dart';
 import 'package:online_exam_app_v/features/register/presentation/screens/register_screen.dart';
@@ -40,7 +42,7 @@ class MyApp extends StatelessWidget {
               : LoginScreen.routeName,
           routes: {
             RegisterScreen.routeName: (context) => RegisterScreen(),
-            ForgetPasswordScreen.routeName: (context) => ForgetPasswordScreen(),
+            ForgotPasswordScreen.routeName: (context) => ForgotPasswordScreen(),
             HomeScreen.routeName: (context) => HomeScreen(),
             LoginScreen.routeName: (context) => LoginScreen(),
           },
