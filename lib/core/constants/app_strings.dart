@@ -1,5 +1,6 @@
 class AppStrings {
   AppStrings._();
+  static const String loginScreen = "loginScreen";
   static const String login = "Login";
   static const String email = "Email";
   static const String enterYourEmail = "Enter your email";

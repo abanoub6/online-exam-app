@@ -48,7 +48,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i361.Dio>(
       () => dioModule.dio(gh<_i297.AuthInterceptor>()),
     );
-    gh.factory<_i315.LoginApiClient>(
+    gh.lazySingleton<_i315.LoginApiClient>(
       () => _i315.LoginApiClient(gh<_i361.Dio>()),
     );
     gh.factory<_i159.LoginRemoteDataSourceContract>(

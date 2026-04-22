@@ -11,13 +11,13 @@ import 'package:online_exam_app_v/core/widgets/rich_text_with_link.dart';
 import 'package:online_exam_app_v/features/forget_password/presentation/screens/forget_password_screen.dart';
 import 'package:online_exam_app_v/features/home/presentation/screens/home_screen.dart';
 import 'package:online_exam_app_v/features/login/data/models/login_request.dart';
-import 'package:online_exam_app_v/features/login/presentation/view_model/states/login_events.dart';
-import 'package:online_exam_app_v/features/register/presentation/screens/register_screen.dart';
 import 'package:online_exam_app_v/features/login/presentation/view_model/cubit/login_view_model.dart';
+import 'package:online_exam_app_v/features/login/presentation/view_model/states/login_events.dart';
 import 'package:online_exam_app_v/features/login/presentation/view_model/states/login_state.dart';
+import 'package:online_exam_app_v/features/register/presentation/screens/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  static const String routeName = 'loginScreen';
+  static const String routeName = AppStrings.loginScreen;
   const LoginScreen({super.key});
 
   @override
@@ -101,88 +101,83 @@ class _LoginScreenState extends State<LoginScreen> {
                         message: AppStrings.pleaseEnterYourPassword,
                       ),
                     ),
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: rememberMe,
-                          tristate: true,
-                          onChanged: (value) => setState(() {
-                            rememberMe = value ?? false;
-                          }),
-                        ),
-                        Text(
-                          AppStrings.rememberMe,
-                          style: AppTextStyles.s14w400(),
-                        ),
-                        const Spacer(),
-                        GestureDetector(
-                          onTap: () => Navigator.pushNamed(
-                            context,
-                            ForgetPasswordScreen.routeName,
+
+                    StatefulBuilder(
+                      builder: (context, setCheckboxState) => Row(
+                        children: [
+                          Checkbox(
+                            value: rememberMe,
+                            tristate: true,
+                            onChanged: (value) => setCheckboxState(() {
+                              rememberMe = value ?? false;
+                            }),
                           ),
-                          child: Text(
-                            AppStrings.forgetPassword,
-                            style: AppTextStyles.s12w400().copyWith(
-                              decoration: TextDecoration.underline,
+                          Text(
+                            AppStrings.rememberMe,
+                            style: AppTextStyles.s14w400(),
+                          ),
+                          const Spacer(),
+                          GestureDetector(
+                            onTap: () => Navigator.pushNamed(
+                              context,
+                              ForgetPasswordScreen.routeName,
+                            ),
+                            child: Text(
+                              AppStrings.forgetPassword,
+                              style: AppTextStyles.s12w400().copyWith(
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: BlocConsumer<LoginViewModel, LoginStates>(
-                            listener: (context, state) {
-                              if (state.loginState.isLoading) return;
 
-                              if (state.loginState.data != null) {
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  HomeScreen.routeName,
-                                );
-                              } else if (state.loginState.errorMessage !=
-                                  null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      state.loginState.errorMessage!,
-                                    ),
-                                    backgroundColor: AppColors.red,
-                                  ),
-                                );
-                              }
-                            },
-                            builder: (context, state) {
-                              return PrimaryButton(
-                                onPressed: state.loginState.isLoading
-                                    ? null
-                                    : () {
-                                        if (_formState.currentState!
-                                            .validate()) {
-                                          context
-                                              .read<LoginViewModel>()
-                                              .doEvent(
-                                                LoginUserEvent(
-                                                  login: LoginRequest(
-                                                    email: emailController.text
-                                                        .trim(),
-                                                    password:
-                                                        passwordController.text,
-                                                    rememberMe: rememberMe,
-                                                  ),
-                                                ),
-                                              );
-                                        }
-                                      },
-                                text: AppStrings.login,
-                                isLoading: state.loginState.isLoading,
-                              );
-                            },
+                    BlocConsumer<LoginViewModel, LoginStates>(
+                      listener: (context, state) {
+                        if (state.loginState.isLoading) return;
+
+                        if (state.loginState.data != null) {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            HomeScreen.routeName,
+                          );
+                        } else if (state.loginState.errorMessage != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(state.loginState.errorMessage!),
+                              backgroundColor: AppColors.red,
+                            ),
+                          );
+                        }
+                      },
+                      builder: (context, state) {
+                        return SizedBox(
+                          width: double.infinity,
+                          height: AppSizes.h(52),
+                          child: PrimaryButton(
+                            onPressed: state.loginState.isLoading
+                                ? null
+                                : () {
+                                    if (_formState.currentState!.validate()) {
+                                      context.read<LoginViewModel>().doEvent(
+                                        LoginUserEvent(
+                                          login: LoginRequest(
+                                            email: emailController.text.trim(),
+                                            password: passwordController.text,
+                                            rememberMe: rememberMe,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                            text: AppStrings.login,
+                            isLoading: state.loginState.isLoading,
                           ),
-                        ),
-                      ],
+                        );
+                      },
                     ),
+
                     RichTextWithLink(
                       normalText: AppStrings.dontHaveAnAccount,
                       linkText: AppStrings.signUp,

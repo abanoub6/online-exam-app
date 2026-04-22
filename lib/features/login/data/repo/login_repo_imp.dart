@@ -23,10 +23,6 @@ class LoginRepoImp implements LoginRepoContract {
       final response = await loginRemoteDataSourceContract.login(loginRequest);
       log(response.toString());
       return SuccessBaseResponse<UserEntity>(data: response.toEntity());
-    } on DioException catch (e) {
-      return ErrorBaseResponse(
-        errorMessage: ApiErrorHandler.getErrorMessage(e),
-      );
     } catch (e) {
       return ErrorBaseResponse(
         errorMessage: ApiErrorHandler.getErrorMessage(e),

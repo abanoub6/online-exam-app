@@ -7,7 +7,7 @@ import 'package:retrofit/retrofit.dart';
 
 part 'login_api_client.g.dart';
 
-@injectable
+@lazySingleton
 @RestApi()
 abstract class LoginApiClient {
   @factoryMethod
