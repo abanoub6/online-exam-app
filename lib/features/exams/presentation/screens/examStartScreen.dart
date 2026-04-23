@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:online_exam_app_v/core/constants/app_strings.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
@@ -7,14 +8,14 @@ import 'package:online_exam_app_v/features/exam-details/presentation/screens/exa
 import 'package:online_exam_app_v/features/exams/domain/models/exam_entity.dart';
 
 class ExamStartScreen extends StatelessWidget {
-  static const String routeName = "exam-start-screen";
+  static const String routeName = AppStrings.examsStartScreen;
   const ExamStartScreen({super.key});
 
   static const List<String> _instructions = [
-    'Lorem ipsum dolor sit amet consectetur.',
-    'Lorem ipsum dolor sit amet consectetur.',
-    'Lorem ipsum dolor sit amet consectetur.',
-    'Lorem ipsum dolor sit amet consectetur.',
+    AppStrings.lorem,
+    AppStrings.lorem,
+    AppStrings.lorem,
+    AppStrings.lorem,
   ];
 
   @override
@@ -47,7 +48,7 @@ class ExamStartScreen extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(AppSizes.r(8)),
                   child: Image.asset(
-                    "assets/icons/Profit.png",
+                    AppStrings.assetsIconsProfit,
                     width: AppSizes.w(42),
                     height: AppSizes.h(46),
                     fit: BoxFit.cover,
@@ -66,7 +67,7 @@ class ExamStartScreen extends StatelessWidget {
                             style: AppTextStyles.s18w500(AppColors.black),
                           ),
                           Text(
-                            '${exam.duration} Minutes',
+                            '${exam.duration} ${AppStrings.minutes}',
                             style: AppTextStyles.s12w400(AppColors.blue),
                           ),
                         ],
@@ -80,7 +81,7 @@ class ExamStartScreen extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  'High level',
+                  AppStrings.highLevel,
                   style: AppTextStyles.s18w500(AppColors.black),
                 ),
                 SizedBox(width: AppSizes.w(2)),
@@ -90,7 +91,7 @@ class ExamStartScreen extends StatelessWidget {
                 ),
                 SizedBox(width: AppSizes.w(2)),
                 Text(
-                  '${exam.numberOfQuestions} Question',
+                  '${exam.numberOfQuestions} ${AppStrings.question}',
                   style: AppTextStyles.s16w400(AppColors.gray),
                 ),
               ],
@@ -103,7 +104,10 @@ class ExamStartScreen extends StatelessWidget {
             SizedBox(height: AppSizes.h(20)),
 
             // Instructions
-            Text('Instructions', style: AppTextStyles.s18w500(AppColors.black)),
+            Text(
+              AppStrings.instructions,
+              style: AppTextStyles.s18w500(AppColors.black),
+            ),
             SizedBox(height: AppSizes.h(16)),
 
             // Instructions list
@@ -132,7 +136,7 @@ class ExamStartScreen extends StatelessWidget {
               width: double.infinity,
               height: AppSizes.h(52),
               child: PrimaryButton(
-                text: 'Start',
+                text: AppStrings.start,
                 onPressed: () {
                   Navigator.pushNamed(
                     context,

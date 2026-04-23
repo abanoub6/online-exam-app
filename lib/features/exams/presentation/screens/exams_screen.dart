@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:online_exam_app_v/config/di/di.dart';
+import 'package:online_exam_app_v/core/constants/app_strings.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
@@ -11,7 +12,7 @@ import 'package:online_exam_app_v/features/exams/presentation/widgets/exam_card.
 import 'package:online_exam_app_v/features/exams/presentation/widgets/exams_shimmer.dart';
 
 class ExamsScreen extends StatefulWidget {
-  static const String routeName = "exams-screen";
+  static const String routeName = AppStrings.examsScreen;
   const ExamsScreen({super.key});
 
   @override
@@ -48,7 +49,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
           ),
           titleSpacing: 0,
           title: Text(
-            'Languages',
+            AppStrings.languages,
             style: AppTextStyles.s20w500(AppColors.black),
           ),
         ),
@@ -74,7 +75,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
               if (state.examsState.data!.isEmpty) {
                 return Center(
                   child: Text(
-                    'No exams available',
+                    AppStrings.noExamsAvailable,
                     style: AppTextStyles.s16w400(AppColors.black),
                   ),
                 );
@@ -90,7 +91,6 @@ class _ExamsScreenState extends State<ExamsScreen> {
                     ExamCard(exam: state.examsState.data![index]),
               );
             }
-
             return const SizedBox();
           },
         ),

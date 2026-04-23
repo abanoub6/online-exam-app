@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:online_exam_app_v/core/constants/app_strings.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
@@ -39,7 +40,7 @@ class ExamCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(AppSizes.r(8)),
                 child: Image.asset(
-                  "assets/icons/Profit.png",
+                  AppStrings.assetsIconsProfit,
                   width: AppSizes.w(60),
                   height: AppSizes.h(70),
                   fit: BoxFit.cover,
@@ -56,26 +57,20 @@ class ExamCard extends StatelessWidget {
                     ),
                     // SizedBox(height: AppSizes.h(2)),
                     Text(
-                      '${exam.numberOfQuestions} Question',
+                      '${exam.numberOfQuestions} ${AppStrings.question}',
                       style: AppTextStyles.s14w400(AppColors.gray),
                     ),
-                    SizedBox(height: AppSizes.h(8)),
+                    SizedBox(height: AppSizes.h(10)),
                     Text(
-                      'From: 1.00  To: 6.00',
+                      AppStrings.from1To6,
                       style: AppTextStyles.s14w400(AppColors.black),
                     ),
                   ],
                 ),
               ),
-              Container(
-                // padding: EdgeInsets.symmetric(
-                //   horizontal: AppSizes.w(8),
-                //   vertical: AppSizes.h(4),
-                // ),
-                child: Text(
-                  '${exam.duration} Minutes',
-                  style: AppTextStyles.s14w400(AppColors.blue),
-                ),
+              Text(
+                '${exam.duration} ${AppStrings.minutes}',
+                style: AppTextStyles.s14w400(AppColors.blue),
               ),
             ],
           ),
