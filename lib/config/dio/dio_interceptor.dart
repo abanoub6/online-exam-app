@@ -13,7 +13,7 @@ class AuthInterceptor extends Interceptor {
   static const _tokenSavingEndpoints = [
     AppEndpoints.signIn,
     AppEndpoints.signUp,
-    // AppEndpoints.changePassword,
+    AppEndpoints.changePassword,
   ];
 
   AuthInterceptor(this.secureStorage);
