@@ -47,12 +47,12 @@ class _ProfileApiClient implements ProfileApiClient {
   }
 
   @override
-  Future<ProfileResponse> editProfile(Map<String, dynamic> body) async {
+  Future<ProfileResponse> editProfile(EditProfileRequest request) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(body);
+    _data.addAll(request.toJson());
     final _options = _setStreamType<ProfileResponse>(
       Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(

@@ -53,7 +53,7 @@ class ProfileRepoImpl implements ProfileRepoContract {
   ) async {
     try {
       final response = await _dataSource.changePassword(request);
-      return SuccessBaseResponse(data: response.token);
+      return SuccessBaseResponse(data: response.token ?? '');
     } on DioException catch (e) {
       return ErrorBaseResponse(
         errorMessage: ApiErrorHandler.getErrorMessage(e),

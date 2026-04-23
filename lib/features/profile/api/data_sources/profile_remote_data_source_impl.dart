@@ -19,7 +19,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSourceContract {
 
   @override
   Future<UserData> editProfile(EditProfileRequest request) async {
-    final response = await _apiClient.editProfile(request.toJson());
+    final response = await _apiClient.editProfile(request);
     return response.user;
   }
 

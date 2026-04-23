@@ -16,7 +16,6 @@ class ProfileShimmer extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(height: AppSizes.h(24)),
-
             Center(
               child: CircleAvatar(
                 radius: AppSizes.h(50),
@@ -24,28 +23,22 @@ class ProfileShimmer extends StatelessWidget {
               ),
             ),
             SizedBox(height: AppSizes.h(32)),
-
-            _buildShimmerField(),
+            const _ShimmerField(),
             SizedBox(height: AppSizes.h(16)),
-
             Row(
               children: [
-                Expanded(child: _buildShimmerField()),
+                const Expanded(child: _ShimmerField()),
                 SizedBox(width: AppSizes.w(16)),
-                Expanded(child: _buildShimmerField()),
+                const Expanded(child: _ShimmerField()),
               ],
             ),
             SizedBox(height: AppSizes.h(16)),
-
-            _buildShimmerField(),
+            const _ShimmerField(),
             SizedBox(height: AppSizes.h(16)),
-
-            _buildShimmerField(),
+            const _ShimmerField(),
             SizedBox(height: AppSizes.h(16)),
-
-            _buildShimmerField(),
+            const _ShimmerField(),
             SizedBox(height: AppSizes.h(40)),
-
             Container(
               width: double.infinity,
               height: AppSizes.h(56),
@@ -60,8 +53,13 @@ class ProfileShimmer extends StatelessWidget {
       ),
     );
   }
+}
 
-  static Widget _buildShimmerField() {
+class _ShimmerField extends StatelessWidget {
+  const _ShimmerField();
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       height: AppSizes.h(48),

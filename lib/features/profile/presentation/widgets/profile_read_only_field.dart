@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
 
-class ReadOnlyField extends StatelessWidget {
+class ProfileReadOnlyField extends StatelessWidget {
   final String label;
   final String value;
 
-  const ReadOnlyField({super.key, required this.label, required this.value});
+  const ProfileReadOnlyField({
+    super.key,
+    required this.label,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {

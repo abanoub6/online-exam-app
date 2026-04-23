@@ -9,9 +9,10 @@ import 'package:online_exam_app_v/features/profile/presentation/screens/edit_pro
 import 'package:online_exam_app_v/features/profile/presentation/view_model/cubit/profile_view_model.dart';
 import 'package:online_exam_app_v/features/profile/presentation/view_model/states/profile_events.dart';
 import 'package:online_exam_app_v/features/profile/presentation/view_model/states/profile_state.dart';
-import 'package:online_exam_app_v/features/profile/presentation/widgets/password_field.dart';
+import 'package:online_exam_app_v/features/profile/presentation/widgets/edit_profile_password_field.dart';
+import 'package:online_exam_app_v/features/profile/presentation/widgets/profile_read_only_field.dart'
+    show ProfileReadOnlyField;
 import 'package:online_exam_app_v/features/profile/presentation/widgets/profile_shimmer.dart';
-import 'package:online_exam_app_v/features/profile/presentation/widgets/read_only_field.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String routeName = AppStrings.profileScreen;
@@ -54,16 +55,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               );
             }
-            if (state is EditProfileSuccess) {
-              cubit.doEvent(GetProfileEvent());
-            }
           },
           builder: (context, state) {
             if (state is GetProfileLoading) {
               return const ProfileShimmer();
             }
 
-            final profile = state is GetProfileSuccess ? state.profile : null;
+            // لو EditProfileSuccess خد البيانات منها
+            // لو GetProfileSuccess خد البيانات منها
+            final profile = state is EditProfileSuccess
+                ? state.profile
+                : state is GetProfileSuccess
+                ? state.profile
+                : null;
+
+            if (profile == null) return const ProfileShimmer();
 
             return SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: AppSizes.h(24)),
@@ -82,7 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   SizedBox(height: AppSizes.h(32)),
 
-                  ReadOnlyField(
+                  ProfileReadOnlyField(
                     label: AppStrings.username,
                     value: profile?.username ?? '',
                   ),
@@ -91,14 +97,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: ReadOnlyField(
+                        child: ProfileReadOnlyField(
                           label: AppStrings.firstName,
                           value: profile?.firstName ?? '',
                         ),
                       ),
                       SizedBox(width: AppSizes.w(16)),
                       Expanded(
-                        child: ReadOnlyField(
+                        child: ProfileReadOnlyField(
                           label: AppStrings.lastName,
                           value: profile?.lastName ?? '',
                         ),
@@ -107,16 +113,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   SizedBox(height: AppSizes.h(16)),
 
-                  ReadOnlyField(
+                  ProfileReadOnlyField(
                     label: AppStrings.email,
                     value: profile?.email ?? '',
                   ),
 
                   SizedBox(height: AppSizes.h(16)),
-                  PasswordField(profile: profile),
+                  EditProfilePasswordField(profile: profile),
                   SizedBox(height: AppSizes.h(16)),
 
-                  ReadOnlyField(
+                  ProfileReadOnlyField(
                     label: AppStrings.phone,
                     value: profile?.phone ?? '',
                   ),

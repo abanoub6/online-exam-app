@@ -7,10 +7,10 @@ import 'package:online_exam_app_v/features/profile/domain/entities/profile_entit
 import 'package:online_exam_app_v/features/profile/presentation/screens/change_password_screen.dart';
 import 'package:online_exam_app_v/features/profile/presentation/view_model/cubit/profile_view_model.dart';
 
-class PasswordField extends StatelessWidget {
+class EditProfilePasswordField extends StatelessWidget {
   final ProfileEntity? profile;
 
-  const PasswordField({super.key, required this.profile});
+  const EditProfilePasswordField({super.key, required this.profile});
 
   @override
   Widget build(BuildContext context) {
