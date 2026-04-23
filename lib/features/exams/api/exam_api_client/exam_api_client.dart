@@ -8,7 +8,7 @@ part 'exam_api_client.g.dart';
 
 @lazySingleton
 @RestApi()
-abstract class ExamApiClient {
+abstract interface class ExamApiClient {
   @factoryMethod
   factory ExamApiClient(Dio dio) = _ExamApiClient;
 

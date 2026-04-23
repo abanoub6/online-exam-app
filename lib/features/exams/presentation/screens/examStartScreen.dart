@@ -35,7 +35,7 @@ class ExamStartScreen extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: AppSizes.w(24)),
+        padding: EdgeInsets.symmetric(horizontal: AppSizes.w(16)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -44,17 +44,13 @@ class ExamStartScreen extends StatelessWidget {
             // Exam header
             Row(
               children: [
-                Container(
-                  width: AppSizes.w(48),
-                  height: AppSizes.h(48),
-                  decoration: BoxDecoration(
-                    color: AppColors.gray.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(AppSizes.r(8)),
-                  ),
-                  child: Icon(
-                    Icons.assignment_outlined,
-                    color: AppColors.blue,
-                    size: AppSizes.h(24),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(AppSizes.r(8)),
+                  child: Image.asset(
+                    "assets/icons/Profit.png",
+                    width: AppSizes.w(42),
+                    height: AppSizes.h(46),
+                    fit: BoxFit.cover,
                   ),
                 ),
                 SizedBox(width: AppSizes.w(12)),
@@ -75,18 +71,36 @@ class ExamStartScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: AppSizes.h(4)),
-                      Text(
-                        '${exam.numberOfQuestions} Question',
-                        style: AppTextStyles.s14w400(AppColors.gray),
-                      ),
                     ],
                   ),
                 ),
               ],
             ),
+            SizedBox(height: AppSizes.h(16)),
+            Row(
+              children: [
+                Text(
+                  'High level',
+                  style: AppTextStyles.s18w500(AppColors.black),
+                ),
+                SizedBox(width: AppSizes.w(2)),
+                SizedBox(
+                  height: AppSizes.h(20),
+                  child: VerticalDivider(thickness: 0.5, color: AppColors.blue),
+                ),
+                SizedBox(width: AppSizes.w(2)),
+                Text(
+                  '${exam.numberOfQuestions} Question',
+                  style: AppTextStyles.s16w400(AppColors.gray),
+                ),
+              ],
+            ),
 
-            SizedBox(height: AppSizes.h(32)),
+            SizedBox(height: AppSizes.h(10)),
+
+            Divider(thickness: 0.5, color: AppColors.blue),
+
+            SizedBox(height: AppSizes.h(20)),
 
             // Instructions
             Text('Instructions', style: AppTextStyles.s18w500(AppColors.black)),
@@ -111,12 +125,12 @@ class ExamStartScreen extends StatelessWidget {
               ),
             )),
 
-            const Spacer(),
+            const SizedBox(height: 32),
 
             // Start button
             SizedBox(
               width: double.infinity,
-              height: AppSizes.h(56),
+              height: AppSizes.h(52),
               child: PrimaryButton(
                 text: 'Start',
                 onPressed: () {

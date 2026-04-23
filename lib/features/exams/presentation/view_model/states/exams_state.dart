@@ -1,36 +1,17 @@
-import 'package:equatable/equatable.dart';
+import 'package:online_exam_app_v/config/base_state/base_state.dart';
 import 'package:online_exam_app_v/features/exams/domain/models/exam_entity.dart';
 
-sealed class ExamsState extends Equatable {
-  const ExamsState();
-}
+class ExamsStates {
+  BaseState<List<ExamEntity>> examsState = BaseState<List<ExamEntity>>(
+    isLoading: false,
+  );
 
-class ExamsInitial extends ExamsState {
-  const ExamsInitial();
+  ExamsStates({BaseState<List<ExamEntity>>? examsState}) {
+    this.examsState =
+        examsState ?? BaseState<List<ExamEntity>>(isLoading: false);
+  }
 
-  @override
-  List<Object?> get props => [];
-}
-
-class ExamsLoading extends ExamsState {
-  const ExamsLoading();
-
-  @override
-  List<Object?> get props => [];
-}
-
-class ExamsSuccess extends ExamsState {
-  final List<ExamEntity> exams;
-  const ExamsSuccess(this.exams);
-
-  @override
-  List<Object?> get props => [exams];
-}
-
-class ExamsFailure extends ExamsState {
-  final String errorMessage;
-  const ExamsFailure(this.errorMessage);
-
-  @override
-  List<Object?> get props => [errorMessage];
+  ExamsStates copyWith({BaseState<List<ExamEntity>>? examsStateParam}) {
+    return ExamsStates(examsState: examsStateParam ?? examsState);
+  }
 }

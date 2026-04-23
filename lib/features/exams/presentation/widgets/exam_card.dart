@@ -1,0 +1,86 @@
+import 'package:flutter/material.dart';
+import 'package:online_exam_app_v/core/theme/app_colors.dart';
+import 'package:online_exam_app_v/core/theme/app_sizes.dart';
+import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
+import 'package:online_exam_app_v/features/exams/domain/models/exam_entity.dart';
+import 'package:online_exam_app_v/features/exams/presentation/screens/examStartScreen.dart';
+
+class ExamCard extends StatelessWidget {
+  final ExamEntity exam;
+  const ExamCard({super.key, required this.exam});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: AppSizes.h(12)),
+      child: InkWell(
+        onTap: () => Navigator.pushNamed(
+          context,
+          ExamStartScreen.routeName,
+          arguments: exam,
+        ),
+        borderRadius: BorderRadius.circular(AppSizes.r(12)),
+        child: Container(
+          padding: EdgeInsets.all(AppSizes.h(16)),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(AppSizes.r(10)),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.black.withOpacity(0.1),
+                blurRadius: AppSizes.r(8),
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(AppSizes.r(8)),
+                child: Image.asset(
+                  "assets/icons/Profit.png",
+                  width: AppSizes.w(60),
+                  height: AppSizes.h(70),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              SizedBox(width: AppSizes.w(12)),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      exam.title,
+                      style: AppTextStyles.s16w500(AppColors.black),
+                    ),
+                    // SizedBox(height: AppSizes.h(2)),
+                    Text(
+                      '${exam.numberOfQuestions} Question',
+                      style: AppTextStyles.s14w400(AppColors.gray),
+                    ),
+                    SizedBox(height: AppSizes.h(8)),
+                    Text(
+                      'From: 1.00  To: 6.00',
+                      style: AppTextStyles.s14w400(AppColors.black),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                // padding: EdgeInsets.symmetric(
+                //   horizontal: AppSizes.w(8),
+                //   vertical: AppSizes.h(4),
+                // ),
+                child: Text(
+                  '${exam.duration} Minutes',
+                  style: AppTextStyles.s14w400(AppColors.blue),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
