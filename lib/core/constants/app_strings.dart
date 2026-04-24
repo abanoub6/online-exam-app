@@ -1,7 +1,7 @@
-class AppStrings {
-  AppStrings._();
-
+abstract class AppStrings {
   // ── Auth ─────────────────────────────────
+
+  // Existing strings...
   static const String signUp = "Sign up";
   static const String login = "Login";
   static const String loginScreen = "loginScreen";
@@ -104,4 +104,37 @@ class AppStrings {
   // ── Misc ─────────────────────────────────
   static const String work = "Work";
   static const String noErrorMessages = "No error messages";
+
+  // ExamDetailsScreen and ScoreScreen
+  static const String noExamIdProvided = "No Exam ID provided!";
+  static const String tryAgain = "Try Again";
+  static const String noQuestionsFound = "No questions found";
+  static const String questionOf =
+      "Question"; // will be used as "Question X of Y"
+  static const String of = "of";
+  static const String back = "Back";
+  static const String next = "Next";
+  static const String submit = "Submit";
+  static const String examScore = "Exam score";
+  static const String yourScore = "Your score";
+  static const String correct = "Correct";
+  static const String correctAnswers = "correct answers";
+  static const String incorrect = "Incorrect";
+  static const String percentage = "percentage";
+  static const String totalQuestions = "total questions";
+  static const String questions = "questions";
+  static const String question = "question";
+  static const String timeOut = "Time out !!";
+  static const String viewSocre = "View Score";
+  static const String questionId = "questionId";
+  static const String selectedAnswer = "selected answer";
+  static const String correctAnswerKey = "correct answer key ";
+  static const String answers = "answers";
+
+  static const String examId = "examId";
+  static const String examTitle = "examTitle";
+  static const String exam = "exam";
+  static const String showResults = "Show results";
+  static const String startAgain = "Start again";
+  static const String kResultsBox = "exam_results_box";
 }

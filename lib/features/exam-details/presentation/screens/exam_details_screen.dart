@@ -1,16 +1,289 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:online_exam_app_v/config/di/di.dart';
+import 'package:online_exam_app_v/core/constants/app_strings.dart';
+import 'package:online_exam_app_v/core/theme/app_colors.dart';
+import 'package:online_exam_app_v/core/theme/app_sizes.dart';
+import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
+import 'package:online_exam_app_v/core/widgets/primary_button.dart';
+import 'package:online_exam_app_v/features/exam-details/data/models/socre_result.dart';
+import 'package:online_exam_app_v/features/exam-details/presentation/screens/score_screen.dart';
+import 'package:online_exam_app_v/features/exam-details/presentation/view_model/cubit/questions_view_model.dart';
+import 'package:online_exam_app_v/features/exam-details/presentation/view_model/states/questions_events.dart';
+import 'package:online_exam_app_v/features/exam-details/presentation/view_model/states/questions_states.dart';
+import 'package:online_exam_app_v/features/exam-details/presentation/widgets/exam_app_bar.dart';
+import 'package:online_exam_app_v/features/exam-details/presentation/widgets/show_time_out_dialog.dart';
 
-class ExamDetailsScreen extends StatelessWidget {
-  static const String routeName = "exam-details-screen";
+class ExamDetailsScreen extends StatefulWidget {
+  static const String routeName = "questions-screen";
+
   const ExamDetailsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final examId = ModalRoute.of(context)!.settings.arguments as String;
+  State<ExamDetailsScreen> createState() => _ExamDetailsScreenState();
+}
 
-    return Scaffold(
-      appBar: AppBar(title: const Text("Exam")),
-      body: Center(child: Text("Exam ID: $examId")),
+class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
+  late final QuestionsViewModel _viewModel;
+  int _currentQuestionIndex = 0;
+  String? _examTitle;
+
+  @override
+  void initState() {
+    super.initState();
+    _viewModel = getIt.get<QuestionsViewModel>();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final args =
+          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
+      final examId = "69d980117c82914570305dd5";
+      //Todo will be changed
+      // args?[AppStrings.examId] as String?;
+      if (examId != null) {
+        _examTitle = args?[AppStrings.examTitle] as String? ?? AppStrings.exam;
+        _viewModel.doEvent(GetQuestionsOnExamEvent(examId));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text(AppStrings.noExamIdProvided)),
+        );
+      }
+    });
+  }
+
+  void _onTimeFinished() {
+    final score = _viewModel.calculateScore();
+    _viewModel.doEvent(SaveExamResults(score));
+    _viewModel.doEvent(ClearAnswersEvent());
+    _currentQuestionIndex = 0;
+    if (mounted) {
+      _showTimeOutDialog(score);
+    }
+  }
+
+  void _showTimeOutDialog(ScoreResult score) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => ShowTimeOutDialog(score: score),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider.value(
+      value: _viewModel,
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: BlocBuilder<QuestionsViewModel, QuestionsStates>(
+            builder: (context, state) {
+              final questions = state.questionsState.data;
+
+              if (questions == null || questions.isEmpty) {
+                return AppBar(
+                  title: Text(_examTitle ?? AppStrings.exam),
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                );
+              }
+
+              return ExamAppBar(
+                timeInSeconds: questions[0].exam!.duration * 60,
+                title: _examTitle ?? AppStrings.exam,
+                onBack: () => Navigator.pop(context),
+                onTimeFinished: _onTimeFinished,
+              );
+            },
+          ),
+        ),
+
+        body: BlocBuilder<QuestionsViewModel, QuestionsStates>(
+          builder: (context, state) {
+            final questions = state.questionsState.data ?? [];
+            final isLoading = state.questionsState.isLoading;
+            final error = state.questionsState.errorMessage;
+
+            if (isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (error != null) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(error, style: AppTextStyles.s16w400(AppColors.red)),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        final args =
+                            ModalRoute.of(context)?.settings.arguments as Map?;
+                        final examId = args?[AppStrings.examId] as String?;
+                        if (examId != null) {
+                          _viewModel.doEvent(GetQuestionsOnExamEvent(examId));
+                        }
+                      },
+                      child: const Text(AppStrings.tryAgain),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            if (questions.isEmpty) {
+              return const Center(child: Text(AppStrings.noQuestionsFound));
+            }
+
+            final currentQuestion = questions[_currentQuestionIndex];
+
+            return Padding(
+              padding: EdgeInsets.all(AppSizes.w(24)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  LinearProgressIndicator(
+                    value: (_currentQuestionIndex + 1) / questions.length,
+                    backgroundColor: AppColors.ligtGrey,
+                    color: AppColors.blue,
+                    minHeight: 8,
+                  ),
+                  SizedBox(height: AppSizes.h(12)),
+
+                  Text(
+                    "${AppStrings.questionOf} ${_currentQuestionIndex + 1} ${AppStrings.of} ${questions.length}",
+                    style: AppTextStyles.s16w500(),
+                  ),
+
+                  SizedBox(height: AppSizes.h(24)),
+
+                  Text(
+                    currentQuestion.question,
+                    style: AppTextStyles.s20w600(),
+                  ),
+
+                  SizedBox(height: AppSizes.h(32)),
+
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: currentQuestion.answers.length,
+                      itemBuilder: (context, index) {
+                        final answer = currentQuestion.answers[index];
+                        final isSelected = _viewModel.isAnswerSelected(
+                          currentQuestion.id,
+                          answer.key,
+                        );
+
+                        return GestureDetector(
+                          onTap: () => _viewModel.doEvent(
+                            SelectAnswerEvent(
+                              questionId: currentQuestion.id,
+                              selectedAnswerKey: answer.key,
+                            ),
+                          ),
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: AppSizes.h(12)),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: AppSizes.w(16),
+                              vertical: AppSizes.h(16),
+                            ),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? AppColors.blue.withOpacity(0.08)
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: isSelected
+                                    ? AppColors.blue
+                                    : AppColors.ligtGrey,
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Radio<String>(
+                                  value: answer.key,
+                                  groupValue: _viewModel.getSelectedAnswer(
+                                    currentQuestion.id,
+                                  ),
+                                  onChanged: (_) => _viewModel.doEvent(
+                                    SelectAnswerEvent(
+                                      questionId: currentQuestion.id,
+                                      selectedAnswerKey: answer.key,
+                                    ),
+                                  ),
+                                  activeColor: AppColors.blue,
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    answer.answer,
+                                    style: AppTextStyles.s16w400(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: _currentQuestionIndex > 0
+                              ? () => setState(() => _currentQuestionIndex--)
+                              : null,
+                          child: Text(
+                            AppStrings.back,
+                            style: AppTextStyles.s16w600(AppColors.blue),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: AppSizes.w(16)),
+                      Expanded(
+                        child: PrimaryButton(
+                          onPressed: _viewModel.canGoNext(currentQuestion.id)
+                              ? () {
+                                  if (_currentQuestionIndex <
+                                      questions.length - 1) {
+                                    setState(() => _currentQuestionIndex++);
+                                  } else {
+                                    final score = _viewModel.calculateScore();
+                                    _viewModel.doEvent(ClearAnswersEvent());
+                                    _currentQuestionIndex = 0;
+
+                                    Navigator.pushNamed(
+                                      context,
+                                      ScoreScreen.routeName,
+                                      arguments: {
+                                        AppStrings.correct:
+                                            score.correctAnswers,
+                                        AppStrings.incorrect:
+                                            score.totalQuestions -
+                                            score.correctAnswers,
+                                        AppStrings.percentage:
+                                            score.scorePercentage,
+                                      },
+                                    );
+                                  }
+                                }
+                              : null,
+                          text: _currentQuestionIndex < questions.length - 1
+                              ? AppStrings.next
+                              : AppStrings.submit,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }
