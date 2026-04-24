@@ -3,6 +3,7 @@ import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
 import 'package:online_exam_app_v/features/exam-details/presentation/screens/exam_details_screen.dart';
+import 'package:online_exam_app_v/features/exams/presentation/screens/exams_screen.dart';
 import 'package:online_exam_app_v/features/explore/domain/entities/subject.dart';
 
 class SubjectCard extends StatelessWidget {
@@ -16,7 +17,7 @@ class SubjectCard extends StatelessWidget {
       onTap: () {
         Navigator.pushNamed(
           context,
-          ExamDetailsScreen.routeName,
+          ExamsScreen.routeName,
           arguments: subject.id,
         );
       },
