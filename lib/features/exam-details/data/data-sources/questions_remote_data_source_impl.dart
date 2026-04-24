@@ -18,13 +18,8 @@ class QuestionsRemoteDataSourceImpl
   ) async {
     try {
       final response = await questionsApiClient.getQuestionsOnExam(examId);
-      print(">>>>>>>>>> test sucsses >>>>>>>>>>>>>>>>>.");
-      print(response.message);
       return SuccessBaseResponse<List<QuestionDto>>(data: response.questions);
     } catch (e) {
-      print(">>>>>>>>>>>>> test filure>>>>>>>>>>>>>>.");
-
-      print(e);
       return ErrorBaseResponse<List<QuestionDto>>(
         errorMessage: ApiErrorHandler.getErrorMessage(e),
       );

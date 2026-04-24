@@ -1,5 +1,4 @@
-class AppApiParam {
-  AppApiParam._();
+abstract class AppApiParam {
   static const String username = "username";
   static const String firstName = "firstName";
   static const String lastName = "lastName";

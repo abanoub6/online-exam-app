@@ -1,6 +1,4 @@
-class AppStrings {
-  AppStrings._();
-
+abstract class AppStrings {
   // ── Auth ─────────────────────────────────
 
   // Existing strings...

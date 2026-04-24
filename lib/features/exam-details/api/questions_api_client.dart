@@ -7,7 +7,7 @@ import 'package:injectable/injectable.dart';
 
 part 'questions_api_client.g.dart';
 
-@injectable
+@lazySingleton
 @RestApi()
 abstract class QuestionsApiClient {
   @factoryMethod
@@ -15,6 +15,6 @@ abstract class QuestionsApiClient {
 
   @GET(AppEndpoints.questions)
   Future<QuestionsResponse> getQuestionsOnExam(
-    @Query(AppApiParam.email) String examId,
+    @Query(AppApiParam.exam) String examId,
   );
 }

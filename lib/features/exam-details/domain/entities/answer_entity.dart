@@ -1,6 +1,9 @@
+import 'package:flutter/cupertino.dart';
+
+@immutable
 class AnswerEntity {
   final String answer;
   final String key;
 
-  AnswerEntity({required this.answer, required this.key});
+  const AnswerEntity({required this.answer, required this.key});
 }
