@@ -88,6 +88,18 @@ class AppStrings {
   static const String iconHome = "assets/icons/explore_icon.png";
   static const String iconResult = "assets/icons/results_icon.png";
   static const String iconPerson = "assets/icons/person_icon.png";
+  static const String examsScreen = "exams-screen";
+  static const String languages = "Languages";
+  static const String noExamsAvailable = "No exams available";
+  static const String examsStartScreen = "exam-start-screen";
+  static const String lorem = "Lorem ipsum dolor sit amet consectetur.";
+  static const String assetsIconsProfit = "assets/icons/Profit.png";
+  static const String highLevel = "High level";
+  static const String instructions = "Instructions";
+  static const String start = "Start";
+  static const String from1To6 = "From: 1.00  To: 6.00";
+  static const String question = 'Question';
+  static const String minutes = 'Minutes';
 
   // ── Misc ─────────────────────────────────
   static const String work = "Work";
