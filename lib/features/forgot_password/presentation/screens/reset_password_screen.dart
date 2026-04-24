@@ -1,38 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:online_exam_app_v/config/di/di.dart';
+import 'package:online_exam_app_v/core/constants/app_strings.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
+import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
 import 'package:online_exam_app_v/core/utilies/app_validators.dart';
 import 'package:online_exam_app_v/core/widgets/primary_button.dart';
-import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/cubits/reset_password_view_model.dart';
-import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/states/reset_password_state.dart';
+import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/cubits/forgot_password_view_model.dart';
+import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/states/forgot_password_events.dart';
+import 'package:online_exam_app_v/features/forgot_password/presentation/view_model/states/forgot_password_state.dart';
 import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
 
-class ResetPasswordScreen extends StatelessWidget {
-  static const String routeName = 'resetPassword';
+class ResetPasswordScreen extends StatefulWidget {
+  static const String routeName = AppStrings.resetPassword;
   final String email;
-
   const ResetPasswordScreen({super.key, required this.email});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => getIt<ResetPasswordCubit>(),
-      child: _ResetPasswordView(email: email),
-    );
-  }
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
-class _ResetPasswordView extends StatelessWidget {
-  final String email;
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+  final resetFormKey = GlobalKey<FormState>();
+  late ForgotPasswordViewModel cubit;
 
-  const _ResetPasswordView({required this.email});
+  @override
+  void initState() {
+    super.initState();
+    cubit = context.read<ForgotPasswordViewModel>();
+  }
+
+  @override
+  void dispose() {
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<ResetPasswordCubit>();
-
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -44,61 +52,61 @@ class _ResetPasswordView extends StatelessWidget {
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
             color: AppColors.black,
-            weight: 20,
           ),
         ),
-        title: Text("Password", style: AppTextStyles.s20w500(AppColors.black)),
+        title: Text(
+          AppStrings.password,
+          style: AppTextStyles.s20w500(AppColors.black),
+        ),
       ),
-      body: BlocListener<ResetPasswordCubit, ResetPasswordState>(
+      body: BlocListener<ForgotPasswordViewModel, ForgotPasswordState>(
         listener: (context, state) {
-          if (state is ResetPasswordSuccess) {
+          if (state is ForgotPasswordResetSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Password reset successfully!'),
-                backgroundColor: Colors.green,
+                content: Text(AppStrings.passwordResetSuccessfully),
+                backgroundColor: AppColors.green,
               ),
             );
             Navigator.pushReplacementNamed(context, LoginScreen.routeName);
-          } else if (state is ResetPasswordFailure) {
+          } else if (state is ForgotPasswordResetFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red,
+                content: Text(state.errorMessage ?? ''),
+                backgroundColor: AppColors.red,
               ),
             );
           }
         },
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: EdgeInsets.symmetric(horizontal: AppSizes.h(24)),
           child: Form(
-            key: cubit.formKey,
+            key: resetFormKey,
             child: Column(
               children: [
-                const SizedBox(height: 24),
+                SizedBox(height: AppSizes.h(24)),
                 Text(
-                  'Reset password',
+                  AppStrings.resetPasswordTitle,
                   style: AppTextStyles.s18w500(AppColors.black),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: AppSizes.h(8)),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.symmetric(horizontal: AppSizes.h(10)),
                   child: Text(
-                    'Password must not be empty and must contain 6 characters with upper case letter and one number at least',
+                    AppStrings.passwordRequirements,
                     style: AppTextStyles.s14w400(AppColors.black),
                     textAlign: TextAlign.center,
                   ),
                 ),
-                const SizedBox(height: 32),
-
-                // New password field
+                SizedBox(height: AppSizes.h(32)),
                 TextFormField(
-                  controller: cubit.passwordController,
+                  controller: passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                    hintText: 'Enter you password',
+                    hintText: AppStrings.enterYourPassword,
                     label: Text(
-                      'New password',
+                      AppStrings.newPassword,
                       style: AppTextStyles.s14w400(AppColors.black),
                     ),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -108,16 +116,14 @@ class _ResetPasswordView extends StatelessWidget {
                   textInputAction: TextInputAction.next,
                   validator: AppValidators.strongPassword,
                 ),
-                const SizedBox(height: 24),
-
-                // Confirm password field
+                SizedBox(height: AppSizes.h(24)),
                 TextFormField(
-                  controller: cubit.confirmPasswordController,
+                  controller: confirmPasswordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                    hintText: 'Confirm password',
+                    hintText: AppStrings.confirmPassword,
                     label: Text(
-                      'Confirm password',
+                      AppStrings.confirmPassword,
                       style: AppTextStyles.s14w400(AppColors.black),
                     ),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -127,25 +133,29 @@ class _ResetPasswordView extends StatelessWidget {
                   textInputAction: TextInputAction.done,
                   validator: (value) => AppValidators.confirmPassword(
                     value,
-                    cubit.passwordController.text,
+                    passwordController.text,
                   ),
                 ),
-                const SizedBox(height: 40),
-
-                // Continue button
-                BlocBuilder<ResetPasswordCubit, ResetPasswordState>(
+                SizedBox(height: AppSizes.h(40)),
+                BlocBuilder<ForgotPasswordViewModel, ForgotPasswordState>(
                   builder: (context, state) {
+                    final isLoading = state is ForgotPasswordResetLoading;
                     return SizedBox(
                       width: double.infinity,
-                      height: 55,
+                      height: AppSizes.h(56),
                       child: PrimaryButton(
-                        isLoading: state is ResetPasswordLoading,
-                        text: 'Continue',
-                        onPressed: state is ResetPasswordLoading
+                        isLoading: isLoading,
+                        text: AppStrings.continueText,
+                        onPressed: isLoading
                             ? null
                             : () {
-                                if (cubit.formKey.currentState!.validate()) {
-                                  cubit.resetPassword(email: email);
+                                if (resetFormKey.currentState!.validate()) {
+                                  cubit.doEvent(
+                                    ResetPasswordEvent(
+                                      widget.email,
+                                      passwordController.text,
+                                    ),
+                                  );
                                 }
                               },
                       ),

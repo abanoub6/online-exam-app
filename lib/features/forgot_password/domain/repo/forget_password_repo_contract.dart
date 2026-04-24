@@ -1,19 +1,16 @@
-import 'package:dartz/dartz.dart';
-import 'package:online_exam_app_v/features/forgot_password/data/models/response/forgot_password_response.dart';
-import 'package:online_exam_app_v/features/forgot_password/data/models/response/reset_password_response.dart';
-import 'package:online_exam_app_v/features/forgot_password/data/models/response/verify_reset_code_response.dart';
-import '../../../../core/errors/failures.dart';
+import 'package:online_exam_app_v/config/base_responce/base_response.dart';
+import 'package:online_exam_app_v/features/forgot_password/domain/entities/forget_password_entity.dart';
 
-abstract class ForgetPasswordRepoContract {
-  Future<Either<Failure, ForgotPasswordResponse>> forgotPassword({
+abstract interface class ForgetPasswordRepoContract {
+  Future<BaseResponse<ForgotPasswordEntity>> forgotPassword({
     required String email,
   });
 
-  Future<Either<Failure, VerifyResetCodeResponse>> verifyResetCode({
+  Future<BaseResponse<ForgotPasswordEntity>> verifyResetCode({
     required String resetCode,
   });
 
-  Future<Either<Failure, ResetPasswordResponse>> resetPassword({
+  Future<BaseResponse<ForgotPasswordEntity>> resetPassword({
     required String email,
     required String newPassword,
   });
