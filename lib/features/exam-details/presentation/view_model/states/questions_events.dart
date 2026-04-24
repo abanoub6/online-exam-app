@@ -1,8 +1,15 @@
+import 'package:online_exam_app_v/features/exam-details/data/models/socre_result.dart';
+
 sealed class QuestionsEvents {}
 
 class GetQuestionsOnExamEvent extends QuestionsEvents {
   final String examId;
   GetQuestionsOnExamEvent(this.examId);
+}
+
+class SaveExamResults extends QuestionsEvents {
+  final ScoreResult score;
+  SaveExamResults(this.score);
 }
 
 class SelectAnswerEvent extends QuestionsEvents {
@@ -21,9 +28,6 @@ class ClearQuestionsErrorEvent extends QuestionsEvents {}
 // class StartTimerEvent extends QuestionsEvents {}
 
 // class TimeFinishedEvent extends QuestionsEvents {}
-
-// Score & Navigation Events
-class CalculateScoreEvent extends QuestionsEvents {}
 
 class ClearAnswersEvent extends QuestionsEvents {}
 

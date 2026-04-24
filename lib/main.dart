@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 import 'package:online_exam_app_v/config/di/di.dart';
 import 'package:online_exam_app_v/config/observer/bloc_observer.dart';
 import 'package:online_exam_app_v/config/services/navigation_service.dart';
@@ -14,6 +16,8 @@ import 'package:online_exam_app_v/features/home/presentation/screens/home_screen
 import 'package:online_exam_app_v/features/login/domain/use_cases/remember_me.dart';
 import 'package:online_exam_app_v/features/profile/presentation/screens/profile_screen.dart';
 import 'package:online_exam_app_v/features/register/presentation/screens/register_screen.dart';
+import 'package:online_exam_app_v/features/results/presentation/screens/result_screen_details.dart';
+import 'package:online_exam_app_v/features/results/presentation/screens/results_list_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +25,8 @@ void main() async {
   Bloc.observer = AppBlocObserver();
   await configureDependencies();
   final rememberUseCase = getIt<RememberMeUseCase>();
+  await Hive.initFlutter(); // 👈 هتشتغل دلوقتي
+  await Hive.openBox('exam_results_box'); // 👈 مهم جدًا
   runApp(MyApp(await rememberUseCase.isRememberedMe()));
 }
 
@@ -29,6 +35,7 @@ class MyApp extends StatelessWidget {
   final bool? isRememberedMe;
   @override
   Widget build(BuildContext context) {
+    // Hive.box("exam_results_box").clear();
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
@@ -38,7 +45,9 @@ class MyApp extends StatelessWidget {
           navigatorKey: NavigationService.navigatorKey, // ← أضف ده
           theme: AppTheme.lightTheme(),
           debugShowCheckedModeBanner: false,
-          initialRoute: isRememberedMe ?? false
+          initialRoute:
+              //  ExamDetailsScreen.routeName,
+              isRememberedMe ?? false
               ? HomeScreen.routeName
               : LoginScreen.routeName,
           routes: {
@@ -50,6 +59,8 @@ class MyApp extends StatelessWidget {
             LoginScreen.routeName: (context) => LoginScreen(),
             ProfileScreen.routeName: (context) => const ProfileScreen(),
             ScoreScreen.routeName: (context) => ScoreScreen(),
+            ResultsListScreen.routeName: (context) => ResultsListScreen(),
+            ResultsDetailsScreen.routeName: (context) => ResultsDetailsScreen(),
           },
         );
       },

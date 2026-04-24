@@ -37,7 +37,9 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
       final args =
           ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
 
-      final examId = args?[AppStrings.examId] as String?;
+      final examId = "69d980117c82914570305dd5";
+      //Todo will be changed
+      // args?[AppStrings.examId] as String?;
       if (examId != null) {
         _examTitle = args?[AppStrings.examTitle] as String? ?? AppStrings.exam;
         _viewModel.doEvent(GetQuestionsOnExamEvent(examId));
@@ -51,6 +53,7 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
 
   void _onTimeFinished() {
     final score = _viewModel.calculateScore();
+    _viewModel.doEvent(SaveExamResults(score));
     _viewModel.doEvent(ClearAnswersEvent());
     _currentQuestionIndex = 0;
     if (mounted) {
