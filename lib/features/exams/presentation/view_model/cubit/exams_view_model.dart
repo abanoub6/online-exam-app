@@ -9,12 +9,12 @@ import 'package:online_exam_app_v/features/exams/presentation/view_model/states/
 import 'package:online_exam_app_v/features/exams/presentation/view_model/states/exams_state.dart';
 
 @injectable
-class ExamsViewModel extends Cubit<ExamsStates> {
+class ExamsViewModel extends Cubit<ExamsState> {
   final GetAllExamsUseCase _getAllExamsUseCase;
   final GetExamsBySubjectUseCase _getExamsBySubjectUseCase;
 
   ExamsViewModel(this._getAllExamsUseCase, this._getExamsBySubjectUseCase)
-    : super(ExamsStates());
+    : super(ExamsState());
 
   Future<void> doEvent(ExamsEvents event) async {
     switch (event) {

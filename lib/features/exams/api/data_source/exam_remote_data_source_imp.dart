@@ -11,12 +11,12 @@ class ExamRemoteDataSourceImpl implements ExamRemoteDataSourceContract {
   @override
   Future<List<ExamDto>> getAllExams() async {
     final response = await _apiClient.getAllExams();
-    return response.exams;
+    return response.exams ?? [];
   }
 
   @override
   Future<List<ExamDto>> getExamsBySubject(String subjectId) async {
     final response = await _apiClient.getExamsBySubject(subjectId);
-    return response.exams;
+    return response.exams ?? [];
   }
 }

@@ -11,32 +11,19 @@ import 'package:online_exam_app_v/features/exams/presentation/view_model/states/
 import 'package:online_exam_app_v/features/exams/presentation/widgets/exam_card.dart';
 import 'package:online_exam_app_v/features/exams/presentation/widgets/exams_shimmer.dart';
 
-class ExamsScreen extends StatefulWidget {
+class ExamsScreen extends StatelessWidget {
   static const String routeName = AppStrings.examsScreen;
   const ExamsScreen({super.key});
 
   @override
-  State<ExamsScreen> createState() => _ExamsScreenState();
-}
-
-class _ExamsScreenState extends State<ExamsScreen> {
-  final ExamsViewModel cubit = getIt<ExamsViewModel>();
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final subjectId = ModalRoute.of(context)!.settings.arguments as String;
-      cubit.doEvent(GetExamsBySubjectEvent(subjectId));
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: cubit,
+    return BlocProvider(
+      create: (_) {
+        final subjectId = ModalRoute.of(context)!.settings.arguments as String;
+        return getIt<ExamsViewModel>()
+          ..doEvent(GetExamsBySubjectEvent(subjectId));
+      },
       child: Scaffold(
-        // backgroundColor: AppColors.white,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -53,7 +40,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
             style: AppTextStyles.s20w500(AppColors.black),
           ),
         ),
-        body: BlocConsumer<ExamsViewModel, ExamsStates>(
+        body: BlocConsumer<ExamsViewModel, ExamsState>(
           listener: (context, state) {
             if (state.examsState.isLoading) return;
 
