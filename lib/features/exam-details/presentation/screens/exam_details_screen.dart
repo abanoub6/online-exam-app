@@ -109,7 +109,6 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
           ),
         ),
 
-        /// 🔥 Body
         body: BlocBuilder<QuestionsViewModel, QuestionsStates>(
           builder: (context, state) {
             final questions = state.questionsState.data ?? [];
@@ -135,12 +134,12 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  /// 🔥 Progress
                   LinearProgressIndicator(
+                    borderRadius: BorderRadius.circular(8),
                     value: (_currentQuestionIndex + 1) / questions.length,
                     backgroundColor: AppColors.ligtGrey,
                     color: AppColors.blue,
-                    minHeight: 8,
+                    minHeight: 4,
                   ),
 
                   SizedBox(height: AppSizes.h(12)),
