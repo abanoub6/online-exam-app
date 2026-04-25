@@ -11,8 +11,10 @@ A comprehensive online examination mobile application built with Flutter, enabli
 | 🔐 **Login** | Email & password login with Remember Me support |
 | 📝 **Register** | Create a new account |
 | 🔑 **Forgot Password** | Reset password via email OTP verification |
-| 🔍 **Explore** | Browse subjects with search functionality |
-| 📚 **Exams** | View and start exams by subject |
+| 🔍 **Explore** | Browse subjects with search functionality and image preloading |
+| 📚 **Exams** | View and start exams by subject with shimmer loading |
+| 📖 **Exam Screen** | Answer questions with timer, progress bar, back/next navigation |
+| 🏆 **Score Screen** | View score with circular progress, correct/incorrect count |
 | 📊 **Results** | View exam results history with detailed question review |
 | 👤 **Profile** | View, edit profile and change password |
 
@@ -32,7 +34,7 @@ A comprehensive online examination mobile application built with Flutter, enabli
 
 ### Networking
 - **Dio** + **Retrofit** for API calls
-- **Interceptors** for token management and 401 handling
+- **Interceptors** for token management and 401 auto-logout
 
 ### Storage
 - **Flutter Secure Storage** — for token and remember me
@@ -67,6 +69,7 @@ lib/
     ├── forgot_password/
     ├── explore/
     ├── exams/
+    ├── exam_details/
     ├── results/
     └── profile/
 ```
@@ -97,6 +100,27 @@ feature/
 
 ---
 
+## 📖 Exam Feature
+
+| Screen | Description |
+|---|---|
+| **ExamsScreen** | Lists exams by subject with shimmer loading |
+| **ExamStartScreen** | Shows exam details and instructions before starting |
+| **ExamDetailsScreen** | Questions with timer, progress bar, back/next navigation |
+| **ScoreScreen** | Shows score with circular progress and correct/incorrect count |
+
+### Exam Flow
+```
+ExploreScreen → ExamsScreen → ExamStartScreen → ExamDetailsScreen → ScoreScreen → ResultsListScreen
+```
+
+### Timer
+- Countdown timer displayed in the AppBar
+- Auto-submits exam when time runs out
+- Shows timeout dialog with option to view score
+
+---
+
 ## 📊 Results Feature
 
 Results are stored **locally using Hive** — no API needed.
@@ -104,7 +128,7 @@ Results are stored **locally using Hive** — no API needed.
 | Screen | Description |
 |---|---|
 | **ResultsListScreen** | Shows all past exam results |
-| **ResultsDetailsScreen** | Shows detailed question review with correct/wrong answers highlighted |
+| **ResultsDetailsScreen** | Shows detailed question review with correct/wrong answers highlighted in green/red |
 
 ---
 
@@ -113,11 +137,22 @@ Results are stored **locally using Hive** — no API needed.
 - **Base URL:** `https://exam.elevateegy.com/api/v1`
 - **Postman Collection:** [View Collection](https://documenter.getpostman.com/view/5709532/2sAXxMfYUf)
 
----
+### Endpoints Used
 
-## 🎨 Design
-
-- **Figma:** [View Design](https://www.figma.com/design/xQqC79GT8hoJ2NFKGaBiRM/Online-exam--Copy-?node-id=23-2962&t=gn6MOfCErXsRVYGH-0)
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/auth/signup` | Register |
+| POST | `/auth/signin` | Login |
+| POST | `/auth/forgotPassword` | Send reset code |
+| POST | `/auth/verifyResetCode` | Verify OTP |
+| PUT | `/auth/resetPassword` | Reset password |
+| GET | `/auth/profileData` | Get profile |
+| PUT | `/auth/editProfile` | Edit profile |
+| PATCH | `/auth/changePassword` | Change password |
+| GET | `/subjects` | Get all subjects |
+| GET | `/exams` | Get all exams |
+| GET | `/exams?subject={id}` | Get exams by subject |
+| GET | `/questions?exam={id}` | Get questions by exam |
 
 ---
 
