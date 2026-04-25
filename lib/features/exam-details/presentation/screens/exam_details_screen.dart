@@ -42,9 +42,9 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
     });
   }
 
-  /// 🔥 Timer خلص
   void _onTimeFinished() {
     final score = _viewModel.calculateScore();
+    _viewModel.doEvent(SaveExamResults(score));
     _viewModel.doEvent(ClearAnswersEvent());
     _currentQuestionIndex = 0;
 
@@ -80,10 +80,9 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _viewModel,
+    return BlocProvider<QuestionsViewModel>(
+      create: (context) => _viewModel,
       child: Scaffold(
-        /// 🔥 AppBar بالتــايمر
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: BlocBuilder<QuestionsViewModel, QuestionsStates>(
@@ -187,7 +186,7 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
                             ),
                             decoration: BoxDecoration(
                               color: isSelected
-                                  ? AppColors.blue.withOpacity(0.08)
+                                  ? AppColors.blue.withValues(alpha: 0.08)
                                   : Colors.white,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
@@ -249,7 +248,7 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
                                     setState(() => _currentQuestionIndex++);
                                   } else {
                                     final score = _viewModel.calculateScore();
-
+                                    _viewModel.doEvent(SaveExamResults(score));
                                     _goToScore(score);
                                   }
                                 }

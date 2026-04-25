@@ -2,16 +2,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:online_exam_app_v/config/base_responce/base_response.dart';
 import 'package:online_exam_app_v/features/exam-details/data/models/socre_result.dart';
+import 'package:online_exam_app_v/features/results/domain/enties/exam_result_entity.dart';
 import 'package:online_exam_app_v/features/exam-details/domain/entities/question_entity.dart';
+import 'package:online_exam_app_v/features/results/domain/enties/question_snap_shot_entity.dart';
 import 'package:online_exam_app_v/features/exam-details/domain/use_cases/get_questions_on_exam_use_case.dart';
 import 'package:online_exam_app_v/features/exam-details/presentation/view_model/states/questions_events.dart';
 import 'package:online_exam_app_v/features/exam-details/presentation/view_model/states/questions_states.dart';
+import 'package:online_exam_app_v/features/results/domain/use-cases/save_exam_results_use_case.dart';
 
 @injectable
 class QuestionsViewModel extends Cubit<QuestionsStates> {
+  final SaveExamResultUseCase _saveExamResultUseCase;
   final GetQuestionsOnExamUseCase getQuestionsOnExamUseCase;
 
-  QuestionsViewModel(this.getQuestionsOnExamUseCase) : super(QuestionsStates());
+  QuestionsViewModel(
+    this.getQuestionsOnExamUseCase,
+    this._saveExamResultUseCase,
+  ) : super(QuestionsStates());
 
   final Map<String, String> _userAnswers = {};
 
@@ -29,17 +36,16 @@ class QuestionsViewModel extends Cubit<QuestionsStates> {
         _clearError();
         break;
 
-      case CalculateScoreEvent():
-        // يمكن إرجاع الـ Score عبر State لو احتجت
-        break;
-
       case ClearAnswersEvent():
         _clearAnswers();
         break;
 
       case CanGoNextEvent():
+
         // يمكنك إضافة Logic إضافي هنا لو احتجت
         break;
+      case SaveExamResults():
+        _saveExamResult(event.score);
     }
   }
 
@@ -124,6 +130,31 @@ class QuestionsViewModel extends Cubit<QuestionsStates> {
       totalQuestions: total,
       scorePercentage: percentage,
     );
+  }
+
+  Future<void> _saveExamResult(ScoreResult score) async {
+    final questions = state.questionsState.data ?? [];
+
+    final snapshots = questions.map((q) {
+      return QuestionSnapshotEntity(
+        questionId: q.id,
+        question: q.question,
+        answers: q.answers, //  كل الاختيارات زي ما هي
+        correctAnswerKey: q.correctAnswerKey,
+        selectedAnswer: _userAnswers[q.id],
+      );
+    }).toList();
+
+    final result = ExamResultEntity(
+      examId: questions.first.exam!.id,
+      examTitle: questions.first.exam!.title,
+      correctAnswers: score.correctAnswers,
+      totalQuestions: score.totalQuestions,
+      percentage: score.scorePercentage,
+      questions: snapshots, //  بدل answers القديمة
+    );
+
+    await _saveExamResultUseCase(result);
   }
 
   void _clearAnswers() {

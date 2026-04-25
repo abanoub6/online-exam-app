@@ -3,8 +3,7 @@ import 'package:online_exam_app_v/core/constants/app_strings.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/features/explore/presentation/screens/explore_screen.dart';
 import 'package:online_exam_app_v/features/profile/presentation/screens/profile_screen.dart';
-import 'package:online_exam_app_v/features/results/presentation/screens/results_screen.dart'
-    show ResultsScreen;
+import 'package:online_exam_app_v/features/results/presentation/screens/results_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> screens = [
     ExploreScreen(),
-    ResultsScreen(),
+    ResultsListScreen(),
     ProfileScreen(),
   ];
 

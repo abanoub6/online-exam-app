@@ -118,14 +118,22 @@ abstract class AppStrings {
   static const String examScore = "Exam score";
   static const String yourScore = "Your score";
   static const String correct = "Correct";
+  static const String correctAnswers = "correct answers";
   static const String incorrect = "Incorrect";
   static const String percentage = "percentage";
+  static const String totalQuestions = "total questions";
+  static const String questions = "questions";
   static const String timeOut = "Time out !!";
   static const String viewSocre = "View Score";
+  static const String questionId = "questionId";
+  static const String selectedAnswer = "selected answer";
+  static const String correctAnswerKey = "correct answer key ";
+  static const String answers = "answers";
 
   static const String examId = "examId";
   static const String examTitle = "examTitle";
   static const String exam = "exam";
   static const String showResults = "Show results";
   static const String startAgain = "Start again";
+  static const String examReslutBox = "exam_results_box";
 }
