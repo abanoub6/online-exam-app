@@ -18,7 +18,7 @@ class ExamsShimmer extends StatelessWidget {
         ),
         itemCount: 6,
         itemExtent: AppSizes.h(120),
-        itemBuilder: (_, __) => const _ShimmerCard(),
+        itemBuilder: (_, _) => const _ShimmerCard(),
       ),
     );
   }

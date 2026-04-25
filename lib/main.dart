@@ -6,8 +6,9 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:online_exam_app_v/config/di/di.dart';
 import 'package:online_exam_app_v/config/observer/bloc_observer.dart';
 import 'package:online_exam_app_v/config/services/navigation_service.dart';
+import 'package:online_exam_app_v/core/constants/app_strings.dart';
 import 'package:online_exam_app_v/core/theme/app_theme.dart';
-import 'package:online_exam_app_v/features/exams/presentation/screens/examStartScreen.dart';
+import 'package:online_exam_app_v/features/exams/presentation/screens/exam_start_screen.dart';
 import 'package:online_exam_app_v/features/exams/presentation/screens/exams_screen.dart';
 import 'package:online_exam_app_v/features/forgot_password/presentation/screens/forgot_password_screen.dart';
 import 'package:online_exam_app_v/features/login/presentation/screens/login_screen.dart';
@@ -24,8 +25,8 @@ void main() async {
   await configureDependencies();
 
   final rememberUseCase = getIt<RememberMeUseCase>();
-  await Hive.initFlutter(); // 👈 هتشتغل دلوقتي
-  await Hive.openBox('exam_results_box'); // 👈 مهم جدًا
+  await Hive.initFlutter();
+  await Hive.openBox(AppStrings.examReslutBox);
   runApp(MyApp(await rememberUseCase.isRememberedMe()));
 }
 

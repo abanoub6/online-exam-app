@@ -123,7 +123,6 @@ abstract class AppStrings {
   static const String percentage = "percentage";
   static const String totalQuestions = "total questions";
   static const String questions = "questions";
-  static const String question = "question";
   static const String timeOut = "Time out !!";
   static const String viewSocre = "View Score";
   static const String questionId = "questionId";
@@ -136,5 +135,5 @@ abstract class AppStrings {
   static const String exam = "exam";
   static const String showResults = "Show results";
   static const String startAgain = "Start again";
-  static const String kResultsBox = "exam_results_box";
+  static const String examReslutBox = "exam_results_box";
 }

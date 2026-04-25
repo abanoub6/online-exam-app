@@ -6,7 +6,6 @@ import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
 import 'package:online_exam_app_v/core/widgets/primary_button.dart';
 import 'package:online_exam_app_v/features/exam-details/presentation/screens/exam_details_screen.dart';
 import 'package:online_exam_app_v/features/exam-details/presentation/widgets/build_state_row.dart';
-import 'package:online_exam_app_v/features/results/presentation/screens/results_screen.dart';
 import 'package:online_exam_app_v/features/results/presentation/screens/results_list_screen.dart';
 
 class ScoreScreen extends StatelessWidget {
@@ -103,7 +102,7 @@ class ScoreScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.pushReplacementNamed(
                         context,
-                        ResultsScreen.routeName,
+                        ResultsListScreen.routeName,
                       );
                     },
                     text: AppStrings.showResults,
