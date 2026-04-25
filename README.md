@@ -1,6 +1,6 @@
 # 📝 Online Exam App
 
-A comprehensive online examination mobile application built with Flutter, enabling students to take exams, track their results, and manage their profiles seamlessly.
+A comprehensive online examination mobile application built with Flutter, enabling students to browse subjects, take exams, view results, and manage their profiles seamlessly.
 
 ---
 
@@ -8,9 +8,12 @@ A comprehensive online examination mobile application built with Flutter, enabli
 
 | Feature | Description |
 |---|---|
-| 🔐 **Authentication** | Login, Register, Forgot Password, Reset Password |
+| 🔐 **Login** | Email & password login with Remember Me support |
+| 📝 **Register** | Create a new account |
+| 🔑 **Forgot Password** | Reset password via email OTP verification |
 | 🔍 **Explore** | Browse subjects with search functionality |
 | 📚 **Exams** | View and start exams by subject |
+| 📊 **Results** | View exam results history with detailed question review |
 | 👤 **Profile** | View, edit profile and change password |
 
 ---
@@ -29,10 +32,11 @@ A comprehensive online examination mobile application built with Flutter, enabli
 
 ### Networking
 - **Dio** + **Retrofit** for API calls
-- **Interceptors** for token management and error handling
+- **Interceptors** for token management and 401 handling
 
 ### Storage
-- **Flutter Secure Storage** for token and remember me
+- **Flutter Secure Storage** — for token and remember me
+- **Hive** — for local exam results storage
 
 ### UI
 - **Shimmer** for loading effects
@@ -50,6 +54,7 @@ lib/
 │   ├── di/                  # Dependency injection
 │   ├── base_response/       # BaseResponse sealed class
 │   ├── base_state/          # BaseState class
+│   ├── storage/             # Hive service
 │   └── services/            # Navigation service
 ├── core/
 │   ├── constants/           # App strings, endpoints, params
@@ -62,6 +67,7 @@ lib/
     ├── forgot_password/
     ├── explore/
     ├── exams/
+    ├── results/
     └── profile/
 ```
 
@@ -75,7 +81,7 @@ Each feature follows the same structure:
 feature/
 ├── data/
 │   ├── api/                 # Retrofit API client
-│   ├── data_sources/        # Remote data source contract & impl
+│   ├── data_sources/        # Remote/Local data source contract & impl
 │   └── models/              # DTOs and request/response models
 ├── domain/
 │   ├── entities/            # Domain entities
@@ -88,6 +94,17 @@ feature/
     │   └── states/          # States and Events
     └── widgets/             # Feature widgets
 ```
+
+---
+
+## 📊 Results Feature
+
+Results are stored **locally using Hive** — no API needed.
+
+| Screen | Description |
+|---|---|
+| **ResultsListScreen** | Shows all past exam results |
+| **ResultsDetailsScreen** | Shows detailed question review with correct/wrong answers highlighted |
 
 ---
 
