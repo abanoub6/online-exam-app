@@ -22,7 +22,7 @@ class _QuestionsApiClient implements QuestionsApiClient {
   @override
   Future<QuestionsResponse> getQuestionsOnExam(String examId) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'email': examId};
+    final queryParameters = <String, dynamic>{r'exam': examId};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<QuestionsResponse>(

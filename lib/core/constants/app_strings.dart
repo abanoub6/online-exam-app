@@ -123,7 +123,7 @@ abstract class AppStrings {
   static const String percentage = "percentage";
   static const String totalQuestions = "total questions";
   static const String questions = "questions";
-  static const String question = "question";
+
   static const String timeOut = "Time out !!";
   static const String viewSocre = "View Score";
   static const String questionId = "questionId";
