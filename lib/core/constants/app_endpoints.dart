@@ -7,8 +7,8 @@ abstract class AppEndpoints {
   static const String forgotPassword = "/auth/forgotPassword";
   static const String verifyResetCode = "/auth/verifyResetCode";
   static const String resetPassword = "/auth/resetPassword";
-  static const String getAllExams = "/exams";
   static const String questions = "/questions";
+  static const String getAllExams = "/exams";
   static const String subjects = "/subjects";
   static const String profileData = '/auth/profileData';
   static const String editProfile = '/auth/editProfile';

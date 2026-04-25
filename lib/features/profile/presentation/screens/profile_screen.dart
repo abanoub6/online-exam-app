@@ -90,7 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   ProfileReadOnlyField(
                     label: AppStrings.username,
-                    value: profile?.username ?? '',
+                    value: profile.username,
                   ),
                   SizedBox(height: AppSizes.h(16)),
 
@@ -99,14 +99,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Expanded(
                         child: ProfileReadOnlyField(
                           label: AppStrings.firstName,
-                          value: profile?.firstName ?? '',
+                          value: profile.firstName,
                         ),
                       ),
                       SizedBox(width: AppSizes.w(16)),
                       Expanded(
                         child: ProfileReadOnlyField(
                           label: AppStrings.lastName,
-                          value: profile?.lastName ?? '',
+                          value: profile.lastName,
                         ),
                       ),
                     ],
@@ -115,7 +115,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   ProfileReadOnlyField(
                     label: AppStrings.email,
-                    value: profile?.email ?? '',
+                    value: profile.email,
                   ),
 
                   SizedBox(height: AppSizes.h(16)),
@@ -124,7 +124,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   ProfileReadOnlyField(
                     label: AppStrings.phone,
-                    value: profile?.phone ?? '',
+                    value: profile.phone,
                   ),
                   SizedBox(height: AppSizes.h(40)),
 
@@ -135,17 +135,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.gray,
                       ),
-                      onPressed: profile == null
-                          ? null
-                          : () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => BlocProvider.value(
-                                  value: cubit,
-                                  child: EditProfileScreen(profile: profile),
-                                ),
-                              ),
-                            ),
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => BlocProvider.value(
+                            value: cubit,
+                            child: EditProfileScreen(profile: profile),
+                          ),
+                        ),
+                      ),
                       child: Text(
                         AppStrings.update,
                         style: AppTextStyles.s16w500(AppColors.white),

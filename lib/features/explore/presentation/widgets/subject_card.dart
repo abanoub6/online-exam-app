@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
-import 'package:online_exam_app_v/features/exam-details/presentation/screens/exam_details_screen.dart';
 import 'package:online_exam_app_v/features/exams/presentation/screens/exams_screen.dart';
 import 'package:online_exam_app_v/features/explore/domain/entities/subject.dart';
 
@@ -33,7 +32,7 @@ class SubjectCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppSizes.r(12)),
             boxShadow: [
               BoxShadow(
-                color: AppColors.black.withOpacity(0.3),
+                color: AppColors.black.withValues(alpha: 0.3),
                 blurRadius: AppSizes.r(8),
                 offset: const Offset(0, 1),
               ),
@@ -59,7 +58,7 @@ class SubjectCard extends StatelessWidget {
                       ),
                     );
                   },
-                  errorBuilder: (_, __, ___) => const Icon(Icons.image),
+                  errorBuilder: (_, _, _) => const Icon(Icons.image),
                 ),
               ),
               SizedBox(width: AppSizes.w(16)),

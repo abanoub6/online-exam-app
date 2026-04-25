@@ -4,7 +4,7 @@ import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
 import 'package:online_exam_app_v/features/exams/domain/models/exam_entity.dart';
-import 'package:online_exam_app_v/features/exams/presentation/screens/examStartScreen.dart';
+import 'package:online_exam_app_v/features/exams/presentation/screens/exam_start_screen.dart';
 
 class ExamCard extends StatelessWidget {
   final ExamEntity exam;
@@ -28,7 +28,7 @@ class ExamCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppSizes.r(10)),
             boxShadow: [
               BoxShadow(
-                color: AppColors.black.withOpacity(0.1),
+                color: AppColors.black.withValues(alpha: 0.1),
                 blurRadius: AppSizes.r(8),
                 offset: const Offset(0, 2),
               ),

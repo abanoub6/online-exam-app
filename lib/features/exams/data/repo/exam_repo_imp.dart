@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:online_exam_app_v/config/base_responce/base_response.dart';
 import 'package:online_exam_app_v/core/network/api_error_handler.dart';
