@@ -112,8 +112,21 @@ import '../../features/register/domain/use_cases/register_usecase.dart'
     as _i679;
 import '../../features/register/presentation/view_model/cubit/register_view_model.dart'
     as _i166;
+import '../../features/results/data/data-source/results_local_data_source.dart'
+    as _i149;
+import '../../features/results/data/data-source/results_local_data_source_imp.dart'
+    as _i109;
+import '../../features/results/data/repo/resluts_repository_imp.dart' as _i665;
+import '../../features/results/domain/repo/results_repo.dart' as _i57;
+import '../../features/results/domain/use-cases/get_exam_results_use_case.dart'
+    as _i1042;
+import '../../features/results/domain/use-cases/save_exam_results_use_case.dart'
+    as _i123;
+import '../../features/results/presentation/view-model/cubit/results_view_mode.dart'
+    as _i727;
 import '../dio/dio_interceptor.dart' as _i297;
 import '../dio/dio_module.dart' as _i977;
+import '../storage/results_hive_service.dart' as _i319;
 import '../storage/secure_storage_module.dart' as _i391;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -125,20 +138,22 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final storageModule = _$StorageModule();
     final dioModule = _$DioModule();
+    gh.factory<_i319.ResultsHiveService>(() => _i319.ResultsHiveService());
     gh.lazySingleton<_i558.FlutterSecureStorage>(
       () => storageModule.secureStorage(),
     );
     gh.lazySingleton<_i297.AuthInterceptor>(
       () => _i297.AuthInterceptor(gh<_i558.FlutterSecureStorage>()),
     );
+    gh.factory<_i149.ResultsLocalDataSource>(
+      () => _i109.ResultsLocalDataSourceImpl(gh<_i319.ResultsHiveService>()),
+    );
     gh.lazySingleton<_i361.Dio>(
       () => dioModule.dio(gh<_i297.AuthInterceptor>()),
     );
-    gh.factory<_i558.QuestionsApiClient>(
+    gh.lazySingleton<_i558.QuestionsApiClient>(
       () => _i558.QuestionsApiClient(gh<_i361.Dio>()),
     );
-    gh.factory<_i410.RegisterApiClient>(
-      () => _i410.RegisterApiClient(gh<_i361.Dio>()),
     gh.lazySingleton<_i127.ExamApiClient>(
       () => _i127.ExamApiClient(gh<_i361.Dio>()),
     );
@@ -148,6 +163,18 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i734.ExplorApiClient>(
       () => _i734.ExplorApiClient(gh<_i361.Dio>()),
     );
+    gh.factory<_i609.ForgotPasswordApiClient>(
+      () => _i609.ForgotPasswordApiClient(gh<_i361.Dio>()),
+    );
+    gh.factory<_i1000.ProfileApiClient>(
+      () => _i1000.ProfileApiClient(gh<_i361.Dio>()),
+    );
+    gh.factory<_i410.RegisterApiClient>(
+      () => _i410.RegisterApiClient(gh<_i361.Dio>()),
+    );
+    gh.factory<_i57.ResultsRepository>(
+      () => _i665.ResultsRepositoryImpl(gh<_i149.ResultsLocalDataSource>()),
+    );
     gh.factory<_i572.QuestionsRemoteDataSourceContract>(
       () => _i684.QuestionsRemoteDataSourceImpl(gh<_i558.QuestionsApiClient>()),
     );
@@ -155,28 +182,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i1032.QuestionsRepositoryImpl(
         gh<_i572.QuestionsRemoteDataSourceContract>(),
       ),
-    );
-    gh.factory<_i684.RegisterRemoteDataSourceContract>(
-      () => _i845.RegisterRemoteDataSourceImpl(gh<_i410.RegisterApiClient>()),
-    );
-    gh.factory<_i210.RegisterRepositoryContract>(
-      () => _i921.AuthRepositoryImpl(
-        gh<_i684.RegisterRemoteDataSourceContract>(),
-      ),
-    );
-    gh.factory<_i609.ForgotPasswordApiClient>(
-      () => _i609.ForgotPasswordApiClient(gh<_i361.Dio>()),
-    );
-    gh.factory<_i902.GetQuestionsOnExamUseCase>(
-      () => _i902.GetQuestionsOnExamUseCase(
-        gh<_i563.QuestionsRepositoryContract>(),
-      ),
-    );
-    gh.factory<_i1000.ProfileApiClient>(
-      () => _i1000.ProfileApiClient(gh<_i361.Dio>()),
-    );
-    gh.factory<_i410.RegisterApiClient>(
-      () => _i410.RegisterApiClient(gh<_i361.Dio>()),
     );
     gh.factory<_i395.ForgotPasswordRemoteDataSourceContract>(
       () => _i902.ForgotPasswordRemoteDataSourceImpl(
@@ -197,8 +202,25 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i320.ExplorRemoteDataSourceContract>(
       () => _i394.ExplorRemoteDataSourceImpl(gh<_i734.ExplorApiClient>()),
     );
+    gh.factory<_i902.GetQuestionsOnExamUseCase>(
+      () => _i902.GetQuestionsOnExamUseCase(
+        gh<_i563.QuestionsRepositoryContract>(),
+      ),
+    );
+    gh.factory<_i1042.GetExamResultsUseCase>(
+      () => _i1042.GetExamResultsUseCase(gh<_i57.ResultsRepository>()),
+    );
+    gh.factory<_i123.SaveExamResultUseCase>(
+      () => _i123.SaveExamResultUseCase(gh<_i57.ResultsRepository>()),
+    );
     gh.factory<_i159.LoginRemoteDataSourceContract>(
       () => _i211.LoginRemoteDataSourceImp(gh<_i315.LoginApiClient>()),
+    );
+    gh.factory<_i427.ProfileRemoteDataSourceContract>(
+      () => _i684.ProfileRemoteDataSourceImpl(gh<_i1000.ProfileApiClient>()),
+    );
+    gh.factory<_i727.ResultsViewModel>(
+      () => _i727.ResultsViewModel(gh<_i1042.GetExamResultsUseCase>()),
     );
     gh.factory<_i210.RegisterRepositoryContract>(
       () => _i921.RegisterRepositoryImpl(
@@ -225,54 +247,13 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i578.ResetPasswordUseCase>(),
       ),
     );
-      ),
-    );
-    gh.factory<_i684.RegisterRemoteDataSourceContract>(
-      () => _i845.RegisterRemoteDataSourceImpl(gh<_i410.RegisterApiClient>()),
-    );
-    gh.factory<_i511.ForgetPasswordRepoContract>(
-      () => _i320.ForgetPasswordRepoImpl(
-        gh<_i395.ForgotPasswordRemoteDataSourceContract>(),
-      ),
-    );
-    gh.factory<_i320.ExplorRemoteDataSourceContract>(
-      () => _i394.ExplorRemoteDataSourceImpl(gh<_i734.ExplorApiClient>()),
-    );
-    gh.factory<_i159.LoginRemoteDataSourceContract>(
-      () => _i211.LoginRemoteDataSourceImp(gh<_i315.LoginApiClient>()),
-    );
-    gh.factory<_i427.ProfileRemoteDataSourceContract>(
-      () => _i684.ProfileRemoteDataSourceImpl(gh<_i1000.ProfileApiClient>()),
-    );
-    gh.factory<_i210.RegisterRepositoryContract>(
-      () => _i921.RegisterRepositoryImpl(
-        gh<_i684.RegisterRemoteDataSourceContract>(),
-      ),
-    );
-    gh.factory<_i597.ForgotPasswordUseCase>(
-      () => _i597.ForgotPasswordUseCase(gh<_i511.ForgetPasswordRepoContract>()),
-    );
-    gh.factory<_i578.ResetPasswordUseCase>(
-      () => _i578.ResetPasswordUseCase(gh<_i511.ForgetPasswordRepoContract>()),
-    );
-    gh.factory<_i717.VerifyResetCodeUseCase>(
-      () =>
-          _i717.VerifyResetCodeUseCase(gh<_i511.ForgetPasswordRepoContract>()),
-    );
-    gh.factory<_i1024.ForgotPasswordViewModel>(
-      () => _i1024.ForgotPasswordViewModel(
-        gh<_i597.ForgotPasswordUseCase>(),
-        gh<_i717.VerifyResetCodeUseCase>(),
-        gh<_i578.ResetPasswordUseCase>(),
-      ),
-    );
     gh.factory<_i692.ExplorRepoContract>(
       () => _i1068.ExplorRepoImpl(gh<_i320.ExplorRemoteDataSourceContract>()),
     );
-    gh.lazySingleton<_i10.GetAllExamsUseCase>(
+    gh.factory<_i10.GetAllExamsUseCase>(
       () => _i10.GetAllExamsUseCase(gh<_i960.ExamRepoContract>()),
     );
-    gh.lazySingleton<_i952.GetExamsBySubjectUseCase>(
+    gh.factory<_i952.GetExamsBySubjectUseCase>(
       () => _i952.GetExamsBySubjectUseCase(gh<_i960.ExamRepoContract>()),
     );
     gh.factory<_i180.LoginRepoContract>(
@@ -287,8 +268,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i679.RegisterUseCase>(
       () => _i679.RegisterUseCase(gh<_i210.RegisterRepositoryContract>()),
     );
-    gh.singleton<_i472.QuestionsViewModel>(
-      () => _i472.QuestionsViewModel(gh<_i902.GetQuestionsOnExamUseCase>()),
+    gh.factory<_i472.QuestionsViewModel>(
+      () => _i472.QuestionsViewModel(
+        gh<_i902.GetQuestionsOnExamUseCase>(),
+        gh<_i123.SaveExamResultUseCase>(),
+      ),
     );
     gh.factory<_i541.ProfileRepoContract>(
       () => _i256.ProfileRepoImpl(gh<_i427.ProfileRemoteDataSourceContract>()),
@@ -309,6 +293,7 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i10.GetAllExamsUseCase>(),
         gh<_i952.GetExamsBySubjectUseCase>(),
       ),
+    );
     gh.lazySingleton<_i266.ChangePasswordUseCase>(
       () => _i266.ChangePasswordUseCase(gh<_i541.ProfileRepoContract>()),
     );

@@ -6,6 +6,7 @@ class BuildStateRow extends StatelessWidget {
   final String label;
   final int value;
   final Color color;
+
   const BuildStateRow({
     super.key,
     required this.label,
@@ -16,10 +17,14 @@ class BuildStateRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Text(label, style: AppTextStyles.s16w500(color)),
+        SizedBox(
+          width: 90,
+          child: Text(label, style: AppTextStyles.s16w500(color)),
+        ),
+
         SizedBox(width: AppSizes.w(12)),
+
         Container(
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
