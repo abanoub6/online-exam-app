@@ -47,17 +47,6 @@ class SubjectCard extends StatelessWidget {
                   width: AppSizes.w(48),
                   height: AppSizes.h(48),
                   fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Container(
-                      width: AppSizes.w(48),
-                      height: AppSizes.h(48),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(AppSizes.r(8)),
-                      ),
-                    );
-                  },
                   errorBuilder: (_, __, ___) => const Icon(Icons.image),
                 ),
               ),
