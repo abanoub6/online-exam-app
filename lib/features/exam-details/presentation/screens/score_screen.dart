@@ -4,22 +4,29 @@ import 'package:online_exam_app_v/core/theme/app_colors.dart';
 import 'package:online_exam_app_v/core/theme/app_sizes.dart';
 import 'package:online_exam_app_v/core/theme/app_text_styles.dart';
 import 'package:online_exam_app_v/core/widgets/primary_button.dart';
+import 'package:online_exam_app_v/features/exam-details/presentation/screens/exam_details_screen.dart';
 import 'package:online_exam_app_v/features/exam-details/presentation/widgets/build_state_row.dart';
+import 'package:online_exam_app_v/features/results/presentation/screens/results_screen.dart';
 
 class ScoreScreen extends StatelessWidget {
-  static const String routeName = "score-screen";
+  final int correct;
+  final int incorrect;
+  final double percentage;
 
-  const ScoreScreen({super.key});
+  final String examId;
+  final String examTitle;
+
+  const ScoreScreen({
+    super.key,
+    required this.correct,
+    required this.incorrect,
+    required this.percentage,
+    required this.examId,
+    required this.examTitle,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final args =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-
-    final int correct = args[AppStrings.correct];
-    final int incorrect = args[AppStrings.incorrect];
-    final double percentage = args[AppStrings.percentage];
-
     return Scaffold(
       appBar: AppBar(
         title: Text(AppStrings.examScore, style: AppTextStyles.s20w600()),
@@ -28,17 +35,21 @@ class ScoreScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
       ),
+
       body: Padding(
         padding: EdgeInsets.all(AppSizes.w(24)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            /// Title
             Text(AppStrings.yourScore, style: AppTextStyles.s18w600()),
 
             SizedBox(height: AppSizes.h(24)),
 
+            /// Score + Stats
             Row(
               children: [
+                /// Circular Progress
                 Stack(
                   alignment: Alignment.center,
                   children: [
@@ -61,7 +72,7 @@ class ScoreScreen extends StatelessWidget {
 
                 SizedBox(width: AppSizes.w(40)),
 
-                // Stats
+                /// Stats
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -80,14 +91,20 @@ class ScoreScreen extends StatelessWidget {
                 ),
               ],
             ),
+
             const SizedBox(height: 70),
 
-            // Show Results Button
+            /// 🔥 Show Results Button (زي ما هو)
             Row(
               children: [
                 Expanded(
                   child: PrimaryButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(
+                        context,
+                        ResultsScreen.routeName,
+                      );
+                    },
                     text: AppStrings.showResults,
                   ),
                 ),
@@ -96,10 +113,15 @@ class ScoreScreen extends StatelessWidget {
 
             SizedBox(height: AppSizes.h(16)),
 
-            // Start Again
             OutlinedButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        ExamDetailsScreen(examId: examId, examTitle: examTitle),
+                  ),
+                );
               },
               style: OutlinedButton.styleFrom(
                 minimumSize: Size(double.infinity, AppSizes.h(56)),

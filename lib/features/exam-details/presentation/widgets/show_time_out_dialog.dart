@@ -7,7 +7,15 @@ import 'package:online_exam_app_v/features/exam-details/presentation/screens/sco
 
 class ShowTimeOutDialog extends StatelessWidget {
   final ScoreResult score;
-  const ShowTimeOutDialog({super.key, required this.score});
+  final String examId;
+  final String examTitle;
+
+  const ShowTimeOutDialog({
+    super.key,
+    required this.score,
+    required this.examId,
+    required this.examTitle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +34,7 @@ class ShowTimeOutDialog extends StatelessWidget {
                   AssetImage("assets/icons/time_out_iocn.png"),
                   color: Colors.grey,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(width: 16),
                 const Text(
                   AppStrings.timeOut,
                   style: TextStyle(
@@ -37,21 +45,28 @@ class ShowTimeOutDialog extends StatelessWidget {
                 ),
               ],
             ),
+
             const SizedBox(height: 24),
+
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
+                  /// اقفل الديالوج
                   Navigator.pop(context);
-                  Navigator.pushNamed(
+
+                  /// روح للـ score screen (replace)
+                  Navigator.pushReplacement(
                     context,
-                    ScoreScreen.routeName,
-                    arguments: {
-                      AppStrings.correct: score.correctAnswers,
-                      AppStrings.incorrect:
-                          score.totalQuestions - score.correctAnswers,
-                      AppStrings.percentage: score.scorePercentage,
-                    },
+                    MaterialPageRoute(
+                      builder: (_) => ScoreScreen(
+                        correct: score.correctAnswers,
+                        incorrect: score.totalQuestions - score.correctAnswers,
+                        percentage: score.scorePercentage,
+                        examId: examId,
+                        examTitle: examTitle,
+                      ),
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(

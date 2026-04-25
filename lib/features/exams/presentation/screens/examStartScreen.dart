@@ -138,10 +138,14 @@ class ExamStartScreen extends StatelessWidget {
               child: PrimaryButton(
                 text: AppStrings.start,
                 onPressed: () {
-                  Navigator.pushNamed(
+                  Navigator.pushReplacement(
                     context,
-                    ExamDetailsScreen.routeName,
-                    arguments: exam.id,
+                    MaterialPageRoute(
+                      builder: (_) => ExamDetailsScreen(
+                        examId: exam.id,
+                        examTitle: exam.title,
+                      ),
+                    ),
                   );
                 },
               ),
