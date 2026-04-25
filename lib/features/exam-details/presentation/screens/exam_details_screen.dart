@@ -15,9 +15,14 @@ import 'package:online_exam_app_v/features/exam-details/presentation/widgets/exa
 import 'package:online_exam_app_v/features/exam-details/presentation/widgets/show_time_out_dialog.dart';
 
 class ExamDetailsScreen extends StatefulWidget {
-  static const String routeName = "questions-screen";
+  final String examId;
+  final String examTitle;
 
-  const ExamDetailsScreen({super.key});
+  const ExamDetailsScreen({
+    super.key,
+    required this.examId,
+    required this.examTitle,
+  });
 
   @override
   State<ExamDetailsScreen> createState() => _ExamDetailsScreenState();
@@ -26,46 +31,51 @@ class ExamDetailsScreen extends StatefulWidget {
 class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
   late final QuestionsViewModel _viewModel;
   int _currentQuestionIndex = 0;
-  String? _examTitle;
 
   @override
   void initState() {
     super.initState();
-    _viewModel = getIt.get<QuestionsViewModel>();
+    _viewModel = getIt<QuestionsViewModel>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final args =
-          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-
-      final examId = "69d980117c82914570305dd5";
-      //Todo will be changed
-      // args?[AppStrings.examId] as String?;
-      if (examId != null) {
-        _examTitle = args?[AppStrings.examTitle] as String? ?? AppStrings.exam;
-        _viewModel.doEvent(GetQuestionsOnExamEvent(examId));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text(AppStrings.noExamIdProvided)),
-        );
-      }
+      _viewModel.doEvent(GetQuestionsOnExamEvent(widget.examId));
     });
   }
 
+  /// 🔥 Timer خلص
   void _onTimeFinished() {
     final score = _viewModel.calculateScore();
     _viewModel.doEvent(SaveExamResults(score));
     _viewModel.doEvent(ClearAnswersEvent());
     _currentQuestionIndex = 0;
-    if (mounted) {
-      _showTimeOutDialog(score);
-    }
+
+    _showTimeOutDialog(score);
   }
 
   void _showTimeOutDialog(ScoreResult score) {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => ShowTimeOutDialog(score: score),
+      builder: (_) => ShowTimeOutDialog(
+        score: score,
+        examId: widget.examId,
+        examTitle: widget.examTitle,
+      ),
+    );
+  }
+
+  void _goToScore(ScoreResult score) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ScoreScreen(
+          correct: score.correctAnswers,
+          incorrect: score.totalQuestions - score.correctAnswers,
+          percentage: score.scorePercentage,
+          examId: widget.examId,
+          examTitle: widget.examTitle,
+        ),
+      ),
     );
   }
 
@@ -74,6 +84,7 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
     return BlocProvider.value(
       value: _viewModel,
       child: Scaffold(
+        /// 🔥 AppBar بالتــايمر
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(kToolbarHeight),
           child: BlocBuilder<QuestionsViewModel, QuestionsStates>(
@@ -82,7 +93,7 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
 
               if (questions == null || questions.isEmpty) {
                 return AppBar(
-                  title: Text(_examTitle ?? AppStrings.exam),
+                  title: Text(widget.examTitle),
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () => Navigator.pop(context),
@@ -92,7 +103,7 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
 
               return ExamAppBar(
                 timeInSeconds: questions[0].exam!.duration * 60,
-                title: _examTitle ?? AppStrings.exam,
+                title: widget.examTitle,
                 onBack: () => Navigator.pop(context),
                 onTimeFinished: _onTimeFinished,
               );
@@ -100,6 +111,7 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
           ),
         ),
 
+        /// 🔥 Body
         body: BlocBuilder<QuestionsViewModel, QuestionsStates>(
           builder: (context, state) {
             final questions = state.questionsState.data ?? [];
@@ -111,26 +123,7 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
             }
 
             if (error != null) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(error, style: AppTextStyles.s16w400(AppColors.red)),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        final args =
-                            ModalRoute.of(context)?.settings.arguments as Map?;
-                        final examId = args?[AppStrings.examId] as String?;
-                        if (examId != null) {
-                          _viewModel.doEvent(GetQuestionsOnExamEvent(examId));
-                        }
-                      },
-                      child: const Text(AppStrings.tryAgain),
-                    ),
-                  ],
-                ),
-              );
+              return Center(child: Text(error));
             }
 
             if (questions.isEmpty) {
@@ -144,12 +137,14 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  /// 🔥 Progress
                   LinearProgressIndicator(
                     value: (_currentQuestionIndex + 1) / questions.length,
                     backgroundColor: AppColors.ligtGrey,
                     color: AppColors.blue,
                     minHeight: 8,
                   ),
+
                   SizedBox(height: AppSizes.h(12)),
 
                   Text(
@@ -159,6 +154,7 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
 
                   SizedBox(height: AppSizes.h(24)),
 
+                  /// 🔥 Question
                   Text(
                     currentQuestion.question,
                     style: AppTextStyles.s20w600(),
@@ -166,6 +162,7 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
 
                   SizedBox(height: AppSizes.h(32)),
 
+                  /// 🔥 Answers
                   Expanded(
                     child: ListView.builder(
                       itemCount: currentQuestion.answers.length,
@@ -229,6 +226,7 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
                     ),
                   ),
 
+                  /// 🔥 Buttons
                   Row(
                     children: [
                       Expanded(
@@ -252,22 +250,8 @@ class _ExamDetailsScreenState extends State<ExamDetailsScreen> {
                                     setState(() => _currentQuestionIndex++);
                                   } else {
                                     final score = _viewModel.calculateScore();
-                                    _viewModel.doEvent(ClearAnswersEvent());
-                                    _currentQuestionIndex = 0;
 
-                                    Navigator.pushNamed(
-                                      context,
-                                      ScoreScreen.routeName,
-                                      arguments: {
-                                        AppStrings.correct:
-                                            score.correctAnswers,
-                                        AppStrings.incorrect:
-                                            score.totalQuestions -
-                                            score.correctAnswers,
-                                        AppStrings.percentage:
-                                            score.scorePercentage,
-                                      },
-                                    );
+                                    _goToScore(score);
                                   }
                                 }
                               : null,
