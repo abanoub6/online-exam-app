@@ -40,6 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         appBar: AppBar(
           backgroundColor: AppColors.white,
           elevation: 0,
+          automaticallyImplyLeading: false,
           title: Text(
             AppStrings.profile,
             style: AppTextStyles.s20w500(AppColors.black),

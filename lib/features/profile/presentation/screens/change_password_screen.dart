@@ -67,6 +67,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 backgroundColor: AppColors.green,
               ),
             );
+            context.read<ProfileViewModel>().doEvent(GetProfileEvent());
             Navigator.pop(context);
           } else if (state is ChangePasswordFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
