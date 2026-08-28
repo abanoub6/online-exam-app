@@ -44,11 +44,22 @@ class _ResultsListScreenState extends State<ResultsListScreen> {
             }
 
             if (error != null) {
-              return Center(child: Text(error));
+              return _EmptyState(
+                icon: Icons.error_outline_rounded,
+                iconColor: Theme.of(context).colorScheme.error,
+                title: "Something went wrong",
+                subtitle: error,
+              );
             }
 
             if (results.isEmpty) {
-              return const Center(child: Text("No Results Found"));
+              return _EmptyState(
+                icon: Icons.fact_check_outlined,
+                iconColor: Theme.of(context).colorScheme.primary,
+                title: "No Results Yet",
+                subtitle:
+                    "Once you complete an exam, your results will show up here.",
+              );
             }
 
             return ListView.builder(
@@ -70,6 +81,62 @@ class _ResultsListScreenState extends State<ResultsListScreen> {
               },
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+/// A centered, friendly placeholder used for both the "no results" and
+/// "error" states, so an empty results list doesn't just show a single
+/// line of plain text in the middle of the screen.
+class _EmptyState extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final String title;
+  final String subtitle;
+
+  const _EmptyState({
+    required this.icon,
+    required this.iconColor,
+    required this.title,
+    required this.subtitle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 96,
+              height: 96,
+              decoration: BoxDecoration(
+                color: iconColor.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, size: 44, color: iconColor),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              subtitle,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
         ),
       ),
     );

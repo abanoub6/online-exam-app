@@ -48,24 +48,34 @@ class ExamCard extends StatelessWidget {
               ),
               SizedBox(width: AppSizes.w(12)),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      exam.title,
-                      style: AppTextStyles.s16w500(AppColors.black),
-                    ),
-                    // SizedBox(height: AppSizes.h(2)),
-                    Text(
-                      '${exam.numberOfQuestions} ${AppStrings.question}',
-                      style: AppTextStyles.s14w400(AppColors.gray),
-                    ),
-                    SizedBox(height: AppSizes.h(10)),
-                    Text(
-                      AppStrings.from1To6,
-                      style: AppTextStyles.s14w400(AppColors.black),
-                    ),
-                  ],
+                // FittedBox only shrinks the content if it doesn't fit the
+                // Row's height constraint — on mobile, where it already
+                // fits, this changes nothing visually. On web, where
+                // AppSizes' scaling leaves slightly less room, this
+                // prevents the overflow stripes automatically.
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        exam.title,
+                        style: AppTextStyles.s16w500(AppColors.black),
+                      ),
+                      // SizedBox(height: AppSizes.h(2)),
+                      Text(
+                        '${exam.numberOfQuestions} ${AppStrings.question}',
+                        style: AppTextStyles.s14w400(AppColors.gray),
+                      ),
+                      SizedBox(height: AppSizes.h(10)),
+                      Text(
+                        AppStrings.from1To6,
+                        style: AppTextStyles.s14w400(AppColors.black),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Text(
